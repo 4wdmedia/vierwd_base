@@ -1,0 +1,13 @@
+{
+	"name": "vierwd/typo3-base",
+	"type": "typo3-cms-extension",
+	"description": "TYPO Installation",
+	"version": "1.0.0",
+	"license": "proprietary",
+	"require": {
+		"typo3/cms-scheduler": "*",
+		"vierwd/typo3-typo3version": "*",
+		"vierwd/typo3-smarty": "*",
+		"vierwd/typo3-errors": "*"
+	}
+}

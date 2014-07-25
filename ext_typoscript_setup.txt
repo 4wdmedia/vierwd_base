@@ -1,0 +1,5 @@
+module.extension_builder {
+	settings{
+		codeTemplateAdditionalRootPath = EXT:vierwd_base/Resources/Private/CodeTemplates/Extbase/
+	}
+}
