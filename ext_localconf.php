@@ -29,3 +29,9 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'Vierwd\\VierwdBase\\Ho
 // ***************
 // 404-PageNotFoundHandling
 $GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:Vierwd\\VierwdBase\\Hooks\\PageNotFound->pageNotFound';
+
+// ***************
+// Check in Reports, if newest TYPO3 Version is used
+$TYPO3_CONF_VARS['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['vierwd'] = array(
+	'Vierwd\\VierwdBase\\Reports\\LatestTYPO3',
+);
