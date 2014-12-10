@@ -12,6 +12,27 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface {
 
+	public function addCompleteCacheGroup() {
+		$cacheManager = $this->getCacheManager();
+		if (!$cacheManager->hasCache('complete')) {
+			// foreach ($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'] as $key => &$data) {
+			// 	if (is_array($data['groups']) && !in_array('complete', $data['groups'])) {
+			// 		$data['groups'][] = 'complete';
+			// 	}
+			// }
+
+			// $cacheManager->setCacheConfigurations($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']);
+
+			// TYPO3 6.2.7 does not add the group later on. Force it!
+			$reflection = new \ReflectionObject($cacheManager);
+			$cacheGroupsProperty = $reflection->getProperty('cacheGroups');
+			$cacheGroupsProperty->setAccessible(true);
+			$cacheGroups = $cacheGroupsProperty->getValue($cacheManager);
+			$cacheGroups['complete'] = array_keys($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']);
+			$cacheGroupsProperty->setValue($cacheManager, $cacheGroups);
+		}
+	}
+
 	public function manipulateCacheActions(&$cacheActions, &$optionValues) {
 		if (!$GLOBALS['BE_USER']->isAdmin() && !$GLOBALS['BE_USER']->getTSConfigVal('options.clearCache.complete')) {
 			return;
@@ -25,14 +46,21 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 			'icon' => IconUtility::getSpriteIcon('actions-system-cache-clear-impact-high')
 		);
 		$optionValues[] = 'complete';
+	}
 
-		foreach ($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'] as $key => &$data) {
-			if (is_array($data['groups']) && !in_array('complete', $data['groups'])) {
-				$data['groups'][] = 'complete';
-			}
+	public function clear_cacheCmd(array $params, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler) {
+		if (isset($params['cacheCmd']) && $params['cacheCmd'] == 'complete') {
+			$this->addCompleteCacheGroup();
+			$this->getCacheManager()->flushCachesInGroup('complete');
 		}
+	}
 
-		$cacheManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager');
-		$cacheManager->setCacheConfigurations($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']);
+	/**
+	 * Create and returns an instance of the CacheManager
+	 *
+	 * @return \TYPO3\CMS\Core\Cache\CacheManager
+	 */
+	protected function getCacheManager() {
+		return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager');
 	}
 }
