@@ -23,5 +23,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clea
 
 // ***************
 // minify JS hook
-$TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = '{project.namespaceEscaped}\\Hooks\\JavascriptOptimization->jsMinify';
-$TYPO3_CONF_VARS['FE']['jsCompressHandler'] = '{project.namespaceEscaped}\\Hooks\\JavascriptOptimization->jsCompressHandler';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = 'Vierwd\\VierwdBase\\Hooks\\JavascriptOptimization->jsMinify';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'Vierwd\\VierwdBase\\Hooks\\JavascriptOptimization->jsCompressHandler';
+
+// ***************
+// 404-PageNotFoundHandling
+$GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:Vierwd\\VierwdBase\\Hooks\\PageNotFound->pageNotFound';
