@@ -1,5 +1,7 @@
 <?php
 
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = array();
+
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\FileGenerator'] = array(
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\FileGenerator',
 );
@@ -35,3 +37,7 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:Vier
 $TYPO3_CONF_VARS['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['vierwd'] = array(
 	'Vierwd\\VierwdBase\\Reports\\LatestTYPO3',
 );
+
+// ***************
+// BackendLayoutDataProvider
+$TYPO3_CONF_VARS['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'Vierwd\\VierwdBase\\Backend\\BackendLayoutDataProvider';
