@@ -38,6 +38,44 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 			return;
 		}
 
+		$groups = [];
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'] as $cacheKey => $cacheConfiguration) {
+			if (!is_array($cacheConfiguration['groups'])) {
+				continue;
+			}
+			foreach ($cacheConfiguration['groups'] as $group) {
+				$groups[$group][] = $cacheKey;
+			}
+		}
+		if (isset($groups['all'], $groups['pages']) && $groups['all'] === $groups['pages']) {
+			// remove the "all" group, it is identical to pages.
+			$cacheActions = array_filter($cacheActions, function($cacheConfiguration) {
+				return $cacheConfiguration['id'] != 'all';
+			});
+		}
+
+		if ($GLOBALS['BE_USER']->isAdmin()) {
+			// modify description to inform which caches will be cleared
+			foreach ($cacheActions as &$actionConfiguration) {
+				$cacheKey = $actionConfiguration['id'];
+				if (isset($groups[$cacheKey])) {
+					if (!isset($actionConfiguration['description'])) {
+						$actionConfiguration['description'] = $actionConfiguration['title'];
+					}
+					$actionConfiguration['description'] .= "\n" . implode(', ', $groups[$cacheKey]);
+				}
+				unset($actionConfiguration);
+			}
+		}
+
+		// change the icon of the system cache group. It has a lower impact as our "complete" cache action
+		foreach ($cacheActions as &$actionConfiguration) {
+			if ($actionConfiguration['id'] == 'system') {
+				$actionConfiguration['icon'] = IconUtility::getSpriteIcon('actions-system-cache-clear-impact-medium');
+			}
+			unset($actionConfiguration);
+		}
+
 		$cacheActions[] = array(
 			'id' => 'complete',
 			'title' => 'Alle Caches leeren',
