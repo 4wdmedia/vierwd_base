@@ -1,5 +1,5 @@
 <?php
-namespace {project.namespace}\Reports;
+namespace Vierwd\VierwdBase\Reports;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
