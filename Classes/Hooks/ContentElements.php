@@ -64,6 +64,9 @@ class ContentElements {
 	static public function addFCEs($extensionKey, $isLocalConf = false) {
 		global $TCA;
 
+		// Groups in planquadrat
+		// https://intern.4wdmedia.de/svn/14013_planquadrat/InBearbeitung/Relaunch-Website_1_1/Webseite/typo3/typo3conf/ext/vierwd_planquadrat/Classes/Hooks/ContentElements.php
+
 		$fceDir = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/';
 
 		$pageTS = '';
@@ -289,5 +292,25 @@ class ContentElements {
 		}
 
 		return $clear;
+	}
+
+	/**
+	 * add id of content element to first HTML Element.
+	 * This enables direct links to elements.
+	 * Normally TYPO3 would add those links with a link (<a id="cXX"></a>) or in the default wrapper,
+	 * but this would interfere with :first-child pseudo elements
+	 */
+	public function elementUid($content, $params) {
+		if (!$content || $content[0] != '<' || !$this->cObj || !$this->cObj->data['uid']) {
+			return $content;
+		}
+
+		// add uid to first element
+		$idAttr = ' id="c' . $this->cObj->data['uid'] . '"';
+		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || strpos($content, $idAttr) !== false) {
+			return $content;
+		}
+
+		return preg_replace('/^<([^\s>!]+)/', '<$1' . $idAttr, $content);
 	}
 }

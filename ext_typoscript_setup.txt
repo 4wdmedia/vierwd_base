@@ -1,5 +1,16 @@
 module.extension_builder {
-	settings{
+	settings {
 		codeTemplateAdditionalRootPath = EXT:vierwd_base/Resources/Private/CodeTemplates/Extbase/
 	}
 }
+
+# remove anchor
+tt_content.stdWrap.innerWrap.cObject.66.10 >
+
+# remove id for content element
+tt_content.stdWrap.innerWrap.cObject.default.10.cObject.default.value = <div
+tt_content.stdWrap.innerWrap.cObject.default.10.cObject.menu.value = <nav
+
+# add id to element
+tt_content.stdWrap.postUserFunc = Vierwd\VierwdBase\Hooks\ContentElements->elementUid
+
