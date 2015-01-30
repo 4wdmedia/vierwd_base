@@ -13,6 +13,6 @@ class BrowserSync {
 			return '';
 		}
 
-		return '<script async src="http://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync-client.js"></script>';
+		return '<script async src="http://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync/browser-sync-client.js"></script>';
 	}
 }
