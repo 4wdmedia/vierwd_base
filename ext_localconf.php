@@ -1,6 +1,11 @@
 <?php
 
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = array();
+if (version_compare(PHP_VERSION, '5.4.0') <= 0) {
+	throw new \Exception('Base extension needs at least PHP 5.4');
+}
+require_once PATH_site . '/vendor/autoload.php';
+
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = array('paths' => array());
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\FileGenerator'] = array(
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\FileGenerator',
