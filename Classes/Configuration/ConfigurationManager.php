@@ -15,7 +15,7 @@ class ConfigurationManager extends \TYPO3\CMS\Core\Configuration\ConfigurationMa
 		$localConfiguration = $this->getLocalConfiguration();
 		foreach ($pairs as $path => $value) {
 			if ($this->isValidLocalConfigurationPath($path)) {
-				if (!Utility\ArrayUtility::isValidPath($localConfiguration, $path)) {
+				if (!Utility\ArrayUtility::isValidPath($localConfiguration, $path) || $path == 'SYS/isInitialInstallationInProgress') {
 					// only set a new value if no old value exists
 					$localConfiguration = Utility\ArrayUtility::setValueByPath($localConfiguration, $path, $value);
 				}
