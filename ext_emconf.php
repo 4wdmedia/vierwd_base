@@ -11,7 +11,7 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'TYPO3 Installation',
+	'title' => 'FORWARD MEDIA TYPO3 Basis',
 	'description' => 'Adds some database configs during installation process',
 	'category' => 'distribution',
 	'author' => 'Robert Vock',
