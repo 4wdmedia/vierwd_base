@@ -46,3 +46,16 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['reports']['tx_reports']['status']['providers']['
 // ***************
 // BackendLayoutDataProvider
 $TYPO3_CONF_VARS['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'Vierwd\\VierwdBase\\Backend\\BackendLayoutDataProvider';
+
+// ***************
+// eID for TYPO3 Version
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = 'EXT:' . $_EXTKEY . '/typo3version.php';
+
+// **************
+// Add Error command controller
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = 'Vierwd\\VierwdBase\\Command\\CronjobCommandController';
+
+// disable html_errors, if this is an ajax request
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+	ini_set('html_errors', 'off');
+}
