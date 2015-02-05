@@ -65,3 +65,9 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 $signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
 $signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PreGeneratePublicUrl, 'Vierwd\\VierwdBase\\Resource\\CacheBuster', 'getPublicUrl');
 
+// **************
+// Replace encoded mail addresses during indexing
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'], function($class) {
+	return $class !== 'TYPO3\\CMS\\IndexedSearch\\Indexer';
+});
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'][] = 'Vierwd\\VierwdBase\\Hooks\\Indexer';
