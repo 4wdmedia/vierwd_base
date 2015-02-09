@@ -86,6 +86,10 @@ class ContentElements {
 			$config = include $fceConfigFile->getPathname();
 			$config = $config + $defaults;
 
+			if (empty($config['CType'])) {
+				throw new \Exception('Missing CType for ' . $fceConfigFile->getFilename());
+			}
+
 			if (!$isLocalConf) {
 				// ext_tables
 
@@ -100,7 +104,7 @@ class ContentElements {
 				}
 
 				if (!$name) {
-					throw new \Exception('Missing FCE name');
+					throw new \Exception('Missing FCE name for ' . $fceConfigFile->getFilename());
 				}
 
 				ExtensionManagementUtility::addPlugin(array($name, $config['CType']), 'CType', $extensionKey);
@@ -127,6 +131,16 @@ class ContentElements {
 			// update typoscript
 			if ($config['list_type']) {
 				$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.list.20.'.$config['list_type']. "\n";
+			} else if ($config['template']) {
+				$template = $config['template'];
+
+				$templateDir = ExtensionManagementUtility::extPath($extensionKey) . 'Resources/Private/Templates/';
+				if (substr($template, 0, 4) !== 'EXT:' && file_exists($templateDir . $template)) {
+					$template = 'EXT:' . $extensionKey . '/Resources/Private/Templates/' . $template;
+				}
+
+				$typoScript .= 'tt_content.' . $config['CType'] . ' < plugin.tx_vierwdsmarty' . "\n";
+				$typoScript .= 'tt_content.' . $config['CType'] . '.settings.template = ' . $template . "\n";
 			}
 			foreach ($config['switchableControllerActions'] as $controller => $actions) {
 				$i = 1;
