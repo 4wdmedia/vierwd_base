@@ -31,11 +31,11 @@ class ContentElements {
 			GeneralUtility::callUserFunction(static::$oldProcFunc, $params, $refObj);
 		}
 
-		$params['items'][] = array('{project.name}', '--div--');
+		$params['items'][] = array('<%= project.name %>', '--div--');
 		$appendKeys = array();
 		$append = array();
 		foreach ($params['items'] as $key => $data) {
-			if (substr($data[1], 0, strlen('{project.extensionName}_')) == '{project.extensionName}_') {
+			if (substr($data[1], 0, strlen('<%= project.extensionName %>_')) == '<%= project.extensionName %>_') {
 				$appendKeys[] = $key;
 				$append[] = $data;
 			}
