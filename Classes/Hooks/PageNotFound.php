@@ -52,6 +52,9 @@ class PageNotFound {
 		$host = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 		if ($tsfe->pageNotFound == 2 && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
 			header("HTTP/1.0 403 Forbidden");
+			if (isset($_COOKIE['fe_typo_user'])) {
+				$headers[] = 'Cookie: fe_typo_user=' . $_COOKIE['fe_typo_user'];
+			}
 			$url = $host . $dirname . 'login/?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
 		} else {
 			$url = $host . $dirname . '404/';
