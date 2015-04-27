@@ -21,6 +21,9 @@ class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout
 			$parser = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser');
 
 			foreach (new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS) as $file) {
+				if (is_dir($file)) {
+					continue;
+				}
 				$content = file_get_contents($file->getPathname());
 				$parser->parse($content);
 				$key = $file->getBasename('.' . $file->getExtension());
