@@ -86,6 +86,36 @@ class ContentElements {
 			$config = include $fceConfigFile->getPathname();
 			$config = $config + $defaults;
 
+			if (!empty($config['pluginName'])) {
+				// create a new plugin
+				$pluginSignature = strtolower(str_replace('_', '', $extensionKey) . '_' . $config['pluginName']);
+				if (empty($config['CType'])) {
+					$config['CType'] = $pluginSignature;
+				}
+
+				if ($isLocalConf) {
+					ExtensionUtility::configurePlugin(
+						'Vierwd.' . $extensionKey,
+						$config['pluginName'],
+						$config['controllerActions'],
+						// non-cacheable actions
+						$config['nonCacheableActions'],
+						ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+					);
+
+					if ($pluginSignature != $config['CType']) {
+						$config['CType'] = $pluginSignature;
+						// Copy from generated plugin without lib.stdheader
+						$typoScript .= 'tmp < tt_content.' . $pluginSignature . ".20\n" .
+							"tt_content." . $config['CType'] . " < tmp\n" .
+							"tmp >\n".
+							"tt_content." . $pluginSignature . " >\n";
+					} else {
+						$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $pluginSignature . ".20\n";
+					}
+				}
+			}
+
 			if (empty($config['CType'])) {
 				throw new \Exception('Missing CType for ' . $fceConfigFile->getFilename());
 			}
@@ -125,7 +155,18 @@ class ContentElements {
 
 				$tca = $config['fullTCA'] ? $config['fullTCA'] : self::generateTCA($config);
 
+				if (ExtensionManagementUtility::isLoaded('gridelements') && strpos($tca, 'tx_gridelements_container, tx_gridelements_columns') === false) {
+					$tca .= ', tx_gridelements_container, tx_gridelements_columns';
+				}
+
 				$TCA['tt_content']['types'][$config['CType']]['showitem'] = $tca;
+
+				foreach ($config['tcaAdditions'] as $tcaAddition) {
+					$method = array_shift($tcaAddition);
+					if ($method == 'addToAllTCAtypes') {
+						ExtensionManagementUtility::addToAllTCAtypes('tt_content', $tcaAddition[0], $tcaAddition[1], $tcaAddition[2]);
+					}
+				}
 			}
 
 			// update typoscript
@@ -322,7 +363,8 @@ class ContentElements {
 		// add uid to first element
 		$idAttr = ' id="c' . $this->cObj->data['uid'] . '"';
 		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || strpos($content, $idAttr) !== false) {
-			return $content;
+			// id already present, add anchor before the element
+			return '<a' . $idAttr . '></a>' . $content;
 		}
 
 		return preg_replace('/^<([^\s>!]+)/', '<$1' . $idAttr, $content);
