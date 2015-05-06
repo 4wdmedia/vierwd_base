@@ -104,7 +104,6 @@ class ContentElements {
 					);
 
 					if ($pluginSignature != $config['CType']) {
-						$config['CType'] = $pluginSignature;
 						// Copy from generated plugin without lib.stdheader
 						$typoScript .= 'tmp < tt_content.' . $pluginSignature . ".20\n" .
 							"tt_content." . $config['CType'] . " < tmp\n" .
@@ -362,7 +361,11 @@ class ContentElements {
 
 		// add uid to first element
 		$idAttr = ' id="c' . $this->cObj->data['uid'] . '"';
-		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || strpos($content, $idAttr) !== false) {
+		if (strpos($content, $idAttr) !== false) {
+			return $content;
+		}
+
+		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content)) {
 			// id already present, add anchor before the element
 			return '<a' . $idAttr . '></a>' . $content;
 		}
