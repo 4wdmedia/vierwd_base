@@ -76,3 +76,12 @@ if (TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search'
 	});
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'][] = 'Vierwd\\VierwdBase\\Hooks\\Indexer';
 }
+
+// ****************
+// Force progressive jpegs
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Imaging\\GraphicalFunctions'] = array(
+	'className' => 'Vierwd\\VierwdBase\\Imaging\\GraphicalFunctions',
+);
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\Imaging\\GifBuilder'] = array(
+	'className' => 'Vierwd\\VierwdBase\\Imaging\\GifBuilder',
+);
