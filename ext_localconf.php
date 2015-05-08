@@ -87,3 +87,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Imaging\\Graphi
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\Imaging\\GifBuilder'] = array(
 	'className' => 'Vierwd\\VierwdBase\\Imaging\\GifBuilder',
 );
+
+// ****************
+// X-Class for SVGContentObject
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject'] = array(
+	'className' => 'Vierwd\\VierwdBase\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject',
+);
