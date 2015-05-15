@@ -21,6 +21,14 @@ class CacheBuster {
 				$publicUrl .= '?' . $resource->getModificationTime();
 			}
 
+			// Fix filename for stupid IE
+			// https://support.microsoft.com/en-us/kb/221805
+			$fileName = $resource->getName();
+			$extension = strtolower(substr($fileName, -4));
+			if ($extension === '.exe' || $extension === '.dll') {
+				$publicUrl .= '&fileName=' . $fileName;
+			}
+
 			// copied from typo3/sysext/core/Classes/Resource/ResourceStorage.php
 			if ($publicUrl !== NULL && $relativeToCurrentScript && !GeneralUtility::isValidUrl($publicUrl)) {
 				$absolutePathToContainingFolder = PathUtility::dirname(PATH_site . $publicUrl);
