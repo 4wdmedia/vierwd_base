@@ -16,9 +16,9 @@ class CacheBuster {
 		if ($storage->isPublic() && $resource instanceof Resource\FileInterface) {
 			$publicUrl = $driver->getPublicUrl($resource->getIdentifier());
 			if ($resource instanceof Resource\ProcessedFile || $resource instanceof Resource\FileReference) {
-				$publicUrl .= '?' . $resource->getOriginalFile()->getModificationTime();
+				$publicUrl .= '?_=' . $resource->getOriginalFile()->getModificationTime();
 			} else {
-				$publicUrl .= '?' . $resource->getModificationTime();
+				$publicUrl .= '?_=' . $resource->getModificationTime();
 			}
 
 			// Fix filename for stupid IE
