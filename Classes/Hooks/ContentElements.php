@@ -273,8 +273,22 @@ class ContentElements {
 			return $content;
 		}
 
-		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content)) {
-			// id already present, add anchor before the element
+		// no-cache elements (COA_INT and USER_INT are marked with <!--INT_SCRIPT.MD5-HASH--> and replaced later)
+		// if the current content starts with a no-cache element, we cannot add the id to this element
+		// Solution: Replace the Cache-Markers
+		$isINTIncScript = substr($content, 0, strlen('<!--INT_SCRIPT.')) === '<!--INT_SCRIPT.';
+		if ($isINTIncScript) {
+			$oldContent = $GLOBALS['TSFE']->content;
+			$GLOBALS['TSFE']->content = $content;
+
+			// this method replaces the markers on TSFE->content
+			$GLOBALS['TSFE']->INTincScript();
+			$content = $GLOBALS['TSFE']->content;
+			$GLOBALS['TSFE']->content = $oldContent;
+		}
+
+		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || substr($content, 0, strlen('<!--')) === '<!--') {
+			// id already present or comment -> add anchor before the element
 			return '<a' . $idAttr . '></a>' . $content;
 		}
 
