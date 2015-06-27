@@ -45,5 +45,3 @@ class LatestTYPO3 implements \TYPO3\CMS\Reports\StatusProviderInterface {
 		return $reports;
 	}
 }
-
-?>

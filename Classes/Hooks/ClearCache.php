@@ -86,7 +86,7 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 		$optionValues[] = 'complete';
 	}
 
-	public function clear_cacheCmd(array $params, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler) {
+	public function clearCacheCmd(array $params, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler) {
 		if (isset($params['cacheCmd']) && $params['cacheCmd'] == 'complete') {
 			$this->addCompleteCacheGroup();
 			$this->getCacheManager()->flushCachesInGroup('complete');

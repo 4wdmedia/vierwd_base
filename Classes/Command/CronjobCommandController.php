@@ -5,19 +5,17 @@ namespace Vierwd\VierwdBase\Command;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * A dummy Command Controller with a noop command which simply echoes the argument
- */
+ * A dummy Command Controller with a noop command which simply echoes the argument
+ */
 class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\CommandController {
 
 	/**
-	 * Send mails with errors since last run.
+	 * Send mails with errors since last run.
 	 *
 	 * @param string $receiver
-	 * @return void
-	 */
+	 * @return void
+	 */
 	public function sendMailsCommand($receiver = 'typo3.reports@4wdmedia.de') {
-		global $TYPO3_DB;
-
 		$lastRunFile = GeneralUtility::getFileAbsFileName('typo3temp/vierwd_errors.lastrun');
 
 		$lastRun = 0;
@@ -31,13 +29,13 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 		}
 
 		$fields = array('uid', 'userid', 'error', 'details', 'IP', 'tstamp', 'workspace');
-		$rows = $TYPO3_DB->exec_SELECTgetRows(
-			$select= 'sys_log.' . implode(', sys_log.', $fields) . ', be_users.username, COUNT(*) as count',
-			$from  = 'sys_log LEFT JOIN be_users ON (be_users.uid=sys_log.userid)',
-			$where = 'sys_log.type=5 AND sys_log.action=0 AND sys_log.tstamp>' . $lastRun,
-			$group = 'sys_log.tstamp, sys_log.userid, sys_log.IP, sys_log.details',
-			$order = 'sys_log.tstamp DESC',
-			$limit = '200'
+		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			$select = 'sys_log.' . implode(', sys_log.', $fields) . ', be_users.username, COUNT(*) as count',
+			$from   = 'sys_log LEFT JOIN be_users ON (be_users.uid=sys_log.userid)',
+			$where  = 'sys_log.type=5 AND sys_log.action=0 AND sys_log.tstamp>' . $lastRun,
+			$group  = 'sys_log.tstamp, sys_log.userid, sys_log.IP, sys_log.details',
+			$order  = 'sys_log.tstamp DESC',
+			$limit  = '200'
 		);
 
 		if (!$rows) {
@@ -98,15 +96,13 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 	}
 
 	protected function getDomain() {
-		global $TYPO3_DB;
-
-		$domain = $TYPO3_DB->exec_SELECTgetSingleRow(
-			$select= 'domainName',
-			$from  = 'sys_domain',
-			$where = '1' . \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('sys_domain'),
-			$group = '',
-			$order = 'sorting',
-			$limit = ''
+		$domain = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+			$select = 'domainName',
+			$from   = 'sys_domain',
+			$where  = '1' . \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('sys_domain'),
+			$group  = '',
+			$order  = 'sorting',
+			$limit  = ''
 		);
 
 		return $domain ? $domain['domainName'] : false;

@@ -13,7 +13,7 @@ class GraphicalFunctions extends \TYPO3\CMS\Core\Imaging\GraphicalFunctions {
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
 	}
 
-	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = array(), $mustCreate = TRUE) {
-		return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
-	}
+	// public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = array(), $mustCreate = TRUE) {
+	// 	return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
+	// }
 }

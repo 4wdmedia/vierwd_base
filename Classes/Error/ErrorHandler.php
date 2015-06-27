@@ -31,7 +31,7 @@ class ErrorHandler extends \TYPO3\CMS\Core\Error\ErrorHandler {
 		// check if it's possible to show notification with growl
 		$growl = trim(`which growl`);
 		if ($growl) {
-			shell_exec($growl . ' -nosticky '.escapeshellarg($logMessage));
+			shell_exec($growl . ' -nosticky ' . escapeshellarg($logMessage));
 		}
 	}
 }

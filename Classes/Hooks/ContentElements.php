@@ -26,7 +26,7 @@ class ContentElements {
 	/**
 	 * process the CType and sort custom FCEs into a special group
 	 */
-	public function process_CType($params, $refObj) {
+	public function processCType($params, $refObj) {
 		if (static::$oldProcFunc) {
 			GeneralUtility::callUserFunction(static::$oldProcFunc, $params, $refObj);
 		}
@@ -60,10 +60,9 @@ class ContentElements {
 	 * add Content Elements
 	 *
 	 * @param string $extensionKey
+	 * @throws \Exception if the FCE configuration is invalid (missing CType or missing name)
 	 */
 	static public function addFCEs($extensionKey, $isLocalConf = false) {
-		global $TCA;
-
 		// Groups in planquadrat
 		// https://intern.4wdmedia.de/svn/14013_planquadrat/InBearbeitung/Relaunch-Website_1_1/Webseite/typo3/typo3conf/ext/vierwd_planquadrat/Classes/Hooks/ContentElements.php
 
@@ -106,9 +105,9 @@ class ContentElements {
 					if ($pluginSignature != $config['CType']) {
 						// Copy from generated plugin without lib.stdheader
 						$typoScript .= 'tmp < tt_content.' . $pluginSignature . ".20\n" .
-							"tt_content." . $config['CType'] . " < tmp\n" .
-							"tmp >\n".
-							"tt_content." . $pluginSignature . " >\n";
+							'tt_content.' . $config['CType'] . " < tmp\n" .
+							"tmp >\n" .
+							'tt_content.' . $pluginSignature . " >\n";
 					} else {
 						$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $pluginSignature . ".20\n";
 					}
@@ -124,7 +123,7 @@ class ContentElements {
 
 				$name = $config['name'];
 				if (empty($name) && !empty($config['list_type'])) {
-					foreach ($TCA['tt_content']['columns']['list_type']['config']['items'] as $plugin) {
+					foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $plugin) {
 						if ($plugin[1] == $config['list_type']) {
 							$name = $plugin[0];
 							break;
@@ -170,7 +169,7 @@ class ContentElements {
 
 			// update typoscript
 			if ($config['list_type']) {
-				$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.list.20.'.$config['list_type']. "\n";
+				$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.list.20.' . $config['list_type'] . "\n";
 			} else if ($config['template']) {
 				$template = $config['template'];
 

@@ -94,9 +94,9 @@ class JavascriptOptimization {
 				if ($properties['compress']) {
 					$error = '';
 					$params['jsInline'][$name]['code'] = GeneralUtility::minifyJavaScript($properties['code'], $error);
-					if ($error) {
-						// $pageRenderer->compressError .= 'Error with minify JS Inline Block "' . $name . '": ' . $error . LF;
-					}
+					// if ($error) {
+					// 	$pageRenderer->compressError .= 'Error with minify JS Inline Block "' . $name . '": ' . $error . LF;
+					// }
 				}
 			}
 		}

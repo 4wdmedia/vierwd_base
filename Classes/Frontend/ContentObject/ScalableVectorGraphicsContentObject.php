@@ -28,6 +28,7 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 	 *
 	 * @param array $conf Array of TypoScript properties
 	 * @return string Empty string (the cObject only sets internal data!)
+	 * @throws \Exception if the SVG is invalid
 	 */
 	public function render($conf = array()) {
 		if (!empty($conf['if.']) && !$this->cObj->checkIf($conf['if.'])) {

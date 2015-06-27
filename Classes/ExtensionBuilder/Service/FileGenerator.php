@@ -28,7 +28,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 			$standAloneView->setLayoutRootPath($this->codeTemplateRootPath);
 			$standAloneView->setPartialRootPath($this->codeTemplateRootPath . '/Partials');
 			$standAloneView->setFormat('txt');
-			$templatePathAndFilename = $this->codeTemplateRootPath .  $filePath;
+			$templatePathAndFilename = $this->codeTemplateRootPath . $filePath;
 			$standAloneView->setTemplatePathAndFilename($templatePathAndFilename);
 		}
 
@@ -41,7 +41,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 	protected function addLicenseHeader($classObject) {
 		$comments = $classObject->getComments();
 		$needsLicenseHeader = TRUE;
-		foreach($comments as $comment) {
+		foreach ($comments as $comment) {
 			// we do not use GPL
 			if (strpos($comment, 'Copyright notice') !== FALSE) {
 				$needsLicenseHeader = FALSE;

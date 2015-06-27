@@ -52,7 +52,7 @@ class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout
 	 * @param integer $pageId
 	 * @return NULL|BackendLayout
 	 */
-	public function getBackendLayout($identifier, $pageId){
+	public function getBackendLayout($identifier, $pageId) {
 		$backendLayout = NULL;
 		if (array_key_exists($identifier, $this->backendLayouts)) {
 			return $this->createBackendLayout($this->backendLayouts[$identifier]);
