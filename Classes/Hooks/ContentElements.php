@@ -157,7 +157,7 @@ class ContentElements {
 					$tca .= ', tx_gridelements_container, tx_gridelements_columns';
 				}
 
-				$TCA['tt_content']['types'][$config['CType']]['showitem'] = $tca;
+				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
 
 				foreach ($config['tcaAdditions'] as $tcaAddition) {
 					$method = array_shift($tcaAddition);
