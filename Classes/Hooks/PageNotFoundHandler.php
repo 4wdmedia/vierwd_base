@@ -19,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @package vierwd_base
  */
-class PageNotFound {
+class PageNotFoundHandler {
 
 	/**
 	 * page not found action.
