@@ -13,7 +13,8 @@ class GifBuilder extends \TYPO3\CMS\Frontend\Imaging\GifBuilder {
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
 	}
 
-	// public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = array(), $mustCreate = TRUE) {
-	// 	return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
-	// }
+	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = array(), $mustCreate = TRUE) {
+		// mustCreate has another default value
+		return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
+	}
 }
