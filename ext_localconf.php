@@ -11,12 +11,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\F
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\FileGenerator',
 );
 
-// ****************
-// X-Class for StorageRepository to force case-sensitive FileSystem
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\StorageRepository'] = array(
-	'className' => 'Vierwd\\VierwdBase\\Resource\\StorageRepository',
-);
-
 // *****************************
 // disable https on dev-machines
 if (!empty($_SERVER['4WD_CONFIG'])) {
