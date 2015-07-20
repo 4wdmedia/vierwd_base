@@ -319,16 +319,10 @@ class ContentElements {
 
 		// no-cache elements (COA_INT and USER_INT are marked with <!--INT_SCRIPT.MD5-HASH--> and replaced later)
 		// if the current content starts with a no-cache element, we cannot add the id to this element
-		// Solution: Replace the Cache-Markers
+		// Solution: Wrap the cache-marker
 		$isINTIncScript = substr($content, 0, strlen('<!--INT_SCRIPT.')) === '<!--INT_SCRIPT.';
 		if ($isINTIncScript) {
-			$oldContent = $GLOBALS['TSFE']->content;
-			$GLOBALS['TSFE']->content = $content;
-
-			// this method replaces the markers on TSFE->content
-			$GLOBALS['TSFE']->INTincScript();
-			$content = $GLOBALS['TSFE']->content;
-			$GLOBALS['TSFE']->content = $oldContent;
+			return '<div' . $idAttr . '>' . $content . '</div>';
 		}
 
 		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || substr($content, 0, strlen('<!--')) === '<!--') {
