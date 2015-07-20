@@ -23,6 +23,9 @@ class ContentElements {
 
 	public static $oldProcFunc;
 
+	protected static $groups = [];
+	protected static $groupNames = ['vierwd' => 'FORWARD MEDIA'];
+
 	/**
 	 * process the CType and sort custom FCEs into a special group
 	 */
@@ -31,26 +34,35 @@ class ContentElements {
 			GeneralUtility::callUserFunction(static::$oldProcFunc, $params, $refObj);
 		}
 
-		$params['items'][] = array('<%= project.name %>', '--div--');
-		$appendKeys = array();
-		$append = array();
-		foreach ($params['items'] as $key => $data) {
-			if (substr($data[1], 0, strlen('<%= project.extensionName %>_')) == '<%= project.extensionName %>_') {
-				$appendKeys[] = $key;
-				$append[] = $data;
+		$CTypes = [];
+		foreach (self::$groups as $groupKey => $groupCTypes) {
+			foreach ($groupCTypes as $CType) {
+				$CTypes[$CType] = $groupKey;
 			}
 		}
 
-		foreach ($appendKeys as $key) {
-			unset($params['items'][$key]);
-		}
+		$groups = array_combine(array_keys(self::$groups), array_fill(0, count(self::$groups), []));
 
-		usort($append, function($plugin1, $plugin2) {
-			return strnatcasecmp($plugin1[0], $plugin2[0]);
+		$params['items'] = array_filter($params['items'], function($element) use (&$groups, $CTypes) {
+			$CType = $element[1];
+
+			if (isset($CTypes[$CType])) {
+				$groupKey = $CTypes[$CType];
+				$groups[$groupKey][] = $element;
+				return false;
+			}
+
+			return true;
 		});
 
-		foreach ($append as $data) {
-			$params['items'][] = $data;
+		foreach ($groups as $groupKey => $elements) {
+			$params['items'][] = array(self::$groupNames[$groupKey], '--div--');
+
+			usort($elements, function($plugin1, $plugin2) {
+				return strnatcasecmp($plugin1[0], $plugin2[0]);
+			});
+
+			$params['items'] = array_merge($params['items'], $elements);
 		}
 
 		return $params['items'];
@@ -73,6 +85,22 @@ class ContentElements {
 
 		$defaults = include $fceDir . '_defaults.php';
 
+		$groupsFile = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/_groups.php';
+		if (!$isLocalConf && file_exists($groupsFile)) {
+			$groups = include $groupsFile;
+
+			self::$groupNames = $groups + self::$groupNames;
+
+			foreach ($groups as $key => $name) {
+				$pageTS .= 'mod.wizards.newContentElement.wizardItems.' . $key . ' {' . "\n" .
+				'	header = ' . $name . "\n" .
+				'	show = *' . "\n" .
+				'}' . "\n";
+			}
+		}
+
+		$FCEs = [];
+
 		foreach (new \DirectoryIterator($fceDir) as $fceConfigFile) {
 			if ($fceConfigFile->isDot() || $fceConfigFile->isDir() || substr($fceConfigFile->getFilename(), 0, 1) == '_') {
 				continue;
@@ -84,7 +112,20 @@ class ContentElements {
 
 			$config = include $fceConfigFile->getPathname();
 			$config = $config + $defaults;
+			$config['filename'] = $fceConfigFile->getFilename();
 
+			if (empty($config['group'])) {
+				$config['group'] = 'vierwd';
+			}
+
+			$FCEs[] = $config;
+		}
+
+		usort($FCEs, function($FCE1, $FCE2) {
+			return strcasecmp($FCE1['name'], $FCE2['name']);
+		});
+
+		foreach ($FCEs as $config) {
 			if (!empty($config['pluginName'])) {
 				// create a new plugin
 				$pluginSignature = strtolower(str_replace('_', '', $extensionKey) . '_' . $config['pluginName']);
@@ -115,7 +156,7 @@ class ContentElements {
 			}
 
 			if (empty($config['CType'])) {
-				throw new \Exception('Missing CType for ' . $fceConfigFile->getFilename());
+				throw new \Exception('Missing CType for ' . $config['filename']);
 			}
 
 			if (!$isLocalConf) {
@@ -132,7 +173,7 @@ class ContentElements {
 				}
 
 				if (!$name) {
-					throw new \Exception('Missing FCE name for ' . $fceConfigFile->getFilename());
+					throw new \Exception('Missing FCE name for ' . $config['filename']);
 				}
 
 				ExtensionManagementUtility::addPlugin(array($name, $config['CType']), 'CType', $extensionKey);
@@ -142,7 +183,7 @@ class ContentElements {
 				}
 
 				$pageTS .=
-					'mod.wizards.newContentElement.wizardItems.vierwd.elements.' . $config['CType'] . ' {' . "\n" .
+					'mod.wizards.newContentElement.wizardItems.' . $config['group'] . '.elements.' . $config['CType'] . ' {' . "\n" .
 					'	icon = ' . $config['icon'] . "\n" .
 					'	title = ' . $name . "\n" .
 					'	description = ' . $config['description'] . "\n" .
@@ -191,6 +232,10 @@ class ContentElements {
 				foreach ($actions as $action) {
 					$typoScript .= 'tt_content.' . $config['CType'] . '.switchableControllerActions.' . $controller . '.' . $i++ . ' = ' . $action . "\n";
 				}
+			}
+
+			if ($isLocalConf) {
+				self::$groups[$config['group']][] = $config['CType'];
 			}
 		}
 
