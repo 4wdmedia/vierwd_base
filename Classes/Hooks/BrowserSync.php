@@ -8,6 +8,10 @@ class BrowserSync {
 			return;
 		}
 
+		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['browserSync']) && !$TSFE->config['config.']['tx_vierwd.']['browserSync']) {
+			return;
+		}
+
 		// check if the port 3000 is open
 		if (!trim(`lsof -i :3000 -P | grep "^node.*3000"`)) {
 			return;
