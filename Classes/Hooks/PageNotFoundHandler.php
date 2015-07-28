@@ -50,11 +50,13 @@ class PageNotFoundHandler {
 		}
 
 		$host = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
+		$cookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
+		if (isset($_COOKIE[$cookieName])) {
+			$headers[] = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
+		}
+		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
 		if ($tsfe->pageNotFound == 2 && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
 			header("HTTP/1.0 403 Forbidden");
-			if (isset($_COOKIE['fe_typo_user'])) {
-				$headers[] = 'Cookie: fe_typo_user=' . $_COOKIE['fe_typo_user'];
-			}
 			$url = $host . $dirname . 'login/?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
 		} else {
 			$url = $host . $dirname . '404/';
@@ -62,6 +64,11 @@ class PageNotFoundHandler {
 		//$report = array();
 		$report = null;
 		$result = GeneralUtility::getUrl($url, 0, $headers, $report);
+		if ($GLOBALS['BE_USER']) {
+			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($param['reasonText']), $result);
+		} else {
+			$result = str_replace('%REASON%', '', $result);
+		}
 		return $result;
 	}
 }
