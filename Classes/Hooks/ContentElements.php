@@ -23,7 +23,7 @@ class ContentElements {
 
 	public static $oldProcFunc;
 
-	protected static $groups = [];
+	protected static $groups = ['vierwd' => []];
 	protected static $groupNames = ['vierwd' => 'FORWARD MEDIA'];
 
 	/**
