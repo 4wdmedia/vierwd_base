@@ -1,9 +1,11 @@
 <?php
 
+<% if (project.typo3Version < "7.0") { %>
 if (version_compare(PHP_VERSION, '5.4.0') <= 0) {
 	throw new \Exception('Base extension needs at least PHP 5.4');
 }
 require_once PATH_site . '/vendor/autoload.php';
+<% } %>
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = array('paths' => array());
 
@@ -95,3 +97,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPo
 // **************
 // Filter files/folders
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = array('Vierwd\\VierwdBase\\Resource\\FilterFiles', 'filterFilesCallback');
+
+// **************
+// Enable error handler
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['errorHandler'] = 'Vierwd\\VierwdBase\\Error\\ErrorHandler';
