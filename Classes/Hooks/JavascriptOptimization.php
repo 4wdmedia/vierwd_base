@@ -151,7 +151,7 @@ class JavascriptOptimization {
 	 */
 	protected function getCompressor() {
 		if ($this->compressor === NULL) {
-			$this->compressor = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\ResourceCompressor');
+			$this->compressor = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceCompressor::class);
 		}
 		return $this->compressor;
 	}

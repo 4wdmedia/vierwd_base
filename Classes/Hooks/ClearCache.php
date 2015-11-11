@@ -99,6 +99,6 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 	 * @return \TYPO3\CMS\Core\Cache\CacheManager
 	 */
 	protected function getCacheManager() {
-		return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager');
+		return GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class);
 	}
 }

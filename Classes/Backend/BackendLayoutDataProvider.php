@@ -18,7 +18,7 @@ class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout
 
 		$paths = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'];
 		foreach ($paths as $path) {
-			$parser = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser');
+			$parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser::class);
 
 			foreach (new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS) as $file) {
 				if (is_dir($file)) {

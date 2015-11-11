@@ -9,7 +9,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 		$codeTemplateAdditionalRootPath = $this->settings['codeTemplateAdditionalRootPath'];
 		if ($codeTemplateAdditionalRootPath) {
-			$standAloneView = $this->objectManager->get('\\Vierwd\\VierwdBase\\View\\MultiSourceStandaloneView');
+			$standAloneView = $this->objectManager->get(\Vierwd\VierwdBase\View\MultiSourceStandaloneView::class);
 			$standAloneView->setTemplatePath(array(
 				$codeTemplateAdditionalRootPath,
 				$this->codeTemplateRootPath
@@ -24,7 +24,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 			$standAloneView->setFilename($filePath);
 		} else {
-			$standAloneView = $this->objectManager->get('\\TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+			$standAloneView = $this->objectManager->get(\TYPO3\CMS\Fluid\View\StandaloneView::class);
 			$standAloneView->setLayoutRootPath($this->codeTemplateRootPath);
 			$standAloneView->setPartialRootPath($this->codeTemplateRootPath . '/Partials');
 			$standAloneView->setFormat('txt');

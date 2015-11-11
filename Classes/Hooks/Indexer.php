@@ -13,7 +13,7 @@ class Indexer {
 			$pObj->content = str_replace($pObj->config['config']['spamProtectEmailAddresses_atSubst'], '@', $pObj->content);
 		}
 
-		$_procObj = GeneralUtility::makeInstance('TYPO3\\CMS\\IndexedSearch\\Indexer');
+		$_procObj = GeneralUtility::makeInstance(\TYPO3\CMS\IndexedSearch\Indexer::class);
 		$_procObj->hook_indexContent($pObj);
 
 		$pObj->content = $contentBefore;

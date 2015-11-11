@@ -22,7 +22,7 @@ class LatestTYPO3 implements \TYPO3\CMS\Reports\StatusProviderInterface {
 		$value = TYPO3_version;
 		$message = '';
 
-		$versions = GeneralUtility::getUrl('http://get.typo3.org/json');
+		$versions = GeneralUtility::getUrl('https://get.typo3.org/json');
 		if (!$versions) {
 			$message = 'Could not get TYPO3 versions.';
 			$severity = \TYPO3\CMS\Reports\Status::ERROR;
@@ -37,7 +37,7 @@ class LatestTYPO3 implements \TYPO3\CMS\Reports\StatusProviderInterface {
 			}
 		}
 
-		$report = GeneralUtility::makeInstance('TYPO3\\CMS\\Reports\\Status', $title, $value, $message, $severity);
+		$report = GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Status::class, $title, $value, $message, $severity);
 
 		$reports = array(
 			$report,

@@ -32,6 +32,10 @@ class Utility {
 
 		$file = GeneralUtility::getFileAbsFileName($file);
 
+		if (!$file || !file_exists($file)) {
+			return '';
+		}
+
 		return file_get_contents($file);
 	}
 
@@ -49,7 +53,7 @@ class Utility {
 		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
 
-		$typoScriptService = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\TypoScriptService');
+		$typoScriptService = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\TypoScriptService::class);
 		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($params['meta.']);
 		foreach ($metaTags as $key => $data) {
 			if (is_array($data)) {
