@@ -80,7 +80,7 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 			'id' => 'complete',
 			'title' => 'Alle Caches leeren',
 			'description' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xlf:flushSystemCachesDescription', TRUE),
-			'href' => 'tce_db.php?vC=' . $GLOBALS['BE_USER']->veriCode() . '&cacheCmd=complete&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
+			'href' => BackendUtility::getModuleUrl('tce_db', ['vC' => $GLOBALS['BE_USER']->veriCode(), 'cacheCmd' => 'complete', 'ajaxCall' => 1]),
 			'icon' => IconUtility::getSpriteIcon('actions-system-cache-clear-impact-high')
 		);
 		$optionValues[] = 'complete';
