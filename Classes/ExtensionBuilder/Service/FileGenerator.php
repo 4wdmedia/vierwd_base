@@ -2,39 +2,35 @@
 
 namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 	public function renderTemplate($filePath, $variables) {
+		$codeTemplateAdditionalRootPath = GeneralUtility::getFileAbsFileName($this->settings['codeTemplateAdditionalRootPath']);
+
 		$variables['settings'] = $this->settings;
-
-		$codeTemplateAdditionalRootPath = $this->settings['codeTemplateAdditionalRootPath'];
-		if ($codeTemplateAdditionalRootPath) {
-			$standAloneView = $this->objectManager->get(\Vierwd\VierwdBase\View\MultiSourceStandaloneView::class);
-			$standAloneView->setTemplatePath(array(
-				$codeTemplateAdditionalRootPath,
-				$this->codeTemplateRootPath
-			));
-			$standAloneView->setLayoutRootPath($this->codeTemplateRootPath);
-			$standAloneView->setPartialRootPath($this->codeTemplateRootPath . '/Partials');
-
-			$standAloneView->setAdditionalLayoutRootPath($codeTemplateAdditionalRootPath);
-			$standAloneView->setAdditionalPartialRootPath($codeTemplateAdditionalRootPath . '/Partials');
-
-			$standAloneView->setFormat('txt');
-
-			$standAloneView->setFilename($filePath);
+		/* @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
+		$standAloneView = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
+		$standAloneView->setLayoutRootPaths(array(
+			$codeTemplateAdditionalRootPath,
+			$this->codeTemplateRootPath,
+		));
+		$standAloneView->setPartialRootPaths(array(
+			$codeTemplateAdditionalRootPath . 'Partials',
+			$this->codeTemplateRootPath . 'Partials',
+		));
+		$standAloneView->setFormat('txt');
+		if (file_exists($codeTemplateAdditionalRootPath . $filePath)) {
+			$templatePathAndFilename = $codeTemplateAdditionalRootPath .  $filePath;
 		} else {
-			$standAloneView = $this->objectManager->get(\TYPO3\CMS\Fluid\View\StandaloneView::class);
-			$standAloneView->setLayoutRootPath($this->codeTemplateRootPath);
-			$standAloneView->setPartialRootPath($this->codeTemplateRootPath . '/Partials');
-			$standAloneView->setFormat('txt');
-			$templatePathAndFilename = $this->codeTemplateRootPath . $filePath;
-			$standAloneView->setTemplatePathAndFilename($templatePathAndFilename);
+			$templatePathAndFilename = $this->codeTemplateRootPath .  $filePath;
 		}
-
+		$standAloneView->setTemplatePathAndFilename($templatePathAndFilename);
 		$standAloneView->assignMultiple($variables);
 		$renderedContent = $standAloneView->render();
-			// remove all double empty lines (coming from fluid)
+
+		// remove all double empty lines (coming from fluid)
 		return preg_replace('/^\\s*\\n[\\t ]*$/m', '', $renderedContent);
 	}
 
