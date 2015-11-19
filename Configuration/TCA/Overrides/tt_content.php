@@ -25,3 +25,5 @@ unset($wizards);
 // Sort Content Elements
 \Vierwd\VierwdBase\Hooks\ContentElements::$oldProcFunc = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemsProcFunc'];
 $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemsProcFunc'] = 'Vierwd\\VierwdBase\\Hooks\\ContentElements->processCType';
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames', 'textmedia', 'replace:layout');
