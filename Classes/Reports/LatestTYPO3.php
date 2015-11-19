@@ -28,11 +28,19 @@ class LatestTYPO3 implements \TYPO3\CMS\Reports\StatusProviderInterface {
 			$severity = \TYPO3\CMS\Reports\Status::ERROR;
 		} else {
 			$versions = json_decode($versions, true);
-			if (!isset($versions[TYPO3_branch])) {
+			$branch = TYPO3_branch;
+			if (!isset($versions[$branch])) {
+				// strip off the last part of the version
+				$branch = explode('.', $branch);
+				array_pop($branch);
+				$branch = implode('.', $branch);
+			}
+
+			if (!isset($versions[$branch])) {
 				$message = 'Unknown TYPO3 branch: ' . TYPO3_branch;
 				$severity = \TYPO3\CMS\Reports\Status::ERROR;
-			} else if ($versions[TYPO3_branch]['stable'] != TYPO3_version) {
-				$message = 'Not on latest TYPO3 version: ' . $versions[TYPO3_branch]['stable'];
+			} else if ($versions[$branch]['stable'] != TYPO3_version) {
+				$message = 'Not on latest TYPO3 version: ' . $versions[$branch]['stable'];
 				$severity = \TYPO3\CMS\Reports\Status::ERROR;
 			}
 		}
