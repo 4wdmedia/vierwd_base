@@ -184,7 +184,7 @@ class ContentElements {
 
 				$pageTS .=
 					'mod.wizards.newContentElement.wizardItems.' . $config['group'] . '.elements.' . $config['CType'] . ' {' . "\n" .
-					'	icon = ' . $config['icon'] . "\n" .
+					'	iconIdentifier = ' . $config['iconIdentifier'] . "\n" .
 					'	title = ' . $name . "\n" .
 					'	description = ' . $config['description'] . "\n" .
 					'	tt_content_defValues {' . "\n" .
@@ -253,16 +253,16 @@ class ContentElements {
 
 		// bodytext,richtext,image,fullheaders
 		if (in_array('fullheaders', $tcaType)) {
-			$header = '--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.headers;headers,';
+			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.headers;headers,';
 		} else if (in_array('simpleheaders', $tcaType)) {
-			$header = '--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.header;header,';
+			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.header;header,';
 		} else {
 			$header = 'header;LLL:EXT:cms/locallang_ttc.xlf:header.ALT.div_formlabel,';
 		}
 
 		$bodytext = '';
 		if (in_array('bodytext', $tcaType) || in_array('richtext', $tcaType)) {
-			$bodytext = 'bodytext;LLL:EXT:cms/locallang_ttc.xml:bodytext_formlabel';
+			$bodytext = 'bodytext;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:bodytext_formlabel';
 
 			if (in_array('richtext', $tcaType)) {
 				$bodytext .= ';;richtext:rte_transform[flag=rte_enabled|mode=ts_css]';
@@ -271,10 +271,14 @@ class ContentElements {
 			$bodytext .= ',';
 		}
 
-		if (in_array('image', $tcaType)) {
-			$image = '--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.images,
+		if (in_array('media', $tcaType)) {
+			$image = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media,
+				assets,
+				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.imagelinks;imagelinks,';
+		} else if (in_array('image', $tcaType)) {
+			$image = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.images,
 				image,
-				--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.imagelinks;imagelinks,';
+				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.imagelinks;imagelinks,';
 		} else {
 			$image = '';
 		}
@@ -285,17 +289,17 @@ class ContentElements {
 		}
 
 		$tca = '
-				--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.general;general,
+				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,
 				' . $header . '
 				' . $bodytext . '
 				' . $flexform . '
 				' . $image . '
-			--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.appearance,
-				--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.frames;frames,
-			--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,
-				--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.visibility;visibility,
-				--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.access;access,
-			--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.extended';
+			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,
+				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames,
+			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
+				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,
+				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
+			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended';
 
 		return $tca;
 	}
