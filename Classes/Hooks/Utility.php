@@ -56,14 +56,44 @@ class Utility {
 		$typoScriptService = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\TypoScriptService::class);
 		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($params['meta.']);
 		foreach ($metaTags as $key => $data) {
+			$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
+			$required = !empty($data['required']);
+
 			if (is_array($data)) {
+				// check if all keys are numeric
+				$onlyNumericKeys = !array_filter(array_keys($data), function($key) {
+					return !is_integer($key);
+				});
+
+				if ($onlyNumericKeys) {
+					// process the keys and output the tag multiple times
+					ksort($data);
+					foreach ($data as $subkey => $value) {
+						if (is_array($value)) {
+							$nodeValue = isset($value['_typoScriptNodeValue']) ? $value['_typoScriptNodeValue'] : '';
+							$value = $this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.'][$subkey . '.']);
+						}
+
+						if (!$value && $required) {
+							continue;
+						}
+
+						$pageRenderer->addMetaTag(
+							'<meta ' . $attribute . '="' . $key . '" content="' . htmlspecialchars($value) . '"' . $endingSlash . '>'
+						);
+					}
+					continue;
+				}
+
 				$nodeValue = isset($data['_typoScriptNodeValue']) ? $data['_typoScriptNodeValue'] : '';
 				$value = trim($this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.']));
 			} else {
 				$value = $data;
 			}
 
-			$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
+			if (!$value && $required) {
+				continue;
+			}
 
 			$pageRenderer->addMetaTag(
 				'<meta ' . $attribute . '="' . $key . '" content="' . htmlspecialchars($value) . '"' . $endingSlash . '>'
