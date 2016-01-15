@@ -94,3 +94,5 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = array('V
 // **************
 // Enable error handler
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['errorHandler'] = 'Vierwd\\VierwdBase\\Error\\ErrorHandler';
+
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][] = 'Vierwd\\VierwdBase\\Hooks\\BaseURL->setLocalBaseUrl';
