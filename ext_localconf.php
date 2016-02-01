@@ -6,6 +6,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\F
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\FileGenerator',
 );
 
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\Printer'] = array(
+	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\Printer',
+);
+
 // *****************************
 // disable https on dev-machines
 if (!empty($_SERVER['4WD_CONFIG'])) {
