@@ -79,9 +79,9 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 
 			// always add the file name as class name of the root element
 			if ($document->documentElement->hasAttribute('class')) {
-				$document->documentElement->setAttribute('class', $document->documentElement->getAttribute('class') . ' ' . $identifier);
+				$document->documentElement->setAttribute('class', $document->documentElement->getAttribute('class') . ' svg ' . $identifier);
 			} else {
-				$document->documentElement->setAttribute('class', $identifier);
+				$document->documentElement->setAttribute('class', 'svg ' . $identifier);
 			}
 
 			$symbol = self::$fullSvg->createElement('symbol');
@@ -110,7 +110,7 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			$use->setAttribute('xlink:href', '#' . $identifier);
 			$svg->appendChild($use);
 		} else {
-			$svg->setAttribute('class', $identifier);
+			$svg->setAttribute('class', 'svg ' . $identifier);
 
 			// use the element directly
 			foreach ($symbol->childNodes as $child) {
@@ -119,11 +119,11 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			}
 		}
 
-		if ($symbol->hasAttribute('width')) {
-			$svg->setAttribute('width', $symbol->getAttribute('width'));
+		if ($width || $symbol->hasAttribute('width')) {
+			$svg->setAttribute('width', $width ?: $symbol->getAttribute('width'));
 		}
-		if ($symbol->hasAttribute('height')) {
-			$svg->setAttribute('height', $symbol->getAttribute('height'));
+		if ($height || $symbol->hasAttribute('height')) {
+			$svg->setAttribute('height', $height ?: $symbol->getAttribute('height'));
 		}
 		if ($symbol->hasAttribute('viewBox')) {
 			$svg->setAttribute('viewBox', $symbol->getAttribute('viewBox'));
