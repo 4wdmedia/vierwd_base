@@ -95,6 +95,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPo
 // Filter files/folders
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = array('Vierwd\\VierwdBase\\Resource\\FilterFiles', 'filterFilesCallback');
 
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver'] = array(
+	'className' => 'Vierwd\\VierwdBase\\Resource\\LocalDriver',
+);
+
 // **************
 // Enable error handler
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['errorHandler'] = 'Vierwd\\VierwdBase\\Error\\ErrorHandler';
