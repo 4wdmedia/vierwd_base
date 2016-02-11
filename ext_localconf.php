@@ -44,7 +44,7 @@ $TYPO3_CONF_VARS['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'Vierwd\
 
 // ***************
 // eID for TYPO3 Version
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = 'EXT:' . $_EXTKEY . '/typo3version.php';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = 'Vierwd\\VierwdBase\\Controller\\Typo3Version::main';
 
 // **************
 // Add Error command controller
