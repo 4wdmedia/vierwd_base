@@ -56,7 +56,7 @@ class PageNotFoundHandler {
 		}
 		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
 		if ($tsfe->pageNotFound == 2 && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
-			header("HTTP/1.0 403 Forbidden");
+			header('HTTP/1.0 403 Forbidden');
 			$url = $host . $dirname . 'login/?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
 		} else {
 			$url = $host . $dirname . '404/';

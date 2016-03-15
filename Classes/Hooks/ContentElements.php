@@ -179,7 +179,10 @@ class ContentElements {
 				ExtensionManagementUtility::addPlugin(array($name, $config['CType']), 'CType', $extensionKey);
 
 				if ($config['flexform']) {
-					ExtensionManagementUtility::addPiFlexFormValue('*', 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'], $config['CType']);
+					if (substr($config['flexform'], 0, 5) !== 'FILE:') {
+						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
+					}
+					ExtensionManagementUtility::addPiFlexFormValue('*', $config['flexform'], $config['CType']);
 				}
 
 				$pageTS .=
@@ -199,6 +202,13 @@ class ContentElements {
 				}
 
 				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
+				if (in_array('richtext', explode(',', $config['tcaType']))) {
+					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
+						'bodytext' => [
+							'defaultExtras' => 'richtext:rte_transform[mode=ts_css]',
+						],
+					];
+				}
 
 				foreach ($config['tcaAdditions'] as $tcaAddition) {
 					$method = array_shift($tcaAddition);
@@ -262,13 +272,7 @@ class ContentElements {
 
 		$bodytext = '';
 		if (in_array('bodytext', $tcaType) || in_array('richtext', $tcaType)) {
-			$bodytext = 'bodytext;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:bodytext_formlabel';
-
-			if (in_array('richtext', $tcaType)) {
-				$bodytext .= ';;richtext:rte_transform[flag=rte_enabled|mode=ts_css]';
-			}
-
-			$bodytext .= ',';
+			$bodytext = 'bodytext;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:bodytext_formlabel,';
 		}
 
 		if (in_array('media', $tcaType)) {

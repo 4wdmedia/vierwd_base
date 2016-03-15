@@ -25,7 +25,7 @@ class CacheBuster {
 			// https://support.microsoft.com/en-us/kb/221805
 			$fileName = $resource->getName();
 			$extension = strtolower(substr($fileName, -4));
-			if ($extension === '.exe' || $extension === '.dll') {
+			if ($extension === '.exe' || $extension === '.dll' || $extension === '.zip') {
 				$publicUrl .= '&fileName=' . $fileName;
 			}
 
