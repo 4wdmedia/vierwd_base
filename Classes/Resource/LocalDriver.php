@@ -8,7 +8,7 @@ class LocalDriver extends \TYPO3\CMS\Core\Resource\Driver\LocalDriver {
 		$fileName = parent::sanitizeFileName($fileName, $charset);
 
 		$pathinfo = pathinfo($fileName);
-		if ($pathinfo['extension'] !== $fileName && strtolower($pathinfo['extension']) !== $pathinfo['extension']) {
+		if ($pathinfo['extension'] && $pathinfo['extension'] !== $fileName && strtolower($pathinfo['extension']) !== $pathinfo['extension']) {
 			$fileName = $pathinfo['filename'] . '.' . strtolower($pathinfo['extension']);
 		}
 
