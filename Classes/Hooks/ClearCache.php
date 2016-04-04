@@ -87,9 +87,24 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 	}
 
 	public function clearCacheCmd(array $params, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler) {
-		if (isset($params['cacheCmd']) && $params['cacheCmd'] == 'complete') {
+		if (!isset($params['cacheCmd'])) {
+			return;
+		}
+
+		$cacheCmd = $params['cacheCmd'];
+
+		if ($cacheCmd == 'complete') {
 			$this->addCompleteCacheGroup();
 			$this->getCacheManager()->flushCachesInGroup('complete');
+
+			if (file_exists(PATH_typo3conf . 'realurl_autoconf.php')) {
+				unlink(PATH_typo3conf . 'realurl_autoconf.php');
+			}
+		} else if (isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheCmd])) {
+			if ($this->getCacheManager()->getCache($cacheCmd)) {
+				// flush only one specific cache
+				$this->getCacheManager()->getCache($cacheCmd)->flush();
+			}
 		}
 	}
 
