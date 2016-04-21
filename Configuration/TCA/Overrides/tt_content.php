@@ -3,6 +3,9 @@
 // Header is a required field
 $GLOBALS['TCA']['tt_content']['columns']['header']['config']['eval'] = 'trim,required';
 
+// Disable file Upload in content-elements
+$GLOBALS['TCA']['tt_content']['columns']['image']['config']['appearance']['fileUploadAllowed'] = false;
+
 // add TypoScript wizard
 $wizards =& $GLOBALS['TCA']['tt_content']['columns']['bodytext']['config']['wizards'];
 $wizards['t3editorTypoScript'] = [
