@@ -35,11 +35,11 @@ class ErrorHandler extends \TYPO3\CMS\Core\Error\ErrorHandler {
 		$messages[] = $logMessage;
 
 		// check if it's possible to show notification with terminal-notifier
-		$terminalNotifier = `which terminal-notifier`;
-		if ($terminalNotifier) {
-			shell_exec('terminal-notifier -title Error -sender com.google.chrome -message ' . escapeshellarg($logMessage));
-			return;
-		}
+		// $terminalNotifier = `which terminal-notifier`;
+		// if ($terminalNotifier) {
+		// 	shell_exec('terminal-notifier -title Error -sender com.google.chrome -message ' . escapeshellarg($logMessage));
+		// 	return;
+		// }
 
 		// check if it's possible to show notification with growl
 		$growl = trim(`which growl`);
