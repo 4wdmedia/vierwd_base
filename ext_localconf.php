@@ -114,3 +114,11 @@ if (!empty($_SERVER['4WD_CONFIG']) && !empty($_SERVER['HTTP_CACHE_CONTROL']) && 
 		$params['disableAcquireCacheData'] = true;
 	};
 }
+
+// **************
+// Make save-and-close the default action
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook'][] = 'Vierwd\\VierwdBase\\Backend\\GetButtonsHook->adjustSaveAndClose';
+
+// **************
+// Improve handling of parallel requests
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageLoadedFromCache'][] = 'Vierwd\\VierwdBase\\Frontend\\PageLoadedFromCache->stallTempPage';
