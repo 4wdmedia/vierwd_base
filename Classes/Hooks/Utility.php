@@ -44,14 +44,21 @@ class Utility {
 	 * OpenGraph needs the property-attribute.
 	 */
 	public function addMetaTags($content, $params) {
-		if (empty($params['meta.']) || !is_array($params['meta.'])) {
+		if (empty($params['meta.']) && empty($params['link.'])) {
 			return $content;
 		}
+
+		$metaTags = is_array($params['meta.']) ? $params['meta.'] : [];
+		$linkTags = is_array($params['link.']) ? $params['link.'] : [];
 
 		$endingSlash = $GLOBALS['TSFE']->xhtmlVersion ? ' /' : '';
 
 		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
+
+		foreach ($linkTags as $linkTag) {
+			$pageRenderer->addMetaTag($linkTag);
+		}
 
 		$typoScriptService = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\TypoScriptService::class);
 		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($params['meta.']);
