@@ -34,32 +34,32 @@ $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemsProcFunc'] = '
 
 // Add content elements
 $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'] = array_merge(
-    $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'],
-    array(
-        'image' => 'mimetypes-x-content-image',
-        'text' => 'mimetypes-x-content-text'
-    )
+	$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'],
+	array(
+		'image' => 'mimetypes-x-content-image',
+		'text' => 'mimetypes-x-content-text'
+	)
 );
 array_splice(
-    $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'],
-    2,
-    0,
-    array(
-        array(
-            'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.I.1',
-            'text',
-            'content-text'
-        ),
-        array(
-            'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.I.3',
-            'image',
-            'content-image'
-        )
-    )
+	$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'],
+	2,
+	0,
+	array(
+		array(
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.I.1',
+			'text',
+			'content-text'
+		),
+		array(
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.I.3',
+			'image',
+			'content-image'
+		)
+	)
 );
 
 $GLOBALS['TCA']['tt_content']['palettes']['imageblock'] = array(
-    'showitem' => '
+	'showitem' => '
 		imageorient;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imageorient_formlabel,
 		imagecols;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imagecols_formlabel,
 		--linebreak--,
@@ -69,9 +69,9 @@ $GLOBALS['TCA']['tt_content']['palettes']['imageblock'] = array(
 );
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
-    'tt_content',
-    'image_settings',
-    'imagewidth;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imagewidth_formlabel,
+	'tt_content',
+	'image_settings',
+	'imagewidth;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imagewidth_formlabel,
 		imageheight;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imageheight_formlabel,
 		imageborder;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imageborder_formlabel,
 		--linebreak--,
@@ -92,14 +92,14 @@ $GLOBALS['TCA']['tt_content']['types']['text']['showitem'] = '
 	--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended
 ';
 if (!is_array($GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides'])) {
-    $GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides'] = array();
+	$GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides'] = array();
 }
 if (!is_array($GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext'])) {
-    $GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext'] = array();
+	$GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext'] = array();
 }
 $baseDefaultExtrasOfBodytext = '';
 if (!empty($GLOBALS['TCA']['tt_content']['columns']['bodytext']['defaultExtras'])) {
-    $baseDefaultExtrasOfBodytext = $GLOBALS['TCA']['tt_content']['columns']['bodytext']['defaultExtras'] . ':';
+	$baseDefaultExtrasOfBodytext = $GLOBALS['TCA']['tt_content']['columns']['bodytext']['defaultExtras'] . ':';
 }
 $GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext']['defaultExtras'] = $baseDefaultExtrasOfBodytext . 'richtext:rte_transform[mode=ts_css]';
 
@@ -119,3 +119,19 @@ $GLOBALS['TCA']['tt_content']['types']['image']['showitem'] = '
 		--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
 	--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended
 ';
+
+
+// Section frame
+if (empty($GLOBALS['TCA']['tt_content']['columns']['section_frame'])) {
+	$GLOBALS['TCA']['tt_content']['columns']['section_frame'] = [
+		'exclude' => true,
+		'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:section_frame',
+		'config' => [
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'items' => [['Automatisch', '0']],
+		],
+	];
+
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette('tt_content', 'frames', 'section_frame');
+}
