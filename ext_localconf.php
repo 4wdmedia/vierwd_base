@@ -122,3 +122,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar
 // **************
 // Improve handling of parallel requests
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageLoadedFromCache'][] = 'Vierwd\\VierwdBase\\Frontend\\PageLoadedFromCache->stallTempPage';
+
+// **************
+// Fix incorrect umlauts during editing of data
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = 'Vierwd\\VierwdBase\\Hooks\\DataHandler';
