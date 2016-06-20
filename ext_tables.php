@@ -19,3 +19,12 @@ if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) {
 
 	unset($reportProviders);
 }
+
+// Add custom Icons
+$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:' . $_EXTKEY . '/Resources/Public/Icons/');
+foreach (new \GlobIterator($path . '*.svg') as $icon) {
+	$iconRegistry->registerIcon('vierwd-' . $icon->getBasename('.svg'), \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class, [
+		'source' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/' . $icon->getFilename(),
+	]);
+}
