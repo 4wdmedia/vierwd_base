@@ -126,3 +126,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageLoade
 // **************
 // Fix incorrect umlauts during editing of data
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = 'Vierwd\\VierwdBase\\Hooks\\DataHandler';
+
+// **************
+// Hyphenate words in generated html
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = 'Vierwd\\VierwdBase\\Hooks\\Utility->addHyphenation';

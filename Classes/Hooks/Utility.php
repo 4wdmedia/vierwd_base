@@ -109,4 +109,40 @@ class Utility {
 
 		return $content;
 	}
+
+	public function addHyphenation(&$funcRef, &$params) {
+		$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
+		if ($hyphenationRows) {
+			$configuration = implode("\n", array_map(function($hyphenationRow) {
+				return $hyphenationRow['hyphenation'];
+			}, $hyphenationRows));
+			$words        = array_map('trim', explode("\n", $configuration));
+			$replacements = [];
+			$shy          = html_entity_decode('&shy;');
+			foreach ($words as $index => $word) {
+				$replacements[trim(str_replace('#', '', $word))] = trim(str_replace('#', $shy, $word));
+			}
+
+			$searchWords  = array_keys($replacements);
+			$replaceWords = array_values($replacements);
+
+			$document = new \DOMDocument('1.0', 'utf-8');
+			// Ignore errors caused by HTML5 Doctype
+			libxml_use_internal_errors(true);
+			$document->loadHTML($params->content);
+			libxml_use_internal_errors(false);
+
+			$body = $document->getElementsByTagName('body')->item(0);
+
+			$XPath = new \DOMXPath($document);
+			$nodes = $XPath->evaluate('.//text()', $body);
+			foreach ($nodes as $node) {
+				if ($node->nodeType === XML_TEXT_NODE) {
+					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue);
+				}
+			}
+
+			$params->content = '<!DOCTYPE html>' . $document->saveHTML($document->documentElement);
+		}
+	}
 }

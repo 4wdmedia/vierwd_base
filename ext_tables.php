@@ -28,3 +28,5 @@ foreach (new \GlobIterator($path . '*.svg') as $icon) {
 		'source' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/' . $icon->getFilename(),
 	]);
 }
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_vierwdbase_hyphenation');
