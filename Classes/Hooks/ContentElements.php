@@ -267,7 +267,7 @@ class ContentElements {
 		} else if (in_array('simpleheaders', $tcaType)) {
 			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.header;header,';
 		} else {
-			$header = 'header;LLL:EXT:cms/locallang_ttc.xlf:header.ALT.div_formlabel,';
+			$header = 'header;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header.ALT.div_formlabel,';
 		}
 
 		$bodytext = '';

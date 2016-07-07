@@ -53,7 +53,7 @@ class Utility {
 
 		$endingSlash = $GLOBALS['TSFE']->xhtmlVersion ? ' /' : '';
 
-		$pageRenderer = $GLOBALS['TSFE']->getPageRenderer();
+		$pageRenderer = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
 
 		foreach ($linkTags as $linkTag) {
@@ -112,7 +112,7 @@ class Utility {
 
 	public function addHyphenation(&$funcRef, &$params) {
 		$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
-		if ($hyphenationRows) {
+		if ($hyphenationRows && $params->content) {
 			$configuration = implode("\n", array_map(function($hyphenationRow) {
 				return $hyphenationRow['hyphenation'];
 			}, $hyphenationRows));
