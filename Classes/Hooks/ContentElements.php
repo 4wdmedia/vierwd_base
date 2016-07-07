@@ -258,7 +258,7 @@ class ContentElements {
 		}
 	}
 
-	public function generateTCA(array $config) {
+	static public function generateTCA(array $config) {
 		$tcaType = explode(',', $config['tcaType']);
 
 		// bodytext,richtext,image,fullheaders

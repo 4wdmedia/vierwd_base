@@ -3,7 +3,8 @@
 namespace Vierwd\VierwdBase\Hooks;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Backend\Utility\IconUtility;
+use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -68,10 +69,12 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 			}
 		}
 
+		$iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+
 		// change the icon of the system cache group. It has a lower impact as our "complete" cache action
 		foreach ($cacheActions as &$actionConfiguration) {
 			if ($actionConfiguration['id'] == 'system') {
-				$actionConfiguration['icon'] = IconUtility::getSpriteIcon('actions-system-cache-clear-impact-medium');
+				$actionConfiguration['icon'] = $iconFactory->getIcon('actions-system-cache-clear-impact-medium', Icon::SIZE_SMALL)->render();
 			}
 			unset($actionConfiguration);
 		}
@@ -79,9 +82,9 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 		$cacheActions[] = array(
 			'id' => 'complete',
 			'title' => 'Alle Caches leeren',
-			'description' => $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xlf:flushSystemCachesDescription', TRUE),
+			'description' => htmlspecialchars($GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xlf:flushSystemCachesDescription'), ENT_COMPAT, 'UTF-8', false),
 			'href' => BackendUtility::getModuleUrl('tce_db', ['vC' => $GLOBALS['BE_USER']->veriCode(), 'cacheCmd' => 'complete', 'ajaxCall' => 1]),
-			'icon' => IconUtility::getSpriteIcon('actions-system-cache-clear-impact-high')
+			'icon' => $iconFactory->getIcon('actions-system-cache-clear-impact-high', Icon::SIZE_SMALL)->render(),
 		);
 		$optionValues[] = 'complete';
 	}

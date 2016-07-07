@@ -74,11 +74,15 @@ class JavascriptOptimization {
 			$unique = $filenameAbsolute . '-min';
 		}
 		$pathinfo = PathUtility::pathinfo($filename);
-		$targetFile = 'typo3temp/compressor/' . $pathinfo['filename'] . '-' . md5($unique) . '.js';
+		$targetFile = 'typo3temp/assets/compressor/' . $pathinfo['filename'] . '-' . md5($unique) . '.js';
 		// only create it, if it doesn't exist, yet
 		if (!file_exists(PATH_site . $targetFile)) {
 			$contents = GeneralUtility::getUrl($filenameAbsolute);
 			$contents = GeneralUtility::minifyJavaScript($contents, $error);
+			// make sure the folder exists
+			if (!is_dir(PATH_site . 'typo3temp/assets/compressor/')) {
+				GeneralUtility::mkdir_deep(PATH_site . 'typo3temp/assets/compressor/');
+			}
 			GeneralUtility::writeFile(PATH_site . $targetFile, $contents);
 		}
 		return $targetFile;
