@@ -120,7 +120,7 @@ class Utility {
 			$replacements = [];
 			$shy          = html_entity_decode('&shy;');
 			foreach ($words as $index => $word) {
-				$replacements[trim(str_replace('#', '', $word))] = trim(str_replace('#', $shy, $word));
+				$replacements[trim(str_replace(['#', '|'], '', $word))] = trim(str_replace(['#', '|'], $shy, $word));
 			}
 
 			$searchWords  = array_keys($replacements);
