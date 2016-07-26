@@ -119,9 +119,13 @@ class Utility {
 			$words        = array_map('trim', explode("\n", $configuration));
 			$replacements = [];
 			$shy          = html_entity_decode('&shy;');
-			foreach ($words as $index => $word) {
-				$replacements[trim(str_replace(['#', '|'], '', $word))] = trim(str_replace(['#', '|'], $shy, $word));
+			foreach ($words as $word) {
+				$replacements[trim(str_replace(['#', '|', '•'], '', $word))] = trim(str_replace(['#', '|', '•'], $shy, $word));
 			}
+
+			uksort($replacements, function($word1, $word2) {
+				return strlen($word2) - strlen($word1);
+			});
 
 			$searchWords  = array_keys($replacements);
 			$replaceWords = array_values($replacements);
@@ -129,7 +133,7 @@ class Utility {
 			$document = new \DOMDocument('1.0', 'utf-8');
 			// Ignore errors caused by HTML5 Doctype
 			libxml_use_internal_errors(true);
-			$document->loadHTML($params->content);
+			$document->loadHTML('<?xml encoding="UTF-8">' . $params->content);
 			libxml_use_internal_errors(false);
 
 			$body = $document->getElementsByTagName('body')->item(0);
