@@ -136,7 +136,7 @@ class Utility {
 			$scriptBlocks = [];
 			$content = preg_replace_callback('#<script[^>]*>.*?</script>#is', function($matches) use (&$scriptBlocks) {
 				$scriptBlocks[] = $matches[0];
-				return 'HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1);
+				return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
 			}, $params->content);
 			$document->loadHTML('<?xml version="1.0" encoding="utf-8"?>' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
 			libxml_use_internal_errors(false);
@@ -151,8 +151,8 @@ class Utility {
 				}
 			}
 
-			$params->content = '<!DOCTYPE html>' . $document->saveHTML($document->documentElement);
-			$params->content = preg_replace_callback('#HYPHENATION_SCRIPT_BLOCK_(\d+)#', function($matches) use (&$scriptBlocks) {
+			$params->content = '<!DOCTYPE html>' . "\n" . $document->saveHTML($document->documentElement);
+			$params->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
 				return $scriptBlocks[$matches[1]];
 			}, $params->content);
 		}
