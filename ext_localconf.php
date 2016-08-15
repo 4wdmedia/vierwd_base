@@ -130,3 +130,11 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['proc
 // **************
 // Hyphenate words in generated html
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = 'Vierwd\\VierwdBase\\Hooks\\Utility->addHyphenation';
+
+// **************
+// Expired Preview links throw an exception. The only solution is to delete the cookie
+// This is really user-unfriendly
+// @see https://forge.typo3.org/issues/18761
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('version')) {
+	array_unshift($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'], 'Vierwd\\VierwdBase\\Hooks\\VersioningHooks->removeExpiredPreviewCookie');
+}
