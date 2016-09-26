@@ -1,0 +1,5 @@
+# cat=basic//10; type=string; label=Kundenbereich Benutzer
+serviceUsername =
+
+# cat=basic//10; type=string; label=Kundenbereich Passwort
+servicePassword =

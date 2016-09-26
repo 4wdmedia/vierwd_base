@@ -44,9 +44,12 @@ class PageNotFoundHandler {
 			$headers[] = 'Authorization: ' . $_SERVER['Authorization'];
 		} else if ($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
 			$headers[] = 'Authorization: Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] .':' . $_SERVER['PHP_AUTH_PW']);
-		} else if ($_SERVER['AUTH_TYPE'] == 'Basic') {
+		} else if ($_SERVER['AUTH_TYPE'] == 'Basic' && $GLOBALS['TYPO3_CONF_VARS']['extConf']['vierwd_base']) {
 			// Kundenbereich
-			// $headers[] = 'Authorization: Basic ' . base64_encode('username:password');
+			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['extConf']['vierwd_base']);
+			if (isset($extConf['serviceUsername'], $extConf['servicePassword'])) {
+				$headers[] = 'Authorization: Basic ' . base64_encode($extConf['serviceUsername'] . ':' . $extConf['servicePassword']);
+			}
 		}
 
 		$host = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
