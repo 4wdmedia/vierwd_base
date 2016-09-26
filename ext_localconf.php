@@ -61,6 +61,10 @@ $signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TY
 $signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PreGeneratePublicUrl, 'Vierwd\\VierwdBase\\Resource\\CacheBuster', 'getPublicUrl');
 
 // **************
+// Check for duplicte files after upload
+$signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PostFileAdd, 'Vierwd\\VierwdBase\\Resource\\DuplicateFiles', 'checkForDuplicateFiles');
+
+// **************
 // Replace encoded mail addresses during indexing
 if (TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search')) {
 	if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
