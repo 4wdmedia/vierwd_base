@@ -142,3 +142,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('version')) {
 	array_unshift($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'], 'Vierwd\\VierwdBase\\Hooks\\VersioningHooks->removeExpiredPreviewCookie');
 }
+
+// *****************
+// Add TCA from FCEs
+$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', 'Vierwd\\VierwdBase\\Hooks\\ContentElements', 'addTCA');

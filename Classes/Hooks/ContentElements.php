@@ -19,12 +19,14 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 /**
  * @package vierwd_base
  */
-class ContentElements {
+class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 	public static $oldProcFunc;
 
 	protected static $groups = ['vierwd' => []];
 	protected static $groupNames = ['vierwd' => 'FORWARD MEDIA'];
+
+	protected static $fceConfiguration = [];
 
 	/**
 	 * process the CType and sort custom FCEs into a special group
@@ -68,15 +70,10 @@ class ContentElements {
 		return $params['items'];
 	}
 
-	/**
-	 * add Content Elements
-	 *
-	 * @param string $extensionKey
-	 * @throws \Exception if the FCE configuration is invalid (missing CType or missing name)
-	 */
-	static public function addFCEs($extensionKey, $isLocalConf = false) {
-		// Groups in planquadrat
-		// https://intern.4wdmedia.de/svn/14013_planquadrat/InBearbeitung/Relaunch-Website_1_1/Webseite/typo3/typo3conf/ext/vierwd_planquadrat/Classes/Hooks/ContentElements.php
+	static public function initializeFCEs($extensionKey) {
+		if (isset(self::$fceConfiguration[$extensionKey])) {
+			return;
+		}
 
 		$fceDir = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/';
 
@@ -85,8 +82,9 @@ class ContentElements {
 
 		$defaults = include $fceDir . '_defaults.php';
 
+		// Load all groups
 		$groupsFile = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/_groups.php';
-		if (!$isLocalConf && file_exists($groupsFile)) {
+		if (file_exists($groupsFile)) {
 			$groups = include $groupsFile;
 
 			self::$groupNames = $groups + self::$groupNames;
@@ -101,6 +99,7 @@ class ContentElements {
 
 		$FCEs = [];
 
+		// Load configs for FCEs
 		foreach (new \DirectoryIterator($fceDir) as $fceConfigFile) {
 			if ($fceConfigFile->isDot() || $fceConfigFile->isDir() || substr($fceConfigFile->getFilename(), 0, 1) == '_') {
 				continue;
@@ -125,7 +124,8 @@ class ContentElements {
 			return strcasecmp($FCE1['name'], $FCE2['name']);
 		});
 
-		foreach ($FCEs as $config) {
+		// Process FCEs
+		foreach ($FCEs as &$config) {
 			if (!empty($config['pluginName'])) {
 				// create a new plugin
 				$pluginSignature = strtolower(str_replace('_', '', $extensionKey) . '_' . $config['pluginName']);
@@ -133,30 +133,84 @@ class ContentElements {
 					$config['CType'] = $pluginSignature;
 				}
 
-				if ($isLocalConf) {
-					ExtensionUtility::configurePlugin(
-						'Vierwd.' . $extensionKey,
-						$config['pluginName'],
-						$config['controllerActions'],
-						// non-cacheable actions
-						$config['nonCacheableActions'],
-						ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
-					);
-
-					if ($pluginSignature != $config['CType']) {
-						// Copy from generated plugin without lib.stdheader
-						$typoScript .= 'tmp < tt_content.' . $pluginSignature . ".20\n" .
-							'tt_content.' . $config['CType'] . " < tmp\n" .
-							"tmp >\n" .
-							'tt_content.' . $pluginSignature . " >\n";
-					} else {
-						$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $pluginSignature . ".20\n";
-					}
-				}
+				$config['generatePlugin'] = true;
+				$config['pluginSignature'] = $pluginSignature;
 			}
 
 			if (empty($config['CType'])) {
 				throw new \Exception('Missing CType for ' . $config['filename']);
+			}
+
+			// update typoscript
+			if ($config['list_type']) {
+				$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.list.20.' . $config['list_type'] . "\n";
+			} else if ($config['template']) {
+				$template = $config['template'];
+
+				$templateDir = ExtensionManagementUtility::extPath($extensionKey) . 'Resources/Private/Templates/';
+				if (substr($template, 0, 4) !== 'EXT:' && file_exists($templateDir . $template)) {
+					$template = 'EXT:' . $extensionKey . '/Resources/Private/Templates/' . $template;
+				}
+
+				$typoScript .= 'tt_content.' . $config['CType'] . ' < plugin.tx_vierwdsmarty' . "\n";
+				$typoScript .= 'tt_content.' . $config['CType'] . '.settings.template = ' . $template . "\n";
+			}
+			foreach ($config['switchableControllerActions'] as $controller => $actions) {
+				$i = 1;
+
+				if (!is_array($actions)) {
+					$actions = GeneralUtility::trimExplode(',', $actions, true);
+				}
+
+				foreach ($actions as $action) {
+					$typoScript .= 'tt_content.' . $config['CType'] . '.switchableControllerActions.' . $controller . '.' . $i++ . ' = ' . $action . "\n";
+				}
+			}
+
+			self::$groups[$config['group']][] = $config['CType'];
+
+			unset($config);
+		}
+
+		self::$fceConfiguration[$extensionKey] = [
+			'typoScript' => $typoScript,
+			'pageTS' => $pageTS,
+			'FCEs' => $FCEs,
+		];
+	}
+
+	/**
+	 * add Content Elements
+	 *
+	 * @param string $extensionKey
+	 * @throws \Exception if the FCE configuration is invalid (missing CType or missing name)
+	 */
+	static public function addFCEs($extensionKey, $isLocalConf = false) {
+		self::initializeFCEs($extensionKey);
+
+		$typoScript = self::$fceConfiguration[$extensionKey]['typoScript'];
+		$pageTS = self::$fceConfiguration[$extensionKey]['pageTS'];
+
+		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
+			if ($config['generatePlugin'] && $isLocalConf) {
+				ExtensionUtility::configurePlugin(
+					'Vierwd.' . $extensionKey,
+					$config['pluginName'],
+					$config['controllerActions'],
+					// non-cacheable actions
+					$config['nonCacheableActions'],
+					ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+				);
+
+				if ($config['pluginSignature'] != $config['CType']) {
+					// Copy from generated plugin without lib.stdheader
+					$typoScript .= 'tmp < tt_content.' . $config['pluginSignature'] . ".20\n" .
+						'tt_content.' . $config['CType'] . " < tmp\n" .
+						"tmp >\n" .
+						'tt_content.' . $config['pluginSignature'] . " >\n";
+				} else {
+					$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $config['pluginSignature'] . ".20\n";
+				}
 			}
 
 			if (!$isLocalConf) {
@@ -194,7 +248,25 @@ class ContentElements {
 					'		CType = ' . $config['CType'] . "\n" .
 					'	}' . "\n" .
 					'}' . "\n";
+			}
+		}
 
+		if ($typoScript && $isLocalConf) {
+			ExtensionManagementUtility::addTypoScript($extensionKey, 'setup', $typoScript, 'defaultContentRendering');
+		}
+
+		if ($pageTS && !$isLocalConf) {
+			ExtensionManagementUtility::addPageTSConfig($pageTS);
+		}
+	}
+
+	/**
+	 * Generate TCA for FCEs.
+	 * Gets called in TCA/Overrides/tt_content.php and will be cached.
+	 */
+	static public function addTCA() {
+		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
+			foreach ($configuration['FCEs'] as $config) {
 				$tca = $config['fullTCA'] ? $config['fullTCA'] : self::generateTCA($config);
 
 				if (ExtensionManagementUtility::isLoaded('gridelements') && strpos($tca, 'tx_gridelements_container, tx_gridelements_columns') === false) {
@@ -217,44 +289,6 @@ class ContentElements {
 					}
 				}
 			}
-
-			// update typoscript
-			if ($config['list_type']) {
-				$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.list.20.' . $config['list_type'] . "\n";
-			} else if ($config['template']) {
-				$template = $config['template'];
-
-				$templateDir = ExtensionManagementUtility::extPath($extensionKey) . 'Resources/Private/Templates/';
-				if (substr($template, 0, 4) !== 'EXT:' && file_exists($templateDir . $template)) {
-					$template = 'EXT:' . $extensionKey . '/Resources/Private/Templates/' . $template;
-				}
-
-				$typoScript .= 'tt_content.' . $config['CType'] . ' < plugin.tx_vierwdsmarty' . "\n";
-				$typoScript .= 'tt_content.' . $config['CType'] . '.settings.template = ' . $template . "\n";
-			}
-			foreach ($config['switchableControllerActions'] as $controller => $actions) {
-				$i = 1;
-
-				if (!is_array($actions)) {
-					$actions = GeneralUtility::trimExplode(',', $actions, true);
-				}
-
-				foreach ($actions as $action) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.switchableControllerActions.' . $controller . '.' . $i++ . ' = ' . $action . "\n";
-				}
-			}
-
-			if ($isLocalConf) {
-				self::$groups[$config['group']][] = $config['CType'];
-			}
-		}
-
-		if ($typoScript && $isLocalConf) {
-			ExtensionManagementUtility::addTypoScript($extensionKey, 'setup', $typoScript, 'defaultContentRendering');
-		}
-
-		if ($pageTS && !$isLocalConf) {
-			ExtensionManagementUtility::addPageTSConfig($pageTS);
 		}
 	}
 
@@ -267,7 +301,7 @@ class ContentElements {
 		} else if (in_array('simpleheaders', $tcaType)) {
 			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.header;header,';
 		} else {
-			$header = 'header;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header.ALT.div_formlabel,';
+			$header = 'header;LLL:EXT:cms/locallang_ttc.xlf:header.ALT.div_formlabel,';
 		}
 
 		$bodytext = '';
