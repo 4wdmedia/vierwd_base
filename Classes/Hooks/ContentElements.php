@@ -263,8 +263,11 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * Generate TCA for FCEs.
 	 * Gets called in TCA/Overrides/tt_content.php and will be cached.
+	 *
+	 * @param array $TCA
+	 * @return array modified $TCA
 	 */
-	static public function addTCA() {
+	static public function addTCA($TCA) {
 		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
 			foreach ($configuration['FCEs'] as $config) {
 				$tca = $config['fullTCA'] ? $config['fullTCA'] : self::generateTCA($config);
@@ -273,9 +276,9 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 					$tca .= ', tx_gridelements_container, tx_gridelements_columns';
 				}
 
-				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
+				$TCA['tt_content']['types'][$config['CType']]['showitem'] = $tca;
 				if (in_array('richtext', explode(',', $config['tcaType']))) {
-					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
+					$TCA['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
 						'bodytext' => [
 							'defaultExtras' => 'richtext:rte_transform[mode=ts_css]',
 						],
@@ -290,6 +293,8 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				}
 			}
 		}
+
+		return [$TCA];
 	}
 
 	static public function generateTCA(array $config) {
