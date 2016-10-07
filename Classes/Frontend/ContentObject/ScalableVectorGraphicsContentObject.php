@@ -21,7 +21,9 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 
 	private static $fullSvg;
 
-	private static $usedSvgs = array();
+	private static $usedSvgs = [];
+
+	private static $usedIDs = [];
 
 	/**
 	 * Rendering the cObject, SVG
@@ -30,7 +32,7 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 	 * @return string Empty string (the cObject only sets internal data!)
 	 * @throws \Exception if the SVG is invalid
 	 */
-	public function render($conf = array()) {
+	public function render($conf = []) {
 		if (!empty($conf['if.']) && !$this->cObj->checkIf($conf['if.'])) {
 			return '';
 		}
@@ -77,6 +79,10 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 				throw new \Exception('Could not load SVG: ' . $src);
 			}
 
+			if (!$conf['ignoreDuplicateIds']) {
+				$this->checkForDuplicateId($identifier, $document->documentElement);
+			}
+
 			// always add the file name as class name of the root element
 			if ($document->documentElement->hasAttribute('class')) {
 				$document->documentElement->setAttribute('class', $document->documentElement->getAttribute('class') . ' svg ' . $identifier);
@@ -99,6 +105,10 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			self::$usedSvgs[$identifier] = $symbol;
 		} else {
 			$symbol = self::$usedSvgs[$identifier];
+
+			if (!$conf['ignoreDuplicateIds']) {
+				$this->checkForDuplicateId($identifier, $symbol);
+			}
 		}
 
 		$document = new \DOMDocument;
@@ -141,4 +151,15 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 		return $value;
 	}
 
+	protected function checkForDuplicateId($identifier, $contextNode) {
+		$XPath = new \DOMXPath($contextNode->ownerDocument);
+		$ids = $XPath->query('.//*[@id]/@id', $contextNode);
+		foreach ($ids as $id) {
+			if (isset(self::$usedIDs[$id->nodeValue])) {
+				throw new \Exception('Duplicate ID within embedded SVG ' . $identifier . '. If this is intentional, add ignoreDuplicateIds=1', 1475853018);
+			}
+
+			self::$usedIDs[$id->nodeValue] = $identifier;
+		}
+	}
 }
