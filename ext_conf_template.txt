@@ -3,3 +3,6 @@ serviceUsername =
 
 # cat=basic//10; type=string; label=Kundenbereich Passwort
 servicePassword =
+
+# cat=basic//10; type=string; label=Inhaltselemente, die nur für Admins bearbeitbar sind (Komma getrennt)
+adminElements =

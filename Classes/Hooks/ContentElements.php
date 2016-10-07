@@ -231,6 +231,11 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				}
 
 				ExtensionManagementUtility::addPlugin(array($name, $config['CType']), 'CType', $extensionKey);
+				if ($config['adminOnly']) {
+					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
+					$last['adminOnly'] = true;
+					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
+				}
 
 				if ($config['flexform']) {
 					if (substr($config['flexform'], 0, 5) !== 'FILE:') {

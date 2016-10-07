@@ -146,3 +146,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('version')) {
 // *****************
 // Add TCA from FCEs
 $signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', 'Vierwd\\VierwdBase\\Hooks\\ContentElements', 'addTCA');
+
+// *****************
+// Warn when no editor has access to edit some content elements
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = $extensionNamespace . '\\Hooks\\CheckBackendGroups';
