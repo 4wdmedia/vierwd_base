@@ -282,7 +282,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				}
 
 				$TCA['tt_content']['types'][$config['CType']]['showitem'] = $tca;
-				if (in_array('richtext', explode(',', $config['tcaType']))) {
+				if (in_array('richtext', GeneralUtility::trimExplode(',', $config['tcaType']))) {
 					$TCA['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
 						'bodytext' => [
 							'defaultExtras' => 'richtext:rte_transform[mode=ts_css]',
@@ -303,7 +303,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 	}
 
 	static public function generateTCA(array $config) {
-		$tcaType = explode(',', $config['tcaType']);
+		$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
 
 		// bodytext,richtext,image,fullheaders
 		if (in_array('fullheaders', $tcaType)) {
