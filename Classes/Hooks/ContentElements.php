@@ -382,6 +382,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			return '<a' . $idAttr . '></a>' . $content;
 		}
 
-		return preg_replace('/^<([^\s>!]+)/', '<$1' . $idAttr, $content);
+		return preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
 	}
 }
