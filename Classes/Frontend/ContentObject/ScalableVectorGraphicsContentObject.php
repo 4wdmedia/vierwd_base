@@ -83,6 +83,8 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 				$this->checkForDuplicateId($identifier, $document->documentElement);
 			}
 
+			$this->checkForSvgErrors($document);
+
 			// always add the file name as class name of the root element
 			if ($document->documentElement->hasAttribute('class')) {
 				$document->documentElement->setAttribute('class', $document->documentElement->getAttribute('class') . ' svg ' . $identifier);
@@ -160,6 +162,14 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			}
 
 			self::$usedIDs[$id->nodeValue] = $identifier;
+		}
+	}
+
+	protected function checkForSvgErrors(\DOMDocument $document) {
+		$XPath = new \DOMXPath($document);
+		$transparentFill = $XPath->query('//*[@fill="transparent"]');
+		if ($transparentFill->length) {
+			throw new \Exception('SVG with fill="transparent" does not work in some older browsers. Use fill="none"', 1476431628);
 		}
 	}
 }
