@@ -111,6 +111,11 @@ class Utility {
 	}
 
 	public function addHyphenation(&$funcRef, &$params) {
+		if (!empty($params->config['config']['disableAllHeaderCode'])) {
+			// do not process content, if all headers are disabled. Probably plain text variant
+			return;
+		}
+
 		$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
 		if ($hyphenationRows && $params->content) {
 			$configuration = implode("\n", array_map(function($hyphenationRow) {
