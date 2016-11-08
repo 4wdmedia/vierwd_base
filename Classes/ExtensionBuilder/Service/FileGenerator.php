@@ -52,4 +52,32 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 			$classObject->addComment($licenseHeader);
 		}
 	}
+
+	protected function generateTCAFiles() {
+		// Generate TCA
+		try {
+			parent::generateTCAFiles();
+
+			$domainObjectsWithoutOverrides = [];
+			foreach ($this->extension->getDomainObjectsInHierarchicalOrder() as $domainObject) {
+				if (!$domainObject->isMappedToExistingTable() && !$domainObject->getHasChildren()) {
+					if (!isset($domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()])) {
+					    $domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()] = [];
+					}
+					$domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()][] = $domainObject;
+				}
+			}
+            $tablesNeedingTypeFields = $this->extension->getTablesForTypeFieldDefinitions();
+			foreach ($domainObjectsWithoutOverrides as $tableName => $domainObjects) {
+				$addRecordTypeField = in_array($tableName, $tablesNeedingTypeFields);
+				$fileContents = $this->generateTCAOverride($domainObjects, $addRecordTypeField);
+				$this->writeFile(
+					$this->configurationDirectory . 'TCA/Overrides/' . $tableName . '.php',
+					$fileContents
+				);
+			}
+		} catch (\Exception $e) {
+			throw new \Exception('Could not generate TCA files, error: ' . $e->getMessage() . $e->getFile());
+		}
+	}
 }
