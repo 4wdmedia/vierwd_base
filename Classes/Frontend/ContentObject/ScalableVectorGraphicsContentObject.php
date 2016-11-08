@@ -94,7 +94,9 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 
 			$symbol = self::$fullSvg->createElement('symbol');
 			foreach ($document->documentElement->attributes as $name => $value) {
-				$symbol->setAttribute($name, $value->nodeValue);
+				if ($name !== 'xmlns') {
+					$symbol->setAttribute($name, $value->nodeValue);
+				}
 			}
 			$symbol->setAttribute('id', $identifier);
 			foreach ($document->documentElement->childNodes as $child) {
@@ -146,6 +148,10 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 
 		// make sure there are no short-tags
 		$value = $document->saveXml($document->documentElement, LIBXML_NOEMPTYTAG);
+		$svgWithNamespace = '<svg xmlns="http://www.w3.org/2000/svg"';
+		if (substr($value, 0, strlen($svgWithNamespace)) === $svgWithNamespace) {
+			$value = '<svg ' . substr($value, strlen($svgWithNamespace));
+		}
 
 		if (isset($conf['stdWrap.'])) {
 			$value = $this->cObj->stdWrap($value, $conf['stdWrap.']);
