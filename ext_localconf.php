@@ -143,4 +143,19 @@ $signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtilit
 
 // *****************
 // Warn when no editor has access to edit some content elements
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = $extensionNamespace . '\\Hooks\\CheckBackendGroups';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = 'Vierwd\\VierwdBase\\Hooks\\CheckBackendGroups';
+
+// Add OAuth Login
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService($_EXTKEY, 'auth', 'Vierwd\\VierwdBase\\Authentication\\AuthenticationService',
+	[
+		'title' => 'FORWARD MEDIA Authentication Service',
+		'description' => 'Provides authentication for FE and BE through OAuth2',
+		'subtype' => 'getUserBE,authUserBE',
+		'available' => true,
+		'priority' => 80,
+		'quality' => 60,
+		'os' => '',
+		'exec' => '',
+		'className' => 'Vierwd\\VierwdBase\\Authentication\\AuthenticationService',
+	]
+);
