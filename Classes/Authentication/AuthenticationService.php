@@ -95,8 +95,8 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 			debug4wd($e);
 		}
 
-debug4wd($token);
-		$userDetails = $provider->getResourceOwner($token);
+		$userDetails = $provider->getResourceOwner($token)->toArray();
+		debug4wd($userDetails);
 
 		if (empty($_SESSION['oauth2_user'])) {
 			// TODO Create user
@@ -107,8 +107,8 @@ debug4wd($token);
 			$record = [
 				'username' => $username,
 				'password' => substr(sha1($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . (microtime(TRUE) * time())), -8),
-				'realName' => $userDetails->getFirstName() . ' ' . $userDetails->getLastName(),
-				'email' => $userDetails->getEmail(),
+				'realName' => $userDetails['realName'],
+				'email' => $userDetails['email'],
 				'tstamp' => time(),
 				'disable' => '0',
 				'deleted' => '0',
@@ -154,6 +154,10 @@ debug4wd($token);
 
 		if ($action === 'token') {
 			return $this->respondToAccessToken($request, $response);
+		}
+
+		if ($action === 'resource') {
+			return $this->respondToOwnerResource($request, $response);
 		}
 
 		// fsmir('Unknown action: ' . $action);
@@ -238,5 +242,32 @@ debug4wd($token);
 			$body->write($exception->getMessage());
 			return $response->withStatus(500)->withBody($body);
 		}
+	}
+
+	public function respondToOwnerResource(ServerRequestInterface $request, ResponseInterface $response) {
+		$accessTokenRepository = new OAuth2\Repositories\AccessTokenRepository();
+		$publicKey = GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Private/OAuth2/public.key');
+
+		$server = new \League\OAuth2\Server\ResourceServer($accessTokenRepository, $publicKey);
+
+		try {
+			if (!$request->hasHeader('authorization') && isset($_SERVER['Authorization'])) {
+				$request = $request->withAddedHeader('Authorization', $_SERVER['Authorization']);
+			}
+			$request = $server->validateAuthenticatedRequest($request);
+		} catch (OAuthServerException $exception) {
+			fsmir('incoming', $request, $response, $exception);
+			return $exception->generateHttpResponse($response);
+		} catch (\Exception $exception) {
+			return (new OAuthServerException($exception->getMessage(), 0, 'unknown_error', 500))
+				->generateHttpResponse($response);
+		}
+
+		$response->getBody()->write(json_encode([
+			'name' => 'rvock',
+			'realName' => 'Robert Vock',
+			'email' => 'robert.vock@4wdmedia.de',
+		]));
+		return $response->withStatus(200);
 	}
 }
