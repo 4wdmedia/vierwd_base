@@ -5,8 +5,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use Vierwd\VierwdBase\OAuth2;
 
 // http://www.4wdmedia.rvock.de/typo3/?state=ob8Ib7esyXJ7aCkoxpDDeXdNEMu7RvVz&code=4/_DoRssrT7uh-dP8EbHM9vJ6y-mxJ37eWWyRrOvmzj9Y&authuser=0&session_state=caaf4993f6a2c93dbbf284e5d1cf1e20a3cdc5c6..2613&prompt=consent&login_status=login
 
@@ -131,143 +129,18 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 		// We are using sessions here, because BE_USER with session is not yet available
 		session_start();
 		$hostedDomain = 'http' . (GeneralUtility::getIndpEnv('TYPO3_SSL') ? 's' : '') . '://' . GeneralUtility::getIndpEnv('HTTP_HOST');
+		$host = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 		$provider = new \League\OAuth2\Client\Provider\GenericProvider([
 			'clientId'     => 'myawesomeapp',
 			'clientSecret' => 'bOqhyZTdIZj8KsdBGd7e9Xey',
 			// 'clientId'     => '419245696499-llpn6lutghof220bk8v5t9rugvjrdp4o.apps.googleusercontent.com',
 			// 'clientSecret' => '48kK62fcT_xvMUnmBL9JTLfH',
 			'redirectUri'  => GeneralUtility::getIndpEnv('TYPO3_REQUEST_SCRIPT') . '?login_status=login',
-			'urlAuthorize'            => 'http://www.4wdmedia.rvock.de/vierwd_oauth/authorize/',
-			'urlAccessToken'          => 'http://www.4wdmedia.rvock.de/vierwd_oauth/token/',
-			'urlResourceOwnerDetails' => 'http://www.4wdmedia.rvock.de/vierwd_oauth/resource/'
+			'urlAuthorize'            => $host . '/vierwd_oauth/authorize/',
+			'urlAccessToken'          => $host . '/vierwd_oauth/token/',
+			'urlResourceOwnerDetails' => $host . '/vierwd_oauth/resource/',
 		]);
 
 		return $provider;
-	}
-
-	public function oauthServer(ServerRequestInterface $request, ResponseInterface $response) {
-		$action = GeneralUtility::_GP('action');
-
-		if ($action === 'authorize') {
-			return $this->respondToAuthorize($request, $response);
-		}
-
-		if ($action === 'token') {
-			return $this->respondToAccessToken($request, $response);
-		}
-
-		if ($action === 'resource') {
-			return $this->respondToOwnerResource($request, $response);
-		}
-
-		// fsmir('Unknown action: ' . $action);
-	}
-
-	/**
-	 * @return League\OAuth2\Server\AuthorizationServer
-	 */
-	public function getOAuth2Server() {
-		$clientRepository = new OAuth2\Repositories\ClientRepository();
-		$scopeRepository = new OAuth2\Repositories\ScopeRepository();
-		$accessTokenRepository = new OAuth2\Repositories\AccessTokenRepository();
-		$authCodeRepository = new OAuth2\Repositories\AuthCodeRepository();
-		$refreshTokenRepository = new OAuth2\Repositories\RefreshTokenRepository();
-
-		$privateKey = GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Private/OAuth2/private.key');
-		$publicKey = GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Private/OAuth2/public.key');
-
-		// Setup the authorization server
-		$server = new \League\OAuth2\Server\AuthorizationServer(
-			$clientRepository,
-			$accessTokenRepository,
-			$scopeRepository,
-			$privateKey,
-			$publicKey
-		);
-		// Enable the client credentials grant on the server
-		// $server->enableGrantType(
-		// 	new \League\OAuth2\Server\Grant\ClientCredentialsGrant(),
-		// 	new \DateInterval('PT1H') // access tokens will expire after 1 hour
-		// );
-
-		// Enable the authentication code grant on the server with a token TTL of 1 hour
-		$server->enableGrantType(
-			new \League\OAuth2\Server\Grant\AuthCodeGrant(
-				$authCodeRepository,
-				$refreshTokenRepository,
-				new \DateInterval('PT10M')
-			),
-			new \DateInterval('PT1H')
-		);
-
-		return $server;
-	}
-
-
-	public function respondToAuthorize(ServerRequestInterface $request, ResponseInterface $response) {
-		$server = $this->getOAuth2Server();
-
-		try {
-			// Validate the HTTP request and return an AuthorizationRequest object.
-			// The auth request object can be serialized into a user's session
-			$authRequest = $server->validateAuthorizationRequest($request);
-			// Once the user has logged in set the user on the AuthorizationRequest
-			$authRequest->setUser(new OAuth2\Entities\UserEntity());
-			// Once the user has approved or denied the client update the status
-			// (true = approved, false = denied)
-			$authRequest->setAuthorizationApproved(true);
-			// Return the HTTP redirect response
-			return $server->completeAuthorizationRequest($authRequest, $response);
-		} catch (OAuthServerException $exception) {
-			// All instances of OAuthServerException can be formatted into a HTTP response
-
-			return $exception->generateHttpResponse($response);
-		} catch (\Exception $exception) {
-			// Unknown exception
-			$body = new Stream('php://temp', 'r+');
-			$body->write($exception->getMessage());
-			return $response->withStatus(500)->withBody($body);
-		}
-	}
-
-	public function respondToAccessToken(ServerRequestInterface $request, ResponseInterface $response) {
-		$server = $this->getOAuth2Server();
-
-		try {
-			return $server->respondToAccessTokenRequest($request, $response);
-		} catch (OAuthServerException $exception) {
-			return $exception->generateHttpResponse($response);
-		} catch (\Exception $exception) {
-			$body = new Stream('php://temp', 'r+');
-			$body->write($exception->getMessage());
-			return $response->withStatus(500)->withBody($body);
-		}
-	}
-
-	public function respondToOwnerResource(ServerRequestInterface $request, ResponseInterface $response) {
-		$accessTokenRepository = new OAuth2\Repositories\AccessTokenRepository();
-		$publicKey = GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Private/OAuth2/public.key');
-
-		$server = new \League\OAuth2\Server\ResourceServer($accessTokenRepository, $publicKey);
-
-		try {
-			if (!$request->hasHeader('authorization') && isset($_SERVER['Authorization'])) {
-				$request = $request->withAddedHeader('Authorization', $_SERVER['Authorization']);
-			}
-			$request = $server->validateAuthenticatedRequest($request);
-		} catch (OAuthServerException $exception) {
-			fsmir('incoming', $request, $response, $exception);
-			return $exception->generateHttpResponse($response);
-		} catch (\Exception $exception) {
-			return (new OAuthServerException($exception->getMessage(), 0, 'unknown_error', 500))
-				->generateHttpResponse($response);
-		}
-
-		$response->getBody()->write(json_encode([
-			'name' => 'rvock',
-			'realName' => 'Robert Vock',
-			'email' => 'robert.vock@4wdmedia.de',
-		]));
-		return $response->withStatus(200);
 	}
 }

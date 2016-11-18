@@ -160,6 +160,3 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displ
 		'className' => 'Vierwd\\VierwdBase\\Authentication\\AuthenticationService',
 	]
 );
-
-// eID for TYPO3 Version
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_oauth'] = 'Vierwd\\VierwdBase\\Authentication\\AuthenticationService::oauthServer';
