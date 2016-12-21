@@ -143,4 +143,4 @@ $signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtilit
 
 // *****************
 // Warn when no editor has access to edit some content elements
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = $extensionNamespace . '\\Hooks\\CheckBackendGroups';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = 'Vierwd\\VierwdBase\\Hooks\\CheckBackendGroups';
