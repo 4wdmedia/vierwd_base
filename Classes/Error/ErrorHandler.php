@@ -17,7 +17,7 @@ class ErrorHandler extends \TYPO3\CMS\Core\Error\ErrorHandler {
 
 		register_shutdown_function(function() {
 			$error = error_get_last();
-			if ($error['type'] & E_ERROR) {
+			if ($error['type'] & (E_ERROR|E_COMPILE_ERROR)) {
 				// Convert type to E_USER_ERROR, because TYPO3 doesn't know about E_ERROR
 				$this->handleError(E_USER_ERROR, $error['message'], $error['file'], $error['line']);
 			}
