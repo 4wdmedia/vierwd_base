@@ -110,6 +110,9 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 
 			$config = include $fceConfigFile->getPathname();
+			if (!$config) {
+				continue;
+			}
 			$config = $config + $defaults;
 			$config['filename'] = $fceConfigFile->getFilename();
 
@@ -193,6 +196,11 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
 			if ($config['generatePlugin'] && $isLocalConf) {
+				$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
+				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']])) {
+					throw new \Exception('Duplicate pluginName for extension ' . $extensionKey . ': ' . $config['pluginName'], 1482331342);
+				}
+
 				ExtensionUtility::configurePlugin(
 					'Vierwd.' . $extensionKey,
 					$config['pluginName'],
