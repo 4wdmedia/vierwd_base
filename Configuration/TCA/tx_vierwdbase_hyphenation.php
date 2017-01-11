@@ -1,7 +1,7 @@
 <?php
 
-return array(
-	'ctrl' => array(
+return [
+	'ctrl' => [
 		'title'	=> 'Hyphenation',
 		'label' => 'hyphenation',
 		'tstamp' => 'tstamp',
@@ -10,26 +10,26 @@ return array(
 		'dividers2tabs' => TRUE,
 		'searchFields' => 'hyphenation',
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('core') . 'Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg'
-	),
-	'interface' => array(
+	],
+	'interface' => [
 		'showRecordFieldList' => 'hyphenation',
-	),
-	'types' => array(
-		'1' => array('showitem' => 'hyphenation'),
-	),
-	'palettes' => array(
-		'1' => array('showitem' => ''),
-	),
-	'columns' => array(
-		'hyphenation' => array(
+	],
+	'types' => [
+		'1' => ['showitem' => 'hyphenation'],
+	],
+	'palettes' => [
+		'1' => ['showitem' => ''],
+	],
+	'columns' => [
+		'hyphenation' => [
 			'exclude' => 0,
 			'label' => 'Hyphenation',
-			'config' => array(
+			'config' => [
 				'type' => 'text',
 				'cols' => 30,
 				'rows' => 20,
 				'eval' => 'trim'
-			),
-		),
-	),
-);
+			],
+		],
+	],
+];
