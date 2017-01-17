@@ -144,3 +144,8 @@ $signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtilit
 // *****************
 // Warn when no editor has access to edit some content elements
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = 'Vierwd\\VierwdBase\\Hooks\\CheckBackendGroups';
+
+// Database connection with correct utf8mb4 charset
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\DatabaseConnection'] = [
+	'className' => 'Vierwd\\VierwdBase\\Database\\DatabaseConnection',
+];
