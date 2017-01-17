@@ -149,3 +149,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displ
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\DatabaseConnection'] = [
 	'className' => 'Vierwd\\VierwdBase\\Database\\DatabaseConnection',
 ];
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\Schema\\ConnectionMigrator'] = [
+	'className' => 'Vierwd\\VierwdBase\\Database\\Schema\\ConnectionMigrator',
+];
