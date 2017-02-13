@@ -85,6 +85,16 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 
 			$this->checkForSvgErrors($document);
 
+			// Remove comments within SVG
+			$removeComments = isset($conf['removeComments.']) ? $this->cObj->stdWrap($conf['removeComments'], $conf['removeComments.']) : ($conf['removeComments'] ?: true);
+			if ($removeComments) {
+				$XPath = new \DOMXPath($document);
+				$comments = $XPath->query('//comment()');
+				foreach ($comments as $comment) {
+					$comment->parentNode->removeChild($comment);
+				}
+			}
+
 			// always add the file name as class name of the root element
 			if ($document->documentElement->hasAttribute('class')) {
 				$document->documentElement->setAttribute('class', $document->documentElement->getAttribute('class') . ' svg ' . $identifier);
