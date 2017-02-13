@@ -116,6 +116,10 @@ class Utility {
 			return;
 		}
 
+		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['hyphenation']) && !$TSFE->config['config.']['tx_vierwd.']['hyphenation']) {
+			return;
+		}
+
 		$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
 		if ($hyphenationRows && $params->content) {
 			$configuration = implode("\n", array_map(function($hyphenationRow) {
