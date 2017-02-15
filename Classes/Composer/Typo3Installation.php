@@ -57,6 +57,10 @@ class Typo3Installation {
 	public static function safeInstall(Event $event) {
 		$consoleIO = $event->getIO();
 
+		if (!getenv('COMPOSER_BINARY')) {
+			throw new ScriptExecutionException('Composer is too old. You need at least 1.3.2');
+		}
+
 		$process = new ProcessExecutor($consoleIO);
 
 		$composerCommand = self::getPhpExecCommand() . ' ' . ProcessExecutor::escape(getenv('COMPOSER_BINARY'));
@@ -137,7 +141,7 @@ class Typo3Installation {
 			}
 
 			$path = substr($path, strlen($cwd));
-			`ln -sf ../..$path typo3conf/ext/$extensionKey`;
+			`ln -sf ../../..$path public/typo3conf/ext/$extensionKey`;
 		}
 	}
 }
