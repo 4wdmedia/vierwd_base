@@ -141,7 +141,7 @@ class Typo3Installation {
 			}
 
 			$path = substr($path, strlen($cwd));
-			`ln -svhf ../../..$path public/typo3conf/ext/$extensionKey`;
+			`ln -svfn ../../..$path public/typo3conf/ext/$extensionKey`;
 		}
 	}
 }
