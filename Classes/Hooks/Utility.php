@@ -147,7 +147,13 @@ class Utility {
 				$scriptBlocks[] = $matches[0];
 				return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
 			}, $params->content);
-			$document->loadHTML('<?xml version="1.0" encoding="utf-8"?>' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
+
+			// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
+			$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
+			if (strpos($content, '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"') === false) {
+				$content = '<?xml encoding="utf-8">' . $content;
+			}
+			$document->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
 			libxml_use_internal_errors(false);
 
 			$body = $document->getElementsByTagName('body')->item(0);
@@ -160,7 +166,9 @@ class Utility {
 				}
 			}
 
-			$params->content = '<!DOCTYPE html>' . "\n" . $document->saveHTML($document->documentElement);
+			$params->content = $document->saveHTML();
+			$params->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $params->content);
+			$params->content = str_replace('<?xml encoding="UTF-8">', '', $params->content);
 			$params->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
 				return $scriptBlocks[$matches[1]];
 			}, $params->content);
