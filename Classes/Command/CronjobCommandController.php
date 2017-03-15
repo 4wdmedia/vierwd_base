@@ -28,7 +28,7 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 			$lastRun = time() - 86400 * 7;
 		}
 
-		$fields = array('uid', 'userid', 'error', 'details', 'IP', 'tstamp', 'workspace');
+		$fields = ['uid', 'userid', 'error', 'details', 'IP', 'tstamp', 'workspace'];
 		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			$select = 'sys_log.' . implode(', sys_log.', $fields) . ', be_users.username, COUNT(*) as count',
 			$from   = 'sys_log LEFT JOIN be_users ON (be_users.uid=sys_log.userid)',
@@ -43,7 +43,7 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 			return;
 		}
 
-		$distinctErrors = array();
+		$distinctErrors = [];
 		array_walk($rows, function($row) use (&$distinctErrors) {
 			$row['tstamp'] = date('Y-m-d H:i:s', $row['tstamp']);
 			if (!$row['username']) {
@@ -54,7 +54,7 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 			$tstamp = $row['tstamp'];
 
 			if (!isset($distinctErrors[$details])) {
-				$distinctErrors[$details] = array();
+				$distinctErrors[$details] = [];
 			}
 
 			$distinctErrors[$details][] = $row;

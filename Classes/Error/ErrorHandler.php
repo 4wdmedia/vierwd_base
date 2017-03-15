@@ -25,7 +25,7 @@ class ErrorHandler extends \TYPO3\CMS\Core\Error\ErrorHandler {
 	}
 
 	protected function writeLog($logMessage, $severity) {
-		static $messages = array();
+		static $messages = [];
 
 		parent::writeLog($logMessage, $severity);
 

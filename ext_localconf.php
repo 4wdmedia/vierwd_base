@@ -1,14 +1,14 @@
 <?php
 
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = array('paths' => array());
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = ['paths' => []];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\FileGenerator'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\FileGenerator'] = [
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\FileGenerator',
-);
+];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\Printer'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\Printer'] = [
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\Printer',
-);
+];
 
 // *****************************
 // disable https on dev-machines
@@ -62,7 +62,7 @@ $signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \T
 // Replace encoded mail addresses during indexing
 if (TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search')) {
 	if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
-		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = array();
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = [];
 	}
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'], function($class) {
 		return $class !== 'TYPO3\\CMS\\IndexedSearch\\Indexer';
@@ -72,18 +72,18 @@ if (TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search'
 
 // ****************
 // Force progressive jpegs
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Imaging\\GraphicalFunctions'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Imaging\\GraphicalFunctions'] = [
 	'className' => 'Vierwd\\VierwdBase\\Imaging\\GraphicalFunctions',
-);
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\Imaging\\GifBuilder'] = array(
+];
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\Imaging\\GifBuilder'] = [
 	'className' => 'Vierwd\\VierwdBase\\Imaging\\GifBuilder',
-);
+];
 
 // ****************
 // X-Class for SVGContentObject
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject'] = [
 	'className' => 'Vierwd\\VierwdBase\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject',
-);
+];
 
 // ****************
 // Enable Browser Sync as Post-Processing (better performance than USER_INT)
@@ -91,11 +91,11 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPo
 
 // **************
 // Filter files/folders
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = array('Vierwd\\VierwdBase\\Resource\\FilterFiles', 'filterFilesCallback');
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = ['Vierwd\\VierwdBase\\Resource\\FilterFiles', 'filterFilesCallback'];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver'] = [
 	'className' => 'Vierwd\\VierwdBase\\Resource\\LocalDriver',
-);
+];
 
 // **************
 // Enable error handler

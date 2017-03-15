@@ -12,14 +12,14 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 		$variables['settings'] = $this->settings;
 		/* @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
 		$standAloneView = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-		$standAloneView->setLayoutRootPaths(array(
+		$standAloneView->setLayoutRootPaths([
 			$codeTemplateAdditionalRootPath,
 			$this->codeTemplateRootPath,
-		));
-		$standAloneView->setPartialRootPaths(array(
+		]);
+		$standAloneView->setPartialRootPaths([
 			$codeTemplateAdditionalRootPath . 'Partials',
 			$this->codeTemplateRootPath . 'Partials',
-		));
+		]);
 		$standAloneView->setFormat('txt');
 		if (file_exists($codeTemplateAdditionalRootPath . $filePath)) {
 			$templatePathAndFilename = $codeTemplateAdditionalRootPath .  $filePath;
@@ -36,18 +36,18 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 	protected function addLicenseHeader($classObject) {
 		$comments = $classObject->getComments();
-		$needsLicenseHeader = TRUE;
+		$needsLicenseHeader = true;
 		foreach ($comments as $comment) {
 			// we do not use GPL
-			if (strpos($comment, 'Copyright notice') !== FALSE) {
-				$needsLicenseHeader = FALSE;
+			if (strpos($comment, 'Copyright notice') !== false) {
+				$needsLicenseHeader = false;
 			}
 		}
 
 		if ($needsLicenseHeader) {
 			$licenseHeader = $this->renderTemplate(
 				'Partials/Classes/licenseHeader.phpt',
-				array('persons' => $this->extension->getPersons())
+				['persons' => $this->extension->getPersons()]
 			);
 			$classObject->addComment($licenseHeader);
 		}
@@ -62,12 +62,12 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 			foreach ($this->extension->getDomainObjectsInHierarchicalOrder() as $domainObject) {
 				if (!$domainObject->isMappedToExistingTable() && !$domainObject->getHasChildren()) {
 					if (!isset($domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()])) {
-					    $domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()] = [];
+						$domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()] = [];
 					}
 					$domainObjectsWithoutOverrides[$domainObject->getDatabaseTableName()][] = $domainObject;
 				}
 			}
-            $tablesNeedingTypeFields = $this->extension->getTablesForTypeFieldDefinitions();
+			$tablesNeedingTypeFields = $this->extension->getTablesForTypeFieldDefinitions();
 			foreach ($domainObjectsWithoutOverrides as $tableName => $domainObjects) {
 				$addRecordTypeField = in_array($tableName, $tablesNeedingTypeFields);
 				$fileContents = $this->generateTCAOverride($domainObjects, $addRecordTypeField);

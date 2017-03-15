@@ -8,7 +8,7 @@ namespace Vierwd\VierwdBase\Resource;
 class FilterFiles {
 
 	static public function filterFilesCallback($itemName, $itemIdentifier, $parentIdentifier, array $additionalInformation, \TYPO3\CMS\Core\Resource\Driver\DriverInterface $driverInstance) {
-		$ignoreFolders = array('_vti_cnf', '_vti_pvt', '.git', '.svn', 'CVS', 'Thumbs.db', '.DS_Store');
+		$ignoreFolders = ['_vti_cnf', '_vti_pvt', '.git', '.svn', 'CVS', 'Thumbs.db', '.DS_Store'];
 		if (in_array($itemName, $ignoreFolders)) {
 			return -1;
 		}
@@ -19,20 +19,20 @@ class FilterFiles {
 			}
 		}
 
-		$ignorePrefixes = array('_vti');
+		$ignorePrefixes = ['_vti'];
 		foreach ($ignorePrefixes as $prefix) {
 			if (substr($itemName, 0, strlen($prefix)) == $prefix) {
 				return -1;
 			}
 		}
 
-		$ignoreSuffixes = array('.svn-base');
+		$ignoreSuffixes = ['.svn-base'];
 		foreach ($ignoreSuffixes as $suffix) {
 			if (substr($itemName, -strlen($suffix)) == $suffix) {
 				return -1;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 }

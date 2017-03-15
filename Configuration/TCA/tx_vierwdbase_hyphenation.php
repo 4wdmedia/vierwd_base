@@ -7,9 +7,9 @@ return [
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'dividers2tabs' => TRUE,
+		'dividers2tabs' => true,
 		'searchFields' => 'hyphenation',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('core') . 'Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg'
+		'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg',
 	],
 	'interface' => [
 		'showRecordFieldList' => 'hyphenation',

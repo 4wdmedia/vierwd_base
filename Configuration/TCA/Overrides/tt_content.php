@@ -35,30 +35,30 @@ $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemsProcFunc'] = '
 // Add content elements
 $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'] = array_merge(
 	$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'],
-	array(
+	[
 		'image' => 'mimetypes-x-content-image',
 		'text' => 'mimetypes-x-content-text'
-	)
+	]
 );
 array_splice(
 	$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'],
 	2,
 	0,
-	array(
-		array(
+	[
+		[
 			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.I.1',
 			'text',
 			'content-text'
-		),
-		array(
+		],
+		[
 			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.I.3',
 			'image',
 			'content-image'
-		)
-	)
+		],
+	]
 );
 
-$GLOBALS['TCA']['tt_content']['palettes']['imageblock'] = array(
+$GLOBALS['TCA']['tt_content']['palettes']['imageblock'] = [
 	'showitem' => '
 		imageorient;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imageorient_formlabel,
 		imagecols;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imagecols_formlabel,
@@ -66,7 +66,7 @@ $GLOBALS['TCA']['tt_content']['palettes']['imageblock'] = array(
 		image_noRows;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:image_noRows_formlabel,
 		imagecaption_position;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:imagecaption_position_formlabel
 	',
-);
+];
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addFieldsToPalette(
 	'tt_content',
@@ -92,10 +92,10 @@ $GLOBALS['TCA']['tt_content']['types']['text']['showitem'] = '
 	--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended
 ';
 if (!is_array($GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides'])) {
-	$GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides'] = array();
+	$GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides'] = [];
 }
 if (!is_array($GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext'])) {
-	$GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext'] = array();
+	$GLOBALS['TCA']['tt_content']['types']['text']['columnsOverrides']['bodytext'] = [];
 }
 $baseDefaultExtrasOfBodytext = '';
 if (!empty($GLOBALS['TCA']['tt_content']['columns']['bodytext']['defaultExtras'])) {

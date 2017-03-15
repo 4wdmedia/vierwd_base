@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout\DataProviderInterface {
 
-	protected $backendLayouts = array();
+	protected $backendLayouts = [];
 
 	public function __construct() {
 		if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'], $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'])) {
@@ -53,7 +53,7 @@ class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout
 	 * @return NULL|BackendLayout
 	 */
 	public function getBackendLayout($identifier, $pageId) {
-		$backendLayout = NULL;
+		$backendLayout = null;
 		if (array_key_exists($identifier, $this->backendLayouts)) {
 			return $this->createBackendLayout($this->backendLayouts[$identifier]);
 		}

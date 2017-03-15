@@ -34,12 +34,12 @@ class PageNotFoundHandler {
 		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
 			header('HTTP/1.1 200 OK');
 			echo '404 Loop';
-			die;
+			exit;
 		}
-		$headers = array(
+		$headers = [
 			'X-PageNotFound: 1',
 			'User-Agent: ' . GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
-		);
+		];
 		if ($_SERVER['Authorization']) {
 			$headers[] = 'Authorization: ' . $_SERVER['Authorization'];
 		} else if ($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
@@ -57,14 +57,14 @@ class PageNotFoundHandler {
 		if (isset($_COOKIE[$cookieName])) {
 			$headers[] = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
 		}
-		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
-		if ($tsfe->pageNotFound == 2 && isset($param['pageAccessFailureReasons']['fe_group']) && $param['pageAccessFailureReasons']['fe_group'] != array('' => 0)) {
+		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
+		if ($tsfe->pageNotFound == 2 && isset($param['pageAccessFailureReasons']['fe_group']) && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
 			header('HTTP/1.0 403 Forbidden');
 			$url = $host . $dirname . 'login/?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
 		} else {
 			$url = $host . $dirname . '404/';
 		}
-		//$report = array();
+		//$report = [];
 		$report = null;
 		$result = GeneralUtility::getUrl($url, 0, $headers, $report);
 		if ($GLOBALS['BE_USER']) {

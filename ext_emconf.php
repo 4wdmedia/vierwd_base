@@ -10,7 +10,7 @@
  * "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
 	'title' => 'FORWARD MEDIA TYPO3 Basis',
 	'description' => 'Adds some database configs during installation process',
 	'category' => 'distribution',
@@ -28,16 +28,13 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
 	'version' => '1.1.1',
-	'constraints' => array(
-		'depends' => array(
-		),
-		'conflicts' => array(
-		),
-		'suggests' => array(
+	'constraints' => [
+		'depends' => [],
+		'conflicts' => [],
+		'suggests' => [
 			'gridelements' => '*',
-		),
-	),
-	'_md5_values_when_last_written' => 'a:3:{s:12:"ext_icon.gif";s:4:"59e6";s:17:"ext_localconf.php";s:4:"d4ac";s:16:"typo3version.php";s:4:"9131";}',
-);
+		],
+	],
+];
 
 ?>

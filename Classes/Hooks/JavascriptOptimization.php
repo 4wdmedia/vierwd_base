@@ -43,12 +43,12 @@ class JavascriptOptimization {
 	}
 
 	public function minifyJsFiles(array $jsFiles) {
-		$filesAfterMinification = array();
+		$filesAfterMinification = [];
 		foreach ($jsFiles as $fileName => $fileOptions) {
 			// If compression is enabled
 			if ($fileOptions['compress']) {
 				$compressedFilename = $this->minifyJsFile($fileOptions['file']);
-				$fileOptions['compress'] = FALSE;
+				$fileOptions['compress'] = false;
 				$fileOptions['file'] = $compressedFilename;
 				$filesAfterMinification[$compressedFilename] = $fileOptions;
 			} else {
@@ -154,7 +154,7 @@ class JavascriptOptimization {
 	 * @return \TYPO3\CMS\Core\Resource\ResourceCompressor
 	 */
 	protected function getCompressor() {
-		if ($this->compressor === NULL) {
+		if ($this->compressor === null) {
 			$this->compressor = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceCompressor::class);
 		}
 		return $this->compressor;

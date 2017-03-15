@@ -24,7 +24,7 @@ class DataHandler {
 		// example: COMBINING DIAERESIS: dots above the previous char.
 		// ü => ü
 		// http://www.fileformat.info/info/unicode/char/0308/index.htm
-		$replacements = array(
+		$replacements = [
 			"a\xCC\x80" => 'à',
 			"A\xCC\x80" => 'À',
 			"a\xCC\x81" => 'á',
@@ -83,8 +83,7 @@ class DataHandler {
 			"Y\xCC\x83" => 'Ỹ',
 			"y\xCC\x88" => 'ÿ',
 			"Y\xCC\x88" => 'Ÿ',
-
-		);
+		];
 
 		$search = array_keys($replacements);
 		$replace = array_values($replacements);

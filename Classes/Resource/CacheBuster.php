@@ -30,7 +30,7 @@ class CacheBuster {
 			}
 
 			// copied from typo3/sysext/core/Classes/Resource/ResourceStorage.php
-			if ($publicUrl !== NULL && $relativeToCurrentScript && !GeneralUtility::isValidUrl($publicUrl)) {
+			if ($publicUrl !== null && $relativeToCurrentScript && !GeneralUtility::isValidUrl($publicUrl)) {
 				$absolutePathToContainingFolder = PathUtility::dirname(PATH_site . $publicUrl);
 				$pathPart = PathUtility::getRelativePathTo($absolutePathToContainingFolder);
 				$filePart = substr(PATH_site . $publicUrl, strlen($absolutePathToContainingFolder) + 1);

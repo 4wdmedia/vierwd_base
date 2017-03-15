@@ -58,7 +58,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		});
 
 		foreach ($groups as $groupKey => $elements) {
-			$params['items'][] = array(self::$groupNames[$groupKey], '--div--');
+			$params['items'][] = [self::$groupNames[$groupKey], '--div--'];
 
 			usort($elements, function($plugin1, $plugin2) {
 				return strnatcasecmp($plugin1[0], $plugin2[0]);
@@ -238,7 +238,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 					throw new \Exception('Missing FCE name for ' . $config['filename']);
 				}
 
-				ExtensionManagementUtility::addPlugin(array($name, $config['CType']), 'CType', $extensionKey);
+				ExtensionManagementUtility::addPlugin([$name, $config['CType']], 'CType', $extensionKey);
 				if ($config['adminOnly']) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
 					$last['adminOnly'] = true;
@@ -320,7 +320,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		} else if (in_array('simpleheaders', $tcaType)) {
 			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.header;header,';
 		} else {
-			$header = 'header;LLL:EXT:cms/locallang_ttc.xlf:header.ALT.div_formlabel,';
+			$header = 'header;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header.ALT.div_formlabel,';
 		}
 
 		$bodytext = '';
