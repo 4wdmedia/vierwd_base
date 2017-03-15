@@ -18,7 +18,7 @@ class CheckBackendGroups {
 
 	public function displayWarningMessages_postProcess(array &$warnings) {
 		$contentElements = $this->getContentElements();
-		$backendGroups = $this->getDatabaseConnection()->exec_SELECTgetRows('*', 'be_groups', '1=1' . BackendUtility::BEenableFields('be_groups'));
+		$backendGroups = $this->getBackendGroups();
 
 		foreach ($backendGroups as $backendGroup) {
 			$allowDeny = GeneralUtility::trimExplode(',', $backendGroup['explicit_allowdeny']);
@@ -50,17 +50,23 @@ class CheckBackendGroups {
 	}
 
 	/**
-	 * @return DatabaseConnection
+	 * @return array
 	 */
-	protected function getDatabaseConnection() {
-	    return $GLOBALS['TYPO3_DB'];
+	protected function getBackendGroups() {
+		if (TYPO3_version <= '8.5.0') {
+			return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'be_groups', '1=1' . BackendUtility::BEenableFields('be_groups'));
+		} else {
+			$queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('be_groups');
+			$queryBuilder->select('*')->from('be_groups');
+			return $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+		}
 	}
 
 	/**
 	 * @return LanguageService
 	 */
 	protected function getLanguageService() {
-	    return $GLOBALS['LANG'];
+		return $GLOBALS['LANG'];
 	}
 
 	/**

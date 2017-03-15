@@ -120,7 +120,13 @@ class Utility {
 			return;
 		}
 
-		$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
+		if (TYPO3_version <= '8.5.0') {
+			$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
+		} else {
+			$queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
+			$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
+			$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+		}
 		if ($hyphenationRows && $params->content) {
 			$configuration = implode("\n", array_map(function($hyphenationRow) {
 				return $hyphenationRow['hyphenation'];
