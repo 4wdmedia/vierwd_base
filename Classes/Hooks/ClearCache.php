@@ -39,6 +39,11 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 			return;
 		}
 
+		if (TYPO3_version >= '8.6.0') {
+			// no need to add "all" cache group
+			return;
+		}
+
 		$groups = [];
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'] as $cacheKey => $cacheConfiguration) {
 			if (!is_array($cacheConfiguration['groups'])) {
@@ -96,7 +101,12 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 
 		$cacheCmd = $params['cacheCmd'];
 
-		if ($cacheCmd == 'complete') {
+		if ($cacheCmd === 'all' && TYPO3_version >= '8.6.0') {
+			// all works as before 6.2. but also delete realurl
+			if (file_exists(PATH_typo3conf . 'realurl_autoconf.php')) {
+				unlink(PATH_typo3conf . 'realurl_autoconf.php');
+			}
+		} else if ($cacheCmd === 'complete' && TYPO3_version < '8.6.0') {
 			$this->addCompleteCacheGroup();
 			$this->getCacheManager()->flushCachesInGroup('complete');
 
