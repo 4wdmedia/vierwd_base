@@ -194,10 +194,12 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$typoScript = self::$fceConfiguration[$extensionKey]['typoScript'];
 		$pageTS = self::$fceConfiguration[$extensionKey]['pageTS'];
 
+		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
+		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
 			if ($config['generatePlugin'] && $isLocalConf) {
-				$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
-				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']])) {
+				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']]) && !isset($currentPlugins[$config['pluginName']])) {
+					// a plugin with the same name was added before
 					throw new \Exception('Duplicate pluginName for extension ' . $extensionKey . ': ' . $config['pluginName'], 1482331342);
 				}
 
@@ -292,11 +294,21 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
 				if (in_array('richtext', GeneralUtility::trimExplode(',', $config['tcaType']))) {
-					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
-						'bodytext' => [
-							'defaultExtras' => 'richtext:rte_transform[mode=ts_css]',
-						],
-					];
+					if (TYPO3_version < '8.6.0') {
+						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
+							'bodytext' => [
+								'defaultExtras' => 'richtext:rte_transform[mode=ts_css]',
+							],
+						];
+					} else {
+						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
+							'bodytext' => [
+								'config' => [
+									'enableRichtext' => true,
+								],
+							],
+						];
+					}
 				}
 
 				foreach ($config['tcaAdditions'] as $tcaAddition) {
