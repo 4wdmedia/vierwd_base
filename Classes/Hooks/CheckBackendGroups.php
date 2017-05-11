@@ -45,7 +45,10 @@ class CheckBackendGroups {
 		// this might be an error, if the content element is new and the editor group was not updated
 		// and allowed access to the new element
 		if ($contentElements) {
-			$warnings[] = 'No backend group has access to edit the following content elements: <strong>' . implode(', ', array_map('htmlspecialchars', $contentElements)) . '</strong>. If this is intentional, configure adminElements in vierwd_base extension configuration.';
+			$contentElements = implode(', ', array_map(function($name, $CType) {
+				return htmlspecialchars($name . ' (' . $CType . ')');
+			}, $contentElements, array_keys($contentElements)));
+			$warnings[] = 'No backend group has access to edit the following content elements: <strong>' . $contentElements . '</strong>. If this is intentional, configure adminElements in vierwd_base extension configuration.';
 		}
 	}
 
