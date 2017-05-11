@@ -49,7 +49,7 @@ script:
   - >
     echo;
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L '<?php // PHP7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
   # - >
   #   echo;
