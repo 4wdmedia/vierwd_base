@@ -341,6 +341,9 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 
 		if (in_array('media', $tcaType)) {
+			if (in_array('image', $tcaType)) {
+				throw new \Exception('You can only choose either media or image as tcaType, but not both', 1491296754);
+			}
 			$image = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media,
 				assets,
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.imagelinks;imagelinks,';
