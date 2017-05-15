@@ -37,7 +37,8 @@ class RichtextConfiguration implements FormDataProviderInterface {
 			// Generate based on classes configuration
 			$stylesSet = $this->generateStylesSet($rteConfiguration);
 			if ($stylesSet) {
-				$result['processedTca']['columns'][$fieldName]['config']['richtextConfiguration']['editor']['config']['stylesSet'] = array_merge($stylesSet, $result['processedTca']['columns'][$fieldName]['config']['richtextConfiguration']['editor']['config']['stylesSet']);
+				$existingStylesSet = $result['processedTca']['columns'][$fieldName]['config']['richtextConfiguration']['editor']['config']['stylesSet'] ?: [];
+				$result['processedTca']['columns'][$fieldName]['config']['richtextConfiguration']['editor']['config']['stylesSet'] = array_merge($stylesSet, $existingStylesSet);
 			}
 
 			// replace contentsCss with cache-busted URL
