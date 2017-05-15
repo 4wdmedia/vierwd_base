@@ -12,16 +12,17 @@ class Canonical {
 		}
 
 		$url = $GLOBALS['TSFE']->id;
+		$parameters = '';
 		if ($GLOBALS['TSFE']->cHash) {
 			$GET = $_GET;
 			unset($GET['cHash'], $GET['id']);
 			$parameters = GeneralUtility::implodeArrayForUrl('', $GET);
-			$url .= ',' . $GLOBALS['TSFE']->type . ',' . $parameters;
 		}
 
 		if ($url) {
 			$conf = [
 				'parameter' => $url,
+				'additionalParams' => $parameters,
 				'useCacheHash' => true,
 				'forceAbsoluteUrl' => true,
 				'forceAbsoluteUrl.' => [
