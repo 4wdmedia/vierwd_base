@@ -157,8 +157,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\Schem
 	'className' => 'Vierwd\\VierwdBase\\Database\\Schema\\ConnectionMigrator',
 ];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\RichtextConfiguration::class] = [
-	'depends' => [
-		\TYPO3\CMS\Backend\Form\FormDataProvider\TcaText::class,
-	],
-];
+if (TYPO3_version >= '8.6.0') {
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\RichtextConfiguration::class] = [
+		'depends' => [
+			\TYPO3\CMS\Backend\Form\FormDataProvider\TcaText::class,
+		],
+	];
+}
