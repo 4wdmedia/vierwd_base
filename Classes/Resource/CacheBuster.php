@@ -39,5 +39,10 @@ class CacheBuster {
 
 			$params['publicUrl'] = $publicUrl;
 		}
+
+		if (TYPO3_MODE === 'FE' && isset($GLOBALS['TSFE']) && preg_match('/^[a-z]/i', $params['publicUrl'])) {
+			// Force absolute path
+			$params['publicUrl'] = $GLOBALS['TSFE']->absRefPrefix . $params['publicUrl'];
+		}
 	}
 }
