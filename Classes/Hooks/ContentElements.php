@@ -157,6 +157,15 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 				$typoScript .= 'tt_content.' . $config['CType'] . ' < plugin.tx_vierwdsmarty' . "\n";
 				$typoScript .= 'tt_content.' . $config['CType'] . '.settings.template = ' . $template . "\n";
+
+				$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
+				if (in_array('media', $tcaType)) {
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = assets' . "\n";
+				} else if (in_array('image', $tcaType)) {
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = image' . "\n";
+				}
 			}
 			foreach ($config['switchableControllerActions'] as $controller => $actions) {
 				$i = 1;
