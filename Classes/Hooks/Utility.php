@@ -133,7 +133,7 @@ class Utility {
 			}, $hyphenationRows));
 			$words        = array_map('trim', explode("\n", $configuration));
 			$replacements = [];
-			$shy          = html_entity_decode('&shy;');
+			$shy          = html_entity_decode('&shy;', 0, 'UTF-8');
 			foreach ($words as $word) {
 				$replacements[trim(str_replace(['#', '|', '•'], '', $word))] = trim(str_replace(['#', '|', '•'], $shy, $word));
 			}
