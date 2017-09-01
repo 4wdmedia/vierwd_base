@@ -110,8 +110,8 @@ class Utility {
 		return $content;
 	}
 
-	public function addHyphenation(&$funcRef, &$params) {
-		if (!empty($params->config['config']['disableAllHeaderCode'])) {
+	public function addHyphenation($params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $TSFE) {
+		if (!empty($TSFE->config['config']['disableAllHeaderCode'])) {
 			// do not process content, if all headers are disabled. Probably plain text variant
 			return;
 		}
@@ -127,7 +127,7 @@ class Utility {
 			$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 			$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
 		}
-		if ($hyphenationRows && $params->content) {
+		if ($hyphenationRows && $TSFE->content) {
 			$configuration = implode("\n", array_map(function($hyphenationRow) {
 				return $hyphenationRow['hyphenation'];
 			}, $hyphenationRows));
@@ -152,7 +152,7 @@ class Utility {
 			$content = preg_replace_callback('#<script[^>]*>.*?</script>#is', function($matches) use (&$scriptBlocks) {
 				$scriptBlocks[] = $matches[0];
 				return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
-			}, $params->content);
+			}, $TSFE->content);
 
 			// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
 			$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
@@ -172,12 +172,23 @@ class Utility {
 				}
 			}
 
-			$params->content = $document->saveHTML();
-			$params->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $params->content);
-			$params->content = str_replace('<?xml encoding="UTF-8">', '', $params->content);
-			$params->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
+			$TSFE->content = $document->saveHTML();
+			$TSFE->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $TSFE->content);
+			$TSFE->content = str_replace('<?xml encoding="UTF-8">', '', $TSFE->content);
+			$TSFE->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
 				return $scriptBlocks[$matches[1]];
-			}, $params->content);
+			}, $TSFE->content);
+
+			// Update Content-Length Header, if it is set
+			// Condition taken from TypoScriptFrontendController::processOutput
+			if (
+				(!isset($TSFE->config['config']['enableContentLengthHeader']) || $TSFE->config['config']['enableContentLengthHeader'])
+				&& !$TSFE->beUserLogin
+				&& !$GLOBALS['TYPO3_CONF_VARS']['FE']['debug']
+				&& !$TSFE->config['config']['debug'] && !$TSFE->doWorkspacePreview()
+			) {
+				header('Content-Length: ' . strlen($TSFE->content));
+			}
 		}
 	}
 }
