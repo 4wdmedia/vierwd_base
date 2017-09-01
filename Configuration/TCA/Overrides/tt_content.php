@@ -122,7 +122,7 @@ if (TYPO3_version < '8.6.0') {
 } else {
 	// TYPO3 >= 8.6.0
 	// make sure, the image element also uses the media-field
-	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', 'assets', 'textmedia', 'replace:image');
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', 'assets', 'image', 'replace:image');
 }
 
 
