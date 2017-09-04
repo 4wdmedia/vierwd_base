@@ -29,6 +29,9 @@ class Utility {
 	 */
 	public function outputFile($content, $params) {
 		$file = $params['file'];
+		if (isset($params['file.'])) {
+			$file = $this->cObj->stdWrap($file, $params['file.']);
+		}
 
 		$file = GeneralUtility::getFileAbsFileName($file);
 
