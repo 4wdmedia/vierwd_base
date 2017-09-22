@@ -305,19 +305,9 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
 				if (in_array('richtext', GeneralUtility::trimExplode(',', $config['tcaType']))) {
 					if (TYPO3_version < '8.6.0') {
-						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
-							'bodytext' => [
-								'defaultExtras' => 'richtext:rte_transform[mode=ts_css]',
-							],
-						];
+						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['defaultExtras'] = 'richtext:rte_transform[mode=ts_css]';
 					} else {
-						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides'] = [
-							'bodytext' => [
-								'config' => [
-									'enableRichtext' => true,
-								],
-							],
-						];
+						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['config']['enableRichtext'] = true;
 					}
 				}
 
