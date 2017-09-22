@@ -164,3 +164,7 @@ if (TYPO3_version >= '8.6.0') {
 		],
 	];
 }
+
+// ***************
+// Add custom content Elements. Configure in Configuration/FCE/*.php
+\Vierwd\VierwdBase\Hooks\ContentElements::addFCEs($_EXTKEY, true);
