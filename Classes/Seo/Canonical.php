@@ -24,7 +24,7 @@ class Canonical implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 
 		if ($GLOBALS['TSFE']->cHash) {
-			$url = $GLOBALS['TSFE']->anchorPrefix;
+			$url = substr(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'), strlen(GeneralUtility::getIndpEnv('TYPO3_SITE_URL')));
 			$urlData = parse_url($url);
 			parse_str($urlData['query'], $query);
 			if (isset($query['tab']) || isset($query['stage'])) {
