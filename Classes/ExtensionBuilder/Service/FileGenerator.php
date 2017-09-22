@@ -87,4 +87,29 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 			throw new \Exception('Could not generate TCA files, error: ' . $e->getMessage() . $e->getFile());
 		}
 	}
+
+	protected function writeFile($targetFile, $fileContents) {
+		// replace spaces with tabs
+		$fileContents = preg_replace_callback('/^(    )+/m', function($matches) use ($fileContents) {
+			return str_replace('    ', "\t", $matches[0]);
+		}, $fileContents);
+
+		if ($fileContents[strlen($fileContents) - 1] != "\n") {
+			// add newline at EOF
+			$fileContents .= "\n";
+		}
+
+		return parent::writeFile($targetFile, $fileContents);
+	}
+
+	protected function insertSplitToken($targetFile, $fileContents) {
+		$fileContents = parent::insertSplitToken($targetFile, $fileContents);
+
+		if ($fileContents && $fileContents[strlen($fileContents) - 1] != "\n") {
+			// add newline at EOF
+			$fileContents .= "\n";
+		}
+
+		return $fileContents;
+	}
 }
