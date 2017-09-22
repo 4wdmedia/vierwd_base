@@ -249,7 +249,8 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 					throw new \Exception('Missing FCE name for ' . $config['filename']);
 				}
 
-				ExtensionManagementUtility::addPlugin([$name, $config['CType']], 'CType', $extensionKey);
+				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
+				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
 				if ($config['adminOnly']) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
 					$last['adminOnly'] = true;
