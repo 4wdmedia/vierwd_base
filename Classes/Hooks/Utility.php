@@ -138,7 +138,7 @@ class Utility {
 			$replacements = [];
 			$shy          = html_entity_decode('&shy;', 0, 'UTF-8');
 			foreach ($words as $word) {
-				$replacements[trim(str_replace(['#', '|', '•'], '', $word))] = trim(str_replace(['#', '|', '•'], $shy, $word));
+				$replacements[trim(str_replace(['#', '|', '•', $shy], '', $word))] = trim(str_replace(['#', '|', '•'], $shy, $word));
 			}
 
 			uksort($replacements, function($word1, $word2) {
