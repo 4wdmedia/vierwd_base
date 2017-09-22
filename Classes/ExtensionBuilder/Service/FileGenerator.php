@@ -7,6 +7,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 	public function renderTemplate($filePath, $variables) {
+		if (isset($this->codeTemplateRootPaths)) {
+			// extension_builder starting with f4cc45ae has support for multiple template root paths
+			return parent::renderTemplate($filePath, $variables);
+		}
+
+		// add support for multiple template root paths
+
 		$codeTemplateAdditionalRootPath = GeneralUtility::getFileAbsFileName($this->settings['codeTemplateAdditionalRootPath']);
 
 		$variables['settings'] = $this->settings;

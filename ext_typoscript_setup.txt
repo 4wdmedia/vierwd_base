@@ -1,5 +1,10 @@
 module.extension_builder {
 	settings {
 		codeTemplateAdditionalRootPath = EXT:vierwd_base/Resources/Private/CodeTemplates/Extbase/
+
+		codeTemplateRootPaths.0 = EXT:extension_builder/Resources/Private/CodeTemplates/Extbase/
+		codeTemplateRootPaths.1 = EXT:vierwd_base/Resources/Private/CodeTemplates/Extbase/
+		codeTemplatePartialPaths.0 = EXT:extension_builder/Resources/Private/CodeTemplates/Extbase/Partials/
+		codeTemplatePartialPaths.1 = EXT:vierwd_base/Resources/Private/CodeTemplates/Extbase/Partials/
 	}
 }
