@@ -37,25 +37,25 @@ class PageNotFoundHandler {
 			exit;
 		}
 		$headers = [
-			'X-PageNotFound: 1',
-			'User-Agent: ' . GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
+			'X-PageNotFound' => '1',
+			'User-Agent' => GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
 		];
 		if ($_SERVER['Authorization']) {
-			$headers[] = 'Authorization: ' . $_SERVER['Authorization'];
+			$headers['Authorization'] = $_SERVER['Authorization'];
 		} else if ($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
-			$headers[] = 'Authorization: Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] .':' . $_SERVER['PHP_AUTH_PW']);
+			$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] .':' . $_SERVER['PHP_AUTH_PW']);
 		} else if ($_SERVER['AUTH_TYPE'] == 'Basic' && $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']) {
 			// Kundenbereich
 			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']);
 			if (isset($extConf['serviceUsername'], $extConf['servicePassword'])) {
-				$headers[] = 'Authorization: Basic ' . base64_encode($extConf['serviceUsername'] . ':' . $extConf['servicePassword']);
+				$headers['Authorization'] = 'Basic ' . base64_encode($extConf['serviceUsername'] . ':' . $extConf['servicePassword']);
 			}
 		}
 
 		$host = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 		$cookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
 		if (isset($_COOKIE[$cookieName])) {
-			$headers[] = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
+			$headers['Cookie'] = $cookieName . '=' . $_COOKIE[$cookieName];
 		}
 		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
 		if ($tsfe->pageNotFound == 2 && isset($param['pageAccessFailureReasons']['fe_group']) && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
@@ -66,6 +66,12 @@ class PageNotFoundHandler {
 		}
 		//$report = [];
 		$report = null;
+		if (TYPO3_version <= '8.0.0') {
+			// Convert headers to old format
+			$headers = array_map(function($key, $value) {
+				return $key . ': ' . $value;
+			}, array_keys($headers), $headers);
+		}
 		$result = GeneralUtility::getUrl($url, 0, $headers, $report);
 		if ($GLOBALS['BE_USER']) {
 			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($param['reasonText']), $result);
