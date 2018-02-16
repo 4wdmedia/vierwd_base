@@ -23,6 +23,13 @@ class CheckBackendGroups {
 
 		$contentElements = $this->getContentElements();
 		$backendGroups = $this->getBackendGroups();
+		$this->checkContentElements($warnings, $backendGroups);
+
+		$this->checkDatabaseTables($warnings, $backendGroups);
+	}
+
+	private function checkContentElements(array &$warnings, array $backendGroups) {
+		$contentElements = $this->getContentElements();
 
 		foreach ($backendGroups as $backendGroup) {
 			$allowDeny = GeneralUtility::trimExplode(',', $backendGroup['explicit_allowdeny']);
@@ -53,6 +60,42 @@ class CheckBackendGroups {
 				return htmlspecialchars($name . ' (' . $CType . ')');
 			}, $contentElements, array_keys($contentElements)));
 			$warnings[] = 'No backend group has access to edit the following content elements: <strong>' . $contentElements . '</strong>. If this is intentional, configure adminElements in vierwd_base extension configuration.';
+		}
+	}
+
+	private function checkDatabaseTables(array &$warnings, array $backendGroups) {
+		$allAllowedTables = [];
+		foreach ($backendGroups as $backendGroup) {
+			$tables = GeneralUtility::trimExplode(',', $backendGroup['tables_modify'], true);
+			$allAllowedTables = array_merge($allAllowedTables, $tables);
+
+			$tables = GeneralUtility::trimExplode(',', $backendGroup['tables_select'], true);
+			$allAllowedTables = array_merge($allAllowedTables, $tables);
+		}
+		$allAllowedTables = array_unique($allAllowedTables);
+
+		$tables = [];
+		foreach ($GLOBALS['TCA'] as $table => $tableConfig) {
+			if (empty($tableConfig['ctrl']['hideTable']) && empty($tableConfig['ctrl']['adminOnly']) && !in_array($table, $allAllowedTables)) {
+				$tables[] = $table;
+			}
+		}
+
+		// Only check FORWARD MEDIA Tables
+		$tables = array_filter($tables, function($table) {
+			return substr($table, 0, 9) === 'tx_vierwd';
+		});
+
+		// $tables contains all tables for which no backend group has access
+		// this might be an error, if the table is new and the editor group was not updated
+		// and allowed access to the new table
+		if ($tables) {
+			$tables = implode(', ', array_map(function($table) {
+				$name = $GLOBALS['TCA'][$table]['ctrl']['title'];
+				$name = $GLOBALS['LANG']->sL($name);
+				return htmlspecialchars($name . ' (' . $table . ')');
+			}, $tables));
+			$warnings[] = 'No backend group has access to edit the following tables: <strong>' . $tables . '</strong>.<br>If this is intentional, set adminOnly for those tables.';
 		}
 	}
 
