@@ -59,6 +59,7 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 		$height = isset($conf['height.']) ? $this->cObj->stdWrap($conf['height'], $conf['height.']) : $conf['height'];
 		$src = isset($conf['src.']) ? $this->cObj->stdWrap($conf['src'], $conf['src.']) : $conf['src'];
 		$value = isset($conf['value.']) ? $this->cObj->stdWrap($conf['value'], $conf['value.']) : $conf['value'];
+		$class = isset($conf['class.']) ? $this->cObj->stdWrap($conf['class'], $conf['class.']) : $conf['class'];
 
 		$identifier = '';
 		if ($src) {
@@ -134,7 +135,9 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			$use->setAttribute('xlink:href', '#' . $identifier);
 			$svg->appendChild($use);
 		} else {
-			$svg->setAttribute('class', 'svg ' . $identifier);
+			$classes = GeneralUtility::trimExplode(' ', 'svg ' . $identifier . ' ' . $class, true);
+			$classes = array_unique($classes);
+			$svg->setAttribute('class', implode(' ', $classes));
 
 			// use the element directly
 			foreach ($symbol->childNodes as $child) {
