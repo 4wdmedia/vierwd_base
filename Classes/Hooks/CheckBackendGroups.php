@@ -17,6 +17,10 @@ use TYPO3\CMS\Lang\LanguageService;
 class CheckBackendGroups {
 
 	public function displayWarningMessages_postProcess(array &$warnings) {
+		if (!$GLOBALS['BE_USER'] || substr($GLOBALS['BE_USER']->user['email'], -12) !== '@4wdmedia.de') {
+			return;
+		}
+
 		$contentElements = $this->getContentElements();
 		$backendGroups = $this->getBackendGroups();
 
