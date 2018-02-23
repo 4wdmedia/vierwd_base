@@ -11,7 +11,14 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use DOMDocument;
+use DOMXPath;
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Extbase\Service\TypoScriptService;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
  * @package vierwd_base
@@ -56,14 +63,14 @@ class Utility {
 
 		$endingSlash = $GLOBALS['TSFE']->xhtmlVersion ? ' /' : '';
 
-		$pageRenderer = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\PageRenderer::class);
+		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
 
 		foreach ($linkTags as $linkTag) {
 			$pageRenderer->addMetaTag($linkTag);
 		}
 
-		$typoScriptService = GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\TypoScriptService::class);
+		$typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
 		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($params['meta.']);
 		foreach ($metaTags as $key => $data) {
 			$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
@@ -113,12 +120,57 @@ class Utility {
 		return $content;
 	}
 
-	public function addHyphenation($params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $TSFE) {
+	public function postProcessHTML($params, TypoScriptFrontendController $TSFE) {
 		if (!empty($TSFE->config['config']['disableAllHeaderCode'])) {
 			// do not process content, if all headers are disabled. Probably plain text variant
 			return;
 		}
 
+		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['postProcessHTML']) && !$TSFE->config['config.']['tx_vierwd.']['postProcessHTML']) {
+			return;
+		}
+
+
+		$document = new DOMDocument('1.0', 'utf-8');
+		// Ignore errors caused by HTML5 Doctype
+		libxml_use_internal_errors(true);
+		$scriptBlocks = [];
+		$content = preg_replace_callback('#<script[^>]*>.*?</script>#is', function($matches) use (&$scriptBlocks) {
+			$scriptBlocks[] = $matches[0];
+			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
+		}, $TSFE->content);
+
+		// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
+		$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
+		if (strpos($content, '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"') === false) {
+			$content = '<?xml encoding="utf-8">' . $content;
+		}
+		$document->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
+		libxml_use_internal_errors(false);
+
+		$this->addHyphenation($document);
+		$this->addNoopener($document);
+
+		$TSFE->content = $document->saveHTML();
+		$TSFE->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $TSFE->content);
+		$TSFE->content = str_replace('<?xml encoding="UTF-8">', '', $TSFE->content);
+		$TSFE->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
+			return $scriptBlocks[$matches[1]];
+		}, $TSFE->content);
+
+		// Update Content-Length Header, if it is set
+		// Condition taken from TypoScriptFrontendController::processOutput
+		if (
+			(!isset($TSFE->config['config']['enableContentLengthHeader']) || $TSFE->config['config']['enableContentLengthHeader'])
+			&& !$TSFE->beUserLogin
+			&& !$GLOBALS['TYPO3_CONF_VARS']['FE']['debug']
+			&& !$TSFE->config['config']['debug'] && !$TSFE->doWorkspacePreview()
+		) {
+			header('Content-Length: ' . strlen($TSFE->content));
+		}
+	}
+
+	private function addHyphenation(DOMDocument $document) {
 		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['hyphenation']) && !$TSFE->config['config.']['tx_vierwd.']['hyphenation']) {
 			return;
 		}
@@ -126,7 +178,7 @@ class Utility {
 		if (TYPO3_version <= '8.5.0') {
 			$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
 		} else {
-			$queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
+			$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
 			$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 			$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
 		}
@@ -148,50 +200,36 @@ class Utility {
 			$searchWords  = array_keys($replacements);
 			$replaceWords = array_values($replacements);
 
-			$document = new \DOMDocument('1.0', 'utf-8');
-			// Ignore errors caused by HTML5 Doctype
-			libxml_use_internal_errors(true);
-			$scriptBlocks = [];
-			$content = preg_replace_callback('#<script[^>]*>.*?</script>#is', function($matches) use (&$scriptBlocks) {
-				$scriptBlocks[] = $matches[0];
-				return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
-			}, $TSFE->content);
-
-			// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
-			$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
-			if (strpos($content, '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"') === false) {
-				$content = '<?xml encoding="utf-8">' . $content;
-			}
-			$document->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
-			libxml_use_internal_errors(false);
-
 			$body = $document->getElementsByTagName('body')->item(0);
 
-			$XPath = new \DOMXPath($document);
+			$XPath = new DOMXPath($document);
 			$nodes = $XPath->evaluate('.//text()', $body);
 			foreach ($nodes as $node) {
 				if ($node->nodeType === XML_TEXT_NODE) {
 					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue);
 				}
 			}
+		}
+	}
 
-			$TSFE->content = $document->saveHTML();
-			$TSFE->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $TSFE->content);
-			$TSFE->content = str_replace('<?xml encoding="UTF-8">', '', $TSFE->content);
-			$TSFE->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
-				return $scriptBlocks[$matches[1]];
-			}, $TSFE->content);
+	/**
+	 * add rel=noopener to all external links.
+	 *
+	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
+	 */
+	private function addNoopener(DOMDocument $document) {
+		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['noopener']) && !$TSFE->config['config.']['tx_vierwd.']['noopener']) {
+			return;
+		}
 
-			// Update Content-Length Header, if it is set
-			// Condition taken from TypoScriptFrontendController::processOutput
-			if (
-				(!isset($TSFE->config['config']['enableContentLengthHeader']) || $TSFE->config['config']['enableContentLengthHeader'])
-				&& !$TSFE->beUserLogin
-				&& !$GLOBALS['TYPO3_CONF_VARS']['FE']['debug']
-				&& !$TSFE->config['config']['debug'] && !$TSFE->doWorkspacePreview()
-			) {
-				header('Content-Length: ' . strlen($TSFE->content));
-			}
+		$body = $document->getElementsByTagName('body')->item(0);
+
+		$XPath = new DOMXPath($document);
+		$nodes = $XPath->evaluate('.//a[@target="_blank"][not(contains(@rel, "noopener"))]', $body);
+		foreach ($nodes as $link) {
+			$rel = $link->getAttribute('rel');
+			$rel = trim($rel . ' noopener');
+			$link->setAttribute('rel', $rel);
 		}
 	}
 }
