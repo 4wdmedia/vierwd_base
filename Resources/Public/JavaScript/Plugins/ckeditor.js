@@ -9,7 +9,7 @@
 					return;
 				}
 				var classes = element.$.className.split(/\s+/).filter(function(className) {
-					return className;
+					return className && className.substr(0, 4) !== 'cke_';
 				});
 				return element.$.tagName.toLowerCase() + (classes.length ? '.' + classes.join('.') : '');
 			});
