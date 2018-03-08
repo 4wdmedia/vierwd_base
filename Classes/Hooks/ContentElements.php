@@ -100,7 +100,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$FCEs = [];
 
 		// Load configs for FCEs
-		foreach (new \DirectoryIterator($fceDir) as $fceConfigFile) {
+		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($fceDir, \FilesystemIterator::SKIP_DOTS)) as $fceConfigFile) {
 			if ($fceConfigFile->isDot() || $fceConfigFile->isDir() || substr($fceConfigFile->getFilename(), 0, 1) == '_') {
 				continue;
 			}
