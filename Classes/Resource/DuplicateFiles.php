@@ -29,10 +29,10 @@ class DuplicateFiles {
 		if ($files) {
 			// There is another file in the same storage which is exactly the same. Inform the user about it
 			$message = GeneralUtility::makeInstance(FlashMessage::class,
-			    'Die Datei existiert bereits an einer anderen Stelle: ' . $files[0]['identifier'],
-			    'Doppelte Datei',
-			    FlashMessage::WARNING,
-			    true // whether message should be stored in session
+				'Die Datei existiert bereits an einer anderen Stelle: ' . $files[0]['identifier'],
+				'Doppelte Datei',
+				FlashMessage::WARNING,
+				true // whether message should be stored in session
 			);
 			$flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
 			$flashMessageService->getMessageQueueByIdentifier()->enqueue($message);

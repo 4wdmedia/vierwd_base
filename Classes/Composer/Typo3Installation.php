@@ -13,6 +13,7 @@ class Typo3Installation {
 
 	/**
 	 * @see \Composer\EventDispatcher\EventDispatcher::getPhpExecCommand
+	 * @throws \RuntimeException when php executable cannot be found
 	 */
 	protected static function getPhpExecCommand() {
 		$finder = new PhpExecutableFinder();
@@ -53,6 +54,7 @@ class Typo3Installation {
 	/**
 	 * perform a composer install into another vendor directory and change the paths
 	 * after the update
+	 * @throws ScriptExecutionException when composer is too old
 	 */
 	public static function safeInstall(Event $event) {
 		$consoleIO = $event->getIO();
