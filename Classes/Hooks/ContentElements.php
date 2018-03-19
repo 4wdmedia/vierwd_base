@@ -179,8 +179,13 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				}
 			}
 
-			self::$groups[$config['group']][] = $config['CType'];
-
+			if (is_array($config['group'])) {
+				foreach ($config['group'] as $group) {
+					self::$groups[$group][] = $config['CType'];
+				}
+			} else {
+				self::$groups[$config['group']][] = $config['CType'];
+			}
 			unset($config);
 		}
 
@@ -264,7 +269,20 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 					ExtensionManagementUtility::addPiFlexFormValue('*', $config['flexform'], $config['CType']);
 				}
 
-				$pageTS .=
+				if (is_array($config['group'])) {
+					foreach ($config['group'] as $group) {
+						$pageTS .=
+						'mod.wizards.newContentElement.wizardItems.' . $group . '.elements.' . $config['CType'] . ' {' . "\n" .
+						'	iconIdentifier = ' . $config['iconIdentifier'] . "\n" .
+						'	title = ' . $name . "\n" .
+						'	description = ' . $config['description'] . "\n" .
+						'	tt_content_defValues {' . "\n" .
+						'		CType = ' . $config['CType'] . "\n" .
+						'	}' . "\n" .
+						'}' . "\n";
+					}
+				} else {
+					$pageTS .=
 					'mod.wizards.newContentElement.wizardItems.' . $config['group'] . '.elements.' . $config['CType'] . ' {' . "\n" .
 					'	iconIdentifier = ' . $config['iconIdentifier'] . "\n" .
 					'	title = ' . $name . "\n" .
@@ -273,6 +291,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 					'		CType = ' . $config['CType'] . "\n" .
 					'	}' . "\n" .
 					'}' . "\n";
+				}
 			}
 		}
 
