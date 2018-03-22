@@ -78,7 +78,7 @@ class JavascriptOptimization {
 		// only create it, if it doesn't exist, yet
 		if (!file_exists(PATH_site . $targetFile)) {
 			$contents = GeneralUtility::getUrl($filenameAbsolute);
-			$contents = GeneralUtility::minifyJavaScript($contents, $error);
+			$contents = GeneralUtility::minifyJavaScript($contents);
 			// make sure the folder exists
 			if (!is_dir(PATH_site . 'typo3temp/assets/compressor/')) {
 				GeneralUtility::mkdir_deep(PATH_site . 'typo3temp/assets/compressor/');
@@ -96,11 +96,7 @@ class JavascriptOptimization {
 		if (count($params['jsInline'])) {
 			foreach ($params['jsInline'] as $name => $properties) {
 				if ($properties['compress']) {
-					$error = '';
-					$params['jsInline'][$name]['code'] = GeneralUtility::minifyJavaScript($properties['code'], $error);
-					// if ($error) {
-					// 	$pageRenderer->compressError .= 'Error with minify JS Inline Block "' . $name . '": ' . $error . LF;
-					// }
+					$params['jsInline'][$name]['code'] = GeneralUtility::minifyJavaScript($properties['code']);
 				}
 			}
 		}

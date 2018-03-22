@@ -171,7 +171,7 @@ class Utility {
 	}
 
 	private function addHyphenation(DOMDocument $document) {
-		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['hyphenation']) && !$TSFE->config['config.']['tx_vierwd.']['hyphenation']) {
+		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['hyphenation']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['hyphenation']) {
 			return;
 		}
 
@@ -182,7 +182,7 @@ class Utility {
 			$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 			$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
 		}
-		if ($hyphenationRows && $TSFE->content) {
+		if ($hyphenationRows && $GLOBALS['TSFE']->content) {
 			$configuration = implode("\n", array_map(function($hyphenationRow) {
 				return $hyphenationRow['hyphenation'];
 			}, $hyphenationRows));
@@ -218,7 +218,7 @@ class Utility {
 	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
 	 */
 	private function addNoopener(DOMDocument $document) {
-		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['noopener']) && !$TSFE->config['config.']['tx_vierwd.']['noopener']) {
+		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['noopener']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['noopener']) {
 			return;
 		}
 
