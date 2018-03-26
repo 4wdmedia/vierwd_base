@@ -18,6 +18,9 @@ matrix:
       env: TYPO3_VERSION="^8.7.0"
     - php: 7
       env: TYPO3_VERSION="^6.2.0"
+  include:
+    - php: 7.1
+      env: SNIFF=1
 sudo: false
 
 addons:
@@ -50,6 +53,8 @@ script:
     echo;
     echo "Running php lint";
     find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+
+  - if [[ "$SNIFF" == "1" ]]; then .Build/bin/phpcs --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/; fi
 
   # - >
   #   echo;
