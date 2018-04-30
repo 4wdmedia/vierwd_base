@@ -168,3 +168,10 @@ if (TYPO3_version >= '8.6.0') {
 // ***************
 // Add custom content Elements. Configure in Configuration/FCE/*.php
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs($_EXTKEY, true);
+
+$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']);
+if (TYPO3_version >= '8.6.0' && !empty($extConf['forceMyISAM'])) {
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\Schema\\SqlReader'] = [
+		'className' => 'Vierwd\\VierwdBase\\Database\\ForceMyISAM',
+	];
+}
