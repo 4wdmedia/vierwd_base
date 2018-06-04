@@ -165,6 +165,7 @@ class Utility {
 			&& !$TSFE->beUserLogin
 			&& !$GLOBALS['TYPO3_CONF_VARS']['FE']['debug']
 			&& !$TSFE->config['config']['debug'] && !$TSFE->doWorkspacePreview()
+			&& !headers_sent()
 		) {
 			header('Content-Length: ' . strlen($TSFE->content));
 		}
