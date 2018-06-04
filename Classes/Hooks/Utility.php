@@ -135,10 +135,18 @@ class Utility {
 		// Ignore errors caused by HTML5 Doctype
 		libxml_use_internal_errors(true);
 		$scriptBlocks = [];
+		$commentBlocks = [];
+		$content = $TSFE->content;
+
+		$content = preg_replace_callback('#<!--.*?-->#is', function($matches) use (&$commentBlocks) {
+			$commentBlocks[] = $matches[0];
+			return '<!--COMMENT_BLOCK_' . (count($commentBlocks) - 1) . '-->';
+		}, $content);
+
 		$content = preg_replace_callback('#<script[^>]*>.*?</script>#is', function($matches) use (&$scriptBlocks) {
 			$scriptBlocks[] = $matches[0];
 			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
-		}, $TSFE->content);
+		}, $content);
 
 		// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
 		$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
@@ -156,6 +164,9 @@ class Utility {
 		$TSFE->content = str_replace('<?xml encoding="UTF-8">', '', $TSFE->content);
 		$TSFE->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
 			return $scriptBlocks[$matches[1]];
+		}, $TSFE->content);
+		$TSFE->content = preg_replace_callback('#<!--COMMENT_BLOCK_(\d+)-->#', function($matches) use (&$commentBlocks) {
+			return $commentBlocks[$matches[1]];
 		}, $TSFE->content);
 
 		// Update Content-Length Header, if it is set
