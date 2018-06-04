@@ -171,11 +171,10 @@ class Utility {
 		}
 	}
 
-	private function addHyphenation(DOMDocument $document) {
-		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['hyphenation']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['hyphenation']) {
-			return;
-		}
-
+	/**
+	 * get all hyphenation words
+	 */
+	protected function getHyphenationWords() {
 		if (TYPO3_version <= '8.5.0') {
 			$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
 		} else {
@@ -183,14 +182,25 @@ class Utility {
 			$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 			$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
 		}
-		if ($hyphenationRows && $GLOBALS['TSFE']->content) {
-			$configuration = implode("\n", array_map(function($hyphenationRow) {
-				return $hyphenationRow['hyphenation'];
-			}, $hyphenationRows));
-			$words        = array_map('trim', explode("\n", $configuration));
+
+		$configuration = implode("\n", array_map(function($hyphenationRow) {
+			return $hyphenationRow['hyphenation'];
+		}, $hyphenationRows));
+		$words = array_map('trim', explode("\n", $configuration));
+
+		return $words;
+	}
+
+	private function addHyphenation(DOMDocument $document) {
+		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['hyphenation']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['hyphenation']) {
+			return;
+		}
+
+		$hyphenationWords = $this->getHyphenationWords();
+		if ($hyphenationWords && $GLOBALS['TSFE']->content) {
 			$replacements = [];
 			$shy          = html_entity_decode('&shy;', 0, 'UTF-8');
-			foreach ($words as $word) {
+			foreach ($hyphenationWords as $word) {
 				$replacements[trim(str_replace(['#', '|', '•', $shy], '', $word))] = trim(str_replace(['#', '|', '•'], $shy, $word));
 			}
 
