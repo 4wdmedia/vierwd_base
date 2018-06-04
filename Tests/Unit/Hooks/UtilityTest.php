@@ -1,11 +1,12 @@
 <?php
 
-namespace Vierwd\VierwdSmarty\Tests\Unit\View;
+namespace Vierwd\VierwdBase\Tests\Unit\View;
 
 use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Core\Page\PageRenderer;
 
 class UtilityTest extends UnitTestCase {
@@ -46,5 +47,49 @@ class UtilityTest extends UnitTestCase {
 			'<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">',
 			'<meta name="google" content="notranslate">',
 		], $metaTags);
+	}
+
+	/**
+	 * test for html processing
+	 *
+	 * @test
+	 */
+	public function testProcessHtml() {
+		$utility = $this->getMockBuilder(BaseUtility::class)
+			->setMethods(['getHyphenationWords'])
+			->getMock();
+		$utility->method('getHyphenationWords')->will($this->returnCallback(function() {
+			return ['con•sec•tetur', 'adi#pi#sicing'];
+		}));
+		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+		$cObj->start([], '_NO_TABLE');
+		$utility->cObj = $cObj;
+
+		$baseContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
+		$TSFE = $this->setupTsfeMock();
+		$TSFE->content = $baseContent;
+		$utility->postProcessHTML([], $TSFE);
+
+		$expectedContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/HyphenationExpected.html');
+		$expectedContent = str_replace('%SHY%', html_entity_decode('&shy;', 0, 'UTF-8'), $expectedContent);
+
+		$this->assertEquals($expectedContent, $TSFE->content);
+	}
+
+	protected function setupTsfeMock() {
+		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$tsfe->content = '';
+		$config = [
+			'config' => [
+				'tx_vierwd.' => [
+				],
+			],
+		];
+		$tsfe->config = $config;
+		$GLOBALS['TSFE'] = $tsfe;
+
+		return $tsfe;
 	}
 }
