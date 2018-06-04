@@ -8,3 +8,27 @@ module.extension_builder {
 		codeTemplatePartialPaths.1 = EXT:vierwd_base/Resources/Private/CodeTemplates/Extbase/Partials/
 	}
 }
+
+config.tx_vierwd {
+	# disable all post-processing of HTML
+	# postProcessHTML = 0
+
+	# Disable browserSync. Can also be set via page.config.tx_vierwd.browserSync
+	# Use this setting for e.g. newsletters
+	# browserSync = 0
+
+	# Disable hyphenation. Can also be set via page.config.tx_vierwd.hyphenation
+	# Use this setting for e.g. newsletters
+	# hyphenation = 0
+
+	# Disable automatic adding of rel="noopener" to external links
+	# noopener = 0
+
+	# Force prepending of absRefPrefix in TYPO3 7 projects
+	# prependAbsRefPrefixToPublicUrl = 1
+
+	# Content-Elements get an id-attribute with their element id.
+	# translated elements can be prefixed with their original element id.
+	# This behaviour is disabled by default
+	enableL10nAnchor = 0
+}

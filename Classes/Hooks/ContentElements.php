@@ -406,10 +406,20 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			return $content;
 		}
 
+		$additionalId = !empty($this->cObj->data['l18n_parent']) && $this->cObj->data['l18n_parent'] != $this->cObj->data['uid'];
+		if ($additionalId) {
+			$additionalIdAttr = ' id="c' . $this->cObj->data['l18n_parent'] . '"';
+			if (strpos($content, $additionalIdAttr) === false && $GLOBALS['TSFE']->config['config']['tx_vierwd.']['enableL10nAnchor']) {
+				$additionalId = '<a' . $additionalIdAttr . '></a>';
+			} else {
+				$additionalId = false;
+			}
+		}
+
 		// add uid to first element
 		$idAttr = ' id="c' . $this->cObj->data['uid'] . '"';
 		if (strpos($content, $idAttr) !== false) {
-			return $content;
+			return $additionalId . $content;
 		}
 
 		// no-cache elements (COA_INT and USER_INT are marked with <!--INT_SCRIPT.MD5-HASH--> and replaced later)
@@ -417,14 +427,14 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		// Solution: Wrap the cache-marker
 		$isINTIncScript = substr($content, 0, strlen('<!--INT_SCRIPT.')) === '<!--INT_SCRIPT.';
 		if ($isINTIncScript) {
-			return '<div' . $idAttr . '>' . $content . '</div>';
+			return $additionalId . '<div' . $idAttr . '>' . $content . '</div>';
 		}
 
 		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || substr($content, 0, strlen('<!--')) === '<!--') {
 			// id already present or comment -> add anchor before the element
-			return '<a' . $idAttr . '></a>' . $content;
+			return $additionalId . '<a' . $idAttr . '></a>' . $content;
 		}
 
-		return preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
+		return $additionalId . preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
 	}
 }
