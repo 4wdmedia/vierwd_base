@@ -76,6 +76,30 @@ class UtilityTest extends UnitTestCase {
 		$this->assertEquals($expectedContent, $TSFE->content);
 	}
 
+	/**
+	 * when script tags get too long, regular expressions might throw an error
+	 *
+	 * @test
+	 */
+	public function testProcessHtmlWithLongScript() {
+		$utility = $this->getMockBuilder(BaseUtility::class)
+			->setMethods(['getHyphenationWords'])
+			->getMock();
+		$utility->method('getHyphenationWords')->will($this->returnCallback(function() {
+			return [];
+		}));
+		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+		$cObj->start([], '_NO_TABLE');
+		$utility->cObj = $cObj;
+
+		$baseContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
+		$TSFE = $this->setupTsfeMock();
+		$TSFE->content = $baseContent;
+		$utility->postProcessHTML([], $TSFE);
+
+		$this->assertEquals($baseContent, $TSFE->content);
+	}
+
 	protected function setupTsfeMock() {
 		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
