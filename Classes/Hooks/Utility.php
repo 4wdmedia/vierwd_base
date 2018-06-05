@@ -138,15 +138,29 @@ class Utility {
 		$commentBlocks = [];
 		$content = $TSFE->content;
 
-		$content = preg_replace_callback('#<!--.*?-->#is', function($matches) use (&$commentBlocks) {
+		// This regex is like #<!--.*?-->#si, but with much better performance
+		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
+		$content = preg_replace_callback('#<!--([^-]*(?:(?!--)[^>]*)*)(*SKIP)-->#si', function($matches) use (&$commentBlocks) {
 			$commentBlocks[] = $matches[0];
 			return '<!--COMMENT_BLOCK_' . (count($commentBlocks) - 1) . '-->';
 		}, $content);
+		if ($content === null) {
+			$pcreMessages = get_defined_constants(true);
+			$pcreMessages = array_flip($pcreMessages['pcre']);
+			throw new \Exception('Could not extract comments: ' . $pcreMessages[preg_last_error()], 1528186643);
+		}
 
-		$content = preg_replace_callback('#<script[^>]*>.*?</script>#is', function($matches) use (&$scriptBlocks) {
+		// This regex is like <script[^>]*>.*?</script>#si, but with much better performance
+		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
+		$content = preg_replace_callback('#<script[^>]*>([^<]*(?:<\/(?!script)[^>]*)*)(*SKIP)</script>#si', function($matches) use (&$scriptBlocks) {
 			$scriptBlocks[] = $matches[0];
 			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
 		}, $content);
+		if ($content === null) {
+			$pcreMessages = get_defined_constants(true);
+			$pcreMessages = array_flip($pcreMessages['pcre']);
+			throw new \Exception('Could not extract scripts: ' . $pcreMessages[preg_last_error()], 1528186643);
+		}
 
 		// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
 		$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
