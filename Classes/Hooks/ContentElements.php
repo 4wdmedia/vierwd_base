@@ -406,6 +406,10 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			return $content;
 		}
 
+		if ($GLOBALS['TSFE']->config['config']['tx_vierwd.']['disableElementId']) {
+			return $content;
+		}
+
 		$additionalId = !empty($this->cObj->data['l18n_parent']) && $this->cObj->data['l18n_parent'] != $this->cObj->data['uid'];
 		if ($additionalId) {
 			$additionalIdAttr = ' id="c' . $this->cObj->data['l18n_parent'] . '"';

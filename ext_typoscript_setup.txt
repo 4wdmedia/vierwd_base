@@ -31,4 +31,7 @@ config.tx_vierwd {
 	# translated elements can be prefixed with their original element id.
 	# This behaviour is disabled by default
 	enableL10nAnchor = 0
+
+	# Disable automatic adding of ids to html-tags. This might be useful for pages which return JSON or other data
+	# disableElementId = 1
 }
