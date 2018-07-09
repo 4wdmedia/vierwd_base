@@ -110,7 +110,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 
 			$config = include $fceConfigFile->getPathname();
-			if (!$config) {
+			if (!$config || !is_array($config)) {
 				continue;
 			}
 			$config = $config + $defaults;
