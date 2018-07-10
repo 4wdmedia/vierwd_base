@@ -67,7 +67,7 @@ class Utility {
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
 
 		foreach ($linkTags as $linkTag) {
-			$pageRenderer->addMetaTag($linkTag);
+			$pageRenderer->addHeaderData($linkTag);
 		}
 
 		$typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
@@ -95,9 +95,7 @@ class Utility {
 							continue;
 						}
 
-						$pageRenderer->addMetaTag(
-							'<meta ' . $attribute . '="' . $key . '" content="' . htmlspecialchars($value) . '"' . $endingSlash . '>'
-						);
+						$pageRenderer->setMetaTag($attribute, $key, $value);
 					}
 					continue;
 				}
@@ -112,9 +110,7 @@ class Utility {
 				continue;
 			}
 
-			$pageRenderer->addMetaTag(
-				'<meta ' . $attribute . '="' . $key . '" content="' . htmlspecialchars($value) . '"' . $endingSlash . '>'
-			);
+			$pageRenderer->setMetaTag($attribute, $key, $value);
 		}
 
 		return $content;

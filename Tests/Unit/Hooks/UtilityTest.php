@@ -26,6 +26,7 @@ class UtilityTest extends UnitTestCase {
 		$params = [
 			'meta.' => [
 				'google' => 'notranslate',
+				'meta.og:image:width' => 400,
 				'meta.og:title' => '',
 				'meta.og:title.' => [
 					'required' => 1,
@@ -39,14 +40,12 @@ class UtilityTest extends UnitTestCase {
 
 		// addMetaTags adds the tags to the singleton pageRenderer
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-		$reflectionProperty = new \ReflectionProperty($pageRenderer, 'metaTags');
-		$reflectionProperty->setAccessible(true);
-		$metaTags = $reflectionProperty->getValue($pageRenderer);
+		$pageRenderer->setTemplateFile(getcwd() . '/Tests/Unit/Fixtures/Utility/PageRendererTemplate.html');
 
-		$this->assertEquals([
-			'<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">',
-			'<meta name="google" content="notranslate">',
-		], $metaTags);
+		$this->assertEquals('<meta name="generator" content="TYPO3 CMS" />
+<meta name="google" content="notranslate" />
+<meta name="meta.og:image:width" content="400" />
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">', $pageRenderer->render());
 	}
 
 	/**

@@ -1,22 +1,17 @@
 language: php
 
 php:
-  - 5.5
-  - 5.6
-  - 7
+  - 7.2
 
 env:
-  - TYPO3_VERSION="^7.6.0"
-  - TYPO3_VERSION="^8.7.0"
+  - TYPO3_VERSION="^9.3.0"
 
 matrix:
   exclude:
-    - php: 5.5
-      env: TYPO3_VERSION="^8.7.0"
-    - php: 5.6
-      env: TYPO3_VERSION="^8.7.0"
+    # - php: 5.5
+    #   env: TYPO3_VERSION="^8.7.0"
   include:
-    - php: 7.1
+    - php: 7.2
       env: SNIFF=1
 sudo: false
 
@@ -35,7 +30,7 @@ before_install:
   - composer --version
 
 install:
-  - if [[ "$TYPO3_VERSION" ]]; then composer require "typo3/cms" "$TYPO3_VERSION"; git checkout .; export TYPO3_PATH_WEB=$PWD/.Build/Web; fi
+  - if [[ "$TYPO3_VERSION" ]]; then composer require "typo3/minimal" "$TYPO3_VERSION"; git checkout .; export TYPO3_PATH_WEB=$PWD/.Build/Web; fi
   - if [[ "$SNIFF" == "1" ]]; then composer install; fi
 
 # before_script:
@@ -51,21 +46,8 @@ script:
     .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/
 
   - >
-    if [[ "${TRAVIS_PHP_VERSION:0:3}" < "7.0" ]]; then
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
-    fi
-
-  - >
-    if [[ "${TRAVIS_PHP_VERSION:0:1}" > "5" ]]; then
-    echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7\.[1-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
-    fi
-  - >
-    if [[ "${TRAVIS_PHP_VERSION:0:3}" > "7.0" ]]; then
-    echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7\.[2-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
-    fi
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match --regexp '<\?php // PHP\s*7\.[3-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
 
   - if [[ "$SNIFF" == "1" ]]; then .Build/bin/phpcs --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/; fi
 
