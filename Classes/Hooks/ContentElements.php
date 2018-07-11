@@ -145,9 +145,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 
 			// update typoscript
-			if ($config['list_type']) {
-				$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.list.20.' . $config['list_type'] . "\n";
-			} else if ($config['template']) {
+			if ($config['template']) {
 				$template = $config['template'];
 
 				$templateDir = ExtensionManagementUtility::extPath($extensionKey) . 'Resources/Private/Templates/';
@@ -211,7 +209,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
 		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
-			if ($config['generatePlugin'] && $isLocalConf) {
+			if (!empty($config['generatePlugin']) && $isLocalConf) {
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']]) && !isset($currentPlugins[$config['pluginName']])) {
 					// a plugin with the same name was added before
 					throw new \Exception('Duplicate pluginName for extension ' . $extensionKey . ': ' . $config['pluginName'], 1482331342);
@@ -241,14 +239,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				// ext_tables
 
 				$name = $config['name'];
-				if (empty($name) && !empty($config['list_type'])) {
-					foreach ($GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'] as $plugin) {
-						if ($plugin[1] == $config['list_type']) {
-							$name = $plugin[0];
-							break;
-						}
-					}
-				}
 
 				if (!$name) {
 					throw new \Exception('Missing FCE name for ' . $config['filename']);
