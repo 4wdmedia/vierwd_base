@@ -140,7 +140,7 @@ class Utility {
 
 		// This regex is like #<!--.*?-->#si, but with much better performance
 		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
-		$content = preg_replace_callback('#<!--([^-]*(?:(?!--)[^>]*)*)(*SKIP)-->#si', function($matches) use (&$commentBlocks) {
+		$content = preg_replace_callback('#<!--([^-]*(?:-(?!-)[^-]*)*)(*SKIP)-->#si', function($matches) use (&$commentBlocks) {
 			$commentBlocks[] = $matches[0];
 			return '<!--COMMENT_BLOCK_' . (count($commentBlocks) - 1) . '-->';
 		}, $content);
