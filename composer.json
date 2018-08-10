@@ -51,7 +51,12 @@
 		},
 		"typo3/cms": {
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",
-			"web-dir": ".Build/Web"
+			"web-dir": ".Build/Web",
+			"Package": {
+				"protected": true,
+				"partOfFactoryDefault": true,
+				"partOfMinimalUsableSystem": true
+			}
 		}
 	},
 	"scripts": {
