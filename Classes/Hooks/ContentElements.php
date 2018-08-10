@@ -110,7 +110,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			}
 
 			$config = include $fceConfigFile->getPathname();
-			if (!$config || !is_array($config)) {
+			if (!$config) {
 				continue;
 			}
 			$config = $config + $defaults;
@@ -336,10 +336,29 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 						ExtensionManagementUtility::addToAllTCAtypes('tt_content', $tcaAddition[0], $tcaAddition[1], $tcaAddition[2]);
 					}
 				}
+
+				self::validateTCA($tca);
 			}
 		}
 
 		return [$GLOBALS['TCA']];
+	}
+
+	static private function validateTCA($tca) {
+		$fields = GeneralUtility::trimExplode(',', $tca, true);
+		foreach ($fields as $fieldString) {
+			$fieldArray = GeneralUtility::trimExplode(';', $fieldString);
+			$fieldArray = [
+				'fieldName' => isset($fieldArray[0]) ? $fieldArray[0] : '',
+				'fieldLabel' => isset($fieldArray[1]) ? $fieldArray[1] : null,
+				'paletteName' => isset($fieldArray[2]) ? $fieldArray[2] : null,
+			];
+			if ($fieldArray['fieldName'] === '--palette--' && $fieldArray['paletteName'] !== null) {
+				if (!isset($GLOBALS['TCA']['tt_content']['palettes'][$fieldArray['paletteName']])) {
+					throw new \Exception('Missing palette: ' . $fieldArray['paletteName'], 1531385089);
+				}
+			}
+		}
 	}
 
 	static public function generateTCA(array $config) {
@@ -379,6 +398,14 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			$flexform = '';
 		}
 
+		if (isset($GLOBALS['TCA']['tt_content']['palettes']['visibility'])) {
+			$paletteVisibility = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,';
+		} else if (isset($GLOBALS['TCA']['tt_content']['palettes']['hidden'])) {
+			$paletteVisibility = '--palette--;;hidden,';
+		} else {
+			$paletteVisibility = 'hidden,';
+		}
+
 		$tca = '
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,
 				' . $header . '
@@ -388,7 +415,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames,
 			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
-				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,
+				' . $paletteVisibility . '
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
 			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended';
 
