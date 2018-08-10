@@ -2,6 +2,8 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class BrowserSync {
 	public function enable($params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $TSFE) {
 		if (empty($_SERVER['4WD_CONFIG'])) {
@@ -17,7 +19,7 @@ class BrowserSync {
 			return;
 		}
 
-		$browserSync = '<script async src="http://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync/browser-sync-client.js"></script>';
+		$browserSync = '<script async src="http' . (GeneralUtility::getIndpEnv('TYPO3_SSL') ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync/browser-sync-client.js"></script>';
 		$TSFE->content = preg_replace('#</body>#', $browserSync . "\n</body>", $TSFE->content, 1, $count);
 	}
 }
