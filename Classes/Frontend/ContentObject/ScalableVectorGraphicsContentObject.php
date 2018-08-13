@@ -12,6 +12,8 @@ namespace Vierwd\VierwdBase\Frontend\ContentObject;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use Vierwd\SvgInliner\SvgInliner;
+
 /**
  * Output svg as inline html
  *
@@ -19,11 +21,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObject\ScalableVectorGraphicsContentObject {
 
-	private static $fullSvg;
+	/**
+	 * @var Vierwd\SvgInliner\SvgInliner;
+	 */
+	protected static $svgInliner;
 
-	private static $usedSvgs = [];
-
-	private static $usedIDs = [];
+	public function __construct() {
+		if (!self::$svgInliner) {
+			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
+		}
+	}
 
 	/**
 	 * Rendering the cObject, SVG
@@ -38,21 +45,7 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 		}
 
 		if ($conf['output']) {
-			if (self::$fullSvg) {
-				return '';
-				return self::$fullSvg->saveXml(self::$fullSvg->documentElement, LIBXML_NOEMPTYTAG);
-			}
-			return;
-		}
-
-		$excludeFromConcatenation = isset($conf['excludeFromConcatenation.']) ? $this->cObj->stdWrap($conf['excludeFromConcatenation'], $conf['excludeFromConcatenation.']) : $conf['excludeFromConcatenation'];
-		$excludeFromConcatenation = true;
-
-		if (!self::$fullSvg) {
-			$fullSvg = self::$fullSvg = new \DOMDocument;
-			$svg = $fullSvg->createElementNs('http://www.w3.org/2000/svg', 'svg');
-			$svg->setAttribute('hidden', 'hidden');
-			$fullSvg->appendChild($svg);
+			return self::$svgInliner->renderFullSVG();
 		}
 
 		$width = isset($conf['width.']) ? $this->cObj->stdWrap($conf['width'], $conf['width.']) : $conf['width'];
@@ -73,122 +66,18 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			$identifier = 'svg-' . md5($value);
 		}
 
-		if (!isset(self::$usedSvgs[$identifier])) {
-			$document = new \DOMDocument;
+		$options = [
+			'width' => $width,
+			'height' => $height,
+			'class' => $class,
+			'identifier' => $identifier,
+		];
 
-			if (!@$document->loadXml($value)) {
-				throw new \Exception('Could not load SVG: ' . $src);
-			}
-
-			if (!$conf['ignoreDuplicateIds']) {
-				$this->checkForDuplicateId($identifier, $document->documentElement);
-			}
-
-			$this->checkForSvgErrors($document);
-
-			// Remove comments within SVG
-			$removeComments = isset($conf['removeComments.']) ? $this->cObj->stdWrap($conf['removeComments'], $conf['removeComments.']) : ($conf['removeComments'] ?: true);
-			if ($removeComments) {
-				$XPath = new \DOMXPath($document);
-				$comments = $XPath->query('//comment()');
-				foreach ($comments as $comment) {
-					$comment->parentNode->removeChild($comment);
-				}
-			}
-
-			// always add the file name as class name of the root element
-			if ($document->documentElement->hasAttribute('class')) {
-				$document->documentElement->setAttribute('class', $document->documentElement->getAttribute('class') . ' svg ' . $identifier);
-			} else {
-				$document->documentElement->setAttribute('class', 'svg ' . $identifier);
-			}
-
-			$symbol = self::$fullSvg->createElement('symbol');
-			foreach ($document->documentElement->attributes as $name => $value) {
-				if ($name !== 'xmlns') {
-					$symbol->setAttribute($name, $value->nodeValue);
-				}
-			}
-			$symbol->setAttribute('id', $identifier);
-			foreach ($document->documentElement->childNodes as $child) {
-				$child = self::$fullSvg->importNode($child, true);
-				$symbol->appendChild($child);
-			}
-
-			self::$fullSvg->documentElement->appendChild($symbol);
-
-			self::$usedSvgs[$identifier] = $symbol;
-		} else {
-			$symbol = self::$usedSvgs[$identifier];
-
-			if (!$conf['ignoreDuplicateIds']) {
-				$this->checkForDuplicateId($identifier, $symbol);
-			}
-		}
-
-		$document = new \DOMDocument;
-		$svg = $document->createElementNs('http://www.w3.org/2000/svg', 'svg');
-		$document->appendChild($svg);
-
-		if (!$excludeFromConcatenation) {
-			$use = $document->createElement('use');
-			$use->setAttribute('xlink:href', '#' . $identifier);
-			$svg->appendChild($use);
-		} else {
-			$classes = GeneralUtility::trimExplode(' ', 'svg ' . $identifier . ' ' . $class, true);
-			$classes = array_unique($classes);
-			$svg->setAttribute('class', implode(' ', $classes));
-
-			// use the element directly
-			foreach ($symbol->childNodes as $child) {
-				$child = $document->importNode($child, true);
-				$svg->appendChild($child);
-			}
-		}
-
-		if ($width || $symbol->hasAttribute('width')) {
-			$svg->setAttribute('width', $width ?: $symbol->getAttribute('width'));
-		}
-		if ($height || $symbol->hasAttribute('height')) {
-			$svg->setAttribute('height', $height ?: $symbol->getAttribute('height'));
-		}
-		if ($symbol->hasAttribute('viewBox')) {
-			$svg->setAttribute('viewBox', $symbol->getAttribute('viewBox'));
-		}
-		if ($symbol->hasAttribute('preserveAspectRatio')) {
-			$svg->setAttribute('preserveAspectRatio', $symbol->getAttribute('preserveAspectRatio'));
-		}
-
-		// make sure there are no short-tags
-		$value = $document->saveXml($document->documentElement, LIBXML_NOEMPTYTAG);
-		$svgWithNamespace = '<svg xmlns="http://www.w3.org/2000/svg"';
-		if (substr($value, 0, strlen($svgWithNamespace)) === $svgWithNamespace) {
-			$value = '<svg ' . substr($value, strlen($svgWithNamespace));
-		}
+		$value = self::$svgInliner->renderSVG($value, $options);
 
 		if (isset($conf['stdWrap.'])) {
 			$value = $this->cObj->stdWrap($value, $conf['stdWrap.']);
 		}
 		return $value;
-	}
-
-	protected function checkForDuplicateId($identifier, $contextNode) {
-		$XPath = new \DOMXPath($contextNode->ownerDocument);
-		$ids = $XPath->query('.//*[@id]/@id', $contextNode);
-		foreach ($ids as $id) {
-			if (isset(self::$usedIDs[$id->nodeValue])) {
-				throw new \Exception('Duplicate ID within embedded SVG ' . $identifier . '. If this is intentional, add ignoreDuplicateIds=1', 1475853018);
-			}
-
-			self::$usedIDs[$id->nodeValue] = $identifier;
-		}
-	}
-
-	protected function checkForSvgErrors(\DOMDocument $document) {
-		$XPath = new \DOMXPath($document);
-		$transparentFill = $XPath->query('//*[@fill="transparent"]');
-		if ($transparentFill->length) {
-			throw new \Exception('SVG with fill="transparent" does not work in some older browsers. Use fill="none"', 1476431628);
-		}
 	}
 }
