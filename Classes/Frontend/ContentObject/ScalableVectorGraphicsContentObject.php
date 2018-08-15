@@ -73,6 +73,10 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 			'identifier' => $identifier,
 		];
 
+		if (isset($conf['excludeFromConcatenation'])) {
+			$options['excludeFromConcatenation'] = $conf['excludeFromConcatenation'];
+		}
+
 		$value = self::$svgInliner->renderSVG($value, $options);
 
 		if (isset($conf['stdWrap.'])) {
