@@ -1,4 +1,4 @@
-<?php
+<?php // PHP 7
 
 namespace Vierwd\VierwdBase\Controller;
 
