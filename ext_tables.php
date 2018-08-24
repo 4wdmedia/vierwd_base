@@ -41,7 +41,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['bef
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:vierwd_base/Configuration/PageTSconfig/page.ts">');
 
-if (TYPO3_MODE === 'BE') {
+if (TYPO3_MODE === 'BE' && version_compare(PHP_VERSION, '7.0.0', '>=')) {
 	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
 		'Vierwd.VierwdBase',
 		'tools', // Make module a submodule of 'tools'
