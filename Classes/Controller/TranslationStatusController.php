@@ -66,7 +66,7 @@ class TranslationStatusController extends \Vierwd\VierwdSmarty\Controller\Smarty
 		return $translations;
 	}
 
-	protected function loadLanguageComparison(string $extensionName = '', string $fileName = '') {
+	protected function loadLanguageComparison(string $extensionName = '', string $fileName = '', bool $showAllLabels = false) {
 		$localizationFactory = GeneralUtility::makeInstance(LocalizationFactory::class);
 
 		$fileReference = ExtensionManagementUtility::extPath($extensionName, 'Resources/Private/Language/' . $fileName);
@@ -95,18 +95,22 @@ class TranslationStatusController extends \Vierwd\VierwdSmarty\Controller\Smarty
 			}
 		}
 
-		if (count($translations) < 2) {
+		if (count($translations) < 2 && !$showAllLabels) {
 			return;
 		}
-
-		$keys = array_keys(array_intersect_key(...array_values($translations)));
-		// $keys are available in all arrays
 
 		$allKeys = array_merge(...array_values(array_map(function(array $data) {
 			return array_keys($data);
 		}, $translations)));
 
-		$diffKeys = array_diff($allKeys, $keys);
+		if ($showAllLabels) {
+			$diffKeys = $allKeys;
+		} else {
+			$keys = array_keys(array_intersect_key(...array_values($translations)));
+			// $keys are available in all arrays
+
+			$diffKeys = array_diff($allKeys, $keys);
+		}
 		sort($diffKeys);
 
 		$this->view->assign('translationKeys', $diffKeys);
@@ -116,10 +120,12 @@ class TranslationStatusController extends \Vierwd\VierwdSmarty\Controller\Smarty
 	/**
 	 * @param string $extensionName
 	 * @param string $fileName
+	 * @param bool $showAllLabels
 	 */
-	public function indexAction(string $extensionName = '', string $fileName = '') {
+	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false) {
 		$languageFiles = $this->getLanguageFiles();
 		$this->view->assign('languageFiles', $languageFiles);
+		$this->view->assign('currentShowAllLabels', $showAllLabels);
 
 		if (!isset($languageFiles[$extensionName], $languageFiles[$extensionName][$fileName])) {
 			$extensionName = '';
@@ -130,7 +136,7 @@ class TranslationStatusController extends \Vierwd\VierwdSmarty\Controller\Smarty
 		$this->view->assign('currentFileName', $fileName);
 
 		if ($extensionName && $fileName) {
-			$this->loadLanguageComparison($extensionName, $fileName);
+			$this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
 		}
 	}
 }

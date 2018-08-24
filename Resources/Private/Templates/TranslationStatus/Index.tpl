@@ -13,7 +13,7 @@
 				{foreach $languageFiles as $extensionName => $files}
 					<optgroup label="{$extensionName}">
 						{foreach $files as $fileName}
-							<option value="{uri_action arguments=[extensionName => $extensionName, fileName => $fileName]}"{if $extensionName === $currentExtensionName && $fileName === $currentFileName} selected{/if}>{$fileName}</option>
+							<option value="{uri_action arguments=[extensionName => $extensionName, fileName => $fileName, showAllLabels => $currentShowAllLabels]}"{if $extensionName === $currentExtensionName && $fileName === $currentFileName} selected{/if}>{$fileName}</option>
 						{/foreach}
 					</optgroup>
 				{/foreach}
@@ -25,10 +25,11 @@
 
 {block name=content}
 	<h1>Übersetzungsstatus</h1>
-	<p>
-		Gelb markierte Übersetzungen sind identisch mit Englisch. Möglicherweise sind diese unübersetzt.<br>Es kann allerdings auch sein, dass die Übersetzung gleich ist.
-	</p>
-	{if $translationKeys}
+	{if !$currentFileName}
+		<p>
+			Bitte wählen Sie eine Datei aus, die überprüft werden soll.
+		</p>
+	{else if $translationKeys}
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
@@ -58,4 +59,12 @@
 	{else}
 		<p>Alle Labels sind in allen Sprachen übersetzt</p>
 	{/if}
+
+	<div class="typo3-listOptions">
+		<div class="checkbox">
+			<label for="check-show-all-translations">
+				<input type="checkbox" class="checkbox" onclick="jumpToUrl('{uri_action arguments=[extensionName => $currentExtensionName, fileName => $currentFileName, showAllLabels => !$currentShowAllLabels]}')" id="check-show-all-translations" value="1"{if $currentShowAllLabels} checked{/if}>Alle Labels anzeigen
+			</label>
+		</div>
+	</div>
 {/block}
