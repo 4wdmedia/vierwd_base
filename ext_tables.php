@@ -32,11 +32,6 @@ foreach (new \GlobIterator($path . '*.svg') as $icon) {
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_vierwdbase_hyphenation');
 
-// Add Hook for Import/Export which imports the groupid for pages.
-// By default groupid for pages would be set to the group of the current user.
-// During initial import, our "All users"-group does not exist yet and will be generated
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_setRelation'][$_EXTKEY] = 'Vierwd\\VierwdBase\\Hooks\\ImportExport->before_setRelation';
-
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs($_EXTKEY);
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:vierwd_base/Configuration/PageTSconfig/page.ts">');
