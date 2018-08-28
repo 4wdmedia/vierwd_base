@@ -19,18 +19,12 @@ use Vierwd\SvgInliner\SvgInliner;
  *
  * @author Robert Vock <robert.vock@4wdmedia.de>
  */
-class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObject\ScalableVectorGraphicsContentObject {
+class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObject\AbstractContentObject {
 
 	/**
 	 * @var Vierwd\SvgInliner\SvgInliner;
 	 */
 	protected static $svgInliner;
-
-	public function __construct() {
-		if (!self::$svgInliner) {
-			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
-		}
-	}
 
 	/**
 	 * Rendering the cObject, SVG
@@ -42,6 +36,10 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 	public function render($conf = []) {
 		if (!empty($conf['if.']) && !$this->cObj->checkIf($conf['if.'])) {
 			return '';
+		}
+
+		if (!self::$svgInliner) {
+			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
 		}
 
 		if ($conf['output']) {
