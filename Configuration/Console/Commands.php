@@ -7,7 +7,7 @@ return [
 			'vendor' => 'vierwd',
 			'controller' => Vierwd\VierwdBase\Console\Command\PostComposerCommandController::class,
 			'controllerCommandName' => 'run',
-			'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_ESSENTIAL,
+			'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE,
 		],
 		'vierwd:database:export' => [
 			'vendor' => 'vierwd',
