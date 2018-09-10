@@ -4,7 +4,7 @@ namespace Vierwd\VierwdBase\Resource;
 
 class LocalDriver extends \TYPO3\CMS\Core\Resource\Driver\LocalDriver {
 
-	public function sanitizeFileName($fileName, $charset = '') {
+	public function sanitizeFileName($fileName, $charset = 'utf-8') {
 		$fileName = parent::sanitizeFileName($fileName, $charset);
 
 		$pathinfo = pathinfo($fileName);
