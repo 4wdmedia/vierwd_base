@@ -176,3 +176,10 @@ if (TYPO3_version >= '8.6.0' && !empty($extConf['forceMyISAM'])) {
 // During initial import, our "All users"-group does not exist yet and will be generated
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_setRelation'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_setRelation';
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_writeRecordsPages'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_writeRecordsPages';
+
+// Hook into Routing for local dev-URLs
+if (!empty($_SERVER['VIERWD_CONFIG'])) {
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Routing\\SiteMatcher'] = [
+		'className' => 'Vierwd\\VierwdBase\\XClass\\Routing\\SiteMatcher',
+	];
+}
