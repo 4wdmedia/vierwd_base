@@ -246,7 +246,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
-				if ($config['adminOnly']) {
+				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
 					$last['adminOnly'] = true;
 					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
@@ -313,11 +313,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
 				if (in_array('richtext', GeneralUtility::trimExplode(',', $config['tcaType']))) {
-					if (TYPO3_version < '8.6.0') {
-						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['defaultExtras'] = 'richtext:rte_transform[mode=ts_css]';
-					} else {
-						$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['config']['enableRichtext'] = true;
-					}
+					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['config']['enableRichtext'] = true;
 				}
 
 				foreach ($config['tcaAdditions'] as $tcaAddition) {

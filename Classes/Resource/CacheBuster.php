@@ -40,15 +40,13 @@ class CacheBuster {
 			$params['publicUrl'] = $publicUrl;
 		}
 
-		if (TYPO3_version >= '8.0.0' || isset($GLOBALS['TSFE'], $GLOBALS['TSFE']->config, $GLOBALS['TSFE']->config['config'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['prependAbsRefPrefixToPublicUrl'])) {
-			// Add absRefPrefix infront of URLs. We do not use this for TYPO3 7, because we're still using sourceSetCollection
-			// for some projects (picture-configuration.ts) and this would lead to duplicate prefixes.
-			// Projects running TYPO3 7 must handle these issues themselves. But most are still using baseURL and do not need
-			// an absolute path
-			if (TYPO3_MODE === 'FE' && isset($GLOBALS['TSFE']) && preg_match('/^[a-z]/i', $params['publicUrl'])) {
-				// Force absolute path
-				$params['publicUrl'] = $GLOBALS['TSFE']->absRefPrefix . $params['publicUrl'];
-			}
+		// Add absRefPrefix infront of URLs. We do not use this for TYPO3 7, because we're still using sourceSetCollection
+		// for some projects (picture-configuration.ts) and this would lead to duplicate prefixes.
+		// Projects running TYPO3 7 must handle these issues themselves. But most are still using baseURL and do not need
+		// an absolute path
+		if (TYPO3_MODE === 'FE' && isset($GLOBALS['TSFE']) && preg_match('/^[a-z]/i', $params['publicUrl'])) {
+			// Force absolute path
+			$params['publicUrl'] = $GLOBALS['TSFE']->absRefPrefix . $params['publicUrl'];
 		}
 	}
 }

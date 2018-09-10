@@ -36,10 +36,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY]
 // eID for TYPO3 Version
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = 'Vierwd\\VierwdBase\\Controller\\Typo3Version::main';
 
-// **************
-// Add Error command controller
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = 'Vierwd\\VierwdBase\\Command\\CronjobCommandController';
-
 // disable html_errors, if this is an ajax request
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 	ini_set('html_errors', 'off');
@@ -145,9 +141,6 @@ $signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtilit
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = 'Vierwd\\VierwdBase\\Hooks\\CheckBackendGroups';
 
 // Database connection with correct utf8mb4 charset
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\DatabaseConnection'] = [
-	'className' => 'Vierwd\\VierwdBase\\Database\\DatabaseConnection',
-];
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\Schema\\ConnectionMigrator'] = [
 	'className' => 'Vierwd\\VierwdBase\\Database\\Schema\\ConnectionMigrator',
 ];

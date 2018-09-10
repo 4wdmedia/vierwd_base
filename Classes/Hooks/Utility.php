@@ -210,13 +210,9 @@ class Utility {
 	 * get all hyphenation words
 	 */
 	protected function getHyphenationWords() {
-		if (TYPO3_version <= '8.5.0') {
-			$hyphenationRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('hyphenation', 'tx_vierwdbase_hyphenation', '1=1');
-		} else {
-			$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
-			$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
-			$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
-		}
+		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
+		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
+		$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
 		$configuration = implode("\n", array_map(function($hyphenationRow) {
 			return $hyphenationRow['hyphenation'];

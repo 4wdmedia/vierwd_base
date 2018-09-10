@@ -11,6 +11,7 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -44,9 +45,9 @@ class PageNotFoundHandler {
 			$headers['Authorization'] = $_SERVER['Authorization'];
 		} else if ($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
 			$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] .':' . $_SERVER['PHP_AUTH_PW']);
-		} else if ($_SERVER['AUTH_TYPE'] == 'Basic' && $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']) {
+		} else if ($_SERVER['AUTH_TYPE'] == 'Basic') {
 			// Kundenbereich
-			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']);
+			$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 			if (isset($extConf['serviceUsername'], $extConf['servicePassword'])) {
 				$headers['Authorization'] = 'Basic ' . base64_encode($extConf['serviceUsername'] . ':' . $extConf['servicePassword']);
 			}
@@ -66,12 +67,6 @@ class PageNotFoundHandler {
 		}
 		//$report = [];
 		$report = null;
-		if (TYPO3_version <= '8.0.0') {
-			// Convert headers to old format
-			$headers = array_map(function($key, $value) {
-				return $key . ': ' . $value;
-			}, array_keys($headers), $headers);
-		}
 		$result = GeneralUtility::getUrl($url, 0, $headers, $report);
 		if ($GLOBALS['BE_USER']) {
 			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($param['reasonText']), $result);
