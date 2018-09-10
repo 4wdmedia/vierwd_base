@@ -1,7 +1,5 @@
 {extends file='Layouts/Backend.tpl'}
 
-{$getModuleUrl = ['TYPO3\\CMS\\Backend\\Utility\\BackendUtility', 'getModuleUrl']}
-
 {block name=header}
 <div class="module-docheader-bar t3js-module-docheader-bar">
 	<div class="form-inline">
