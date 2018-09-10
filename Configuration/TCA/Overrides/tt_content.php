@@ -29,7 +29,9 @@ unset($wizards);
 \Vierwd\VierwdBase\Hooks\ContentElements::$oldProcFunc = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemsProcFunc'];
 $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemsProcFunc'] = 'Vierwd\\VierwdBase\\Hooks\\ContentElements->processCType';
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames', 'textmedia', 'replace:layout');
+if (TYPO3_version < '8.0.0') {
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames', 'textmedia', 'replace:layout');
+}
 
 if (TYPO3_version < '8.6.0') {
 	// Add content elements
