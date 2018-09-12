@@ -11,26 +11,7 @@ class GetButtonsHook {
 	public function adjustSaveAndClose(array $params) {
 		$buttonBars = $params['buttons'];
 
-		foreach ($buttonBars as $position => $buttons) {
-			foreach ($buttons as $priority => $subButtons) {
-				foreach ($subButtons as $subButtonKey => $button) {
-					if ($button instanceof \TYPO3\CMS\Backend\Template\Components\Buttons\SplitButton) {
-						// check if it is the save-button
-						$buttonItems = $button->getButton();
-						if (!isset($buttonItems['primary']) || !$buttonItems['primary']->getIcon() || $buttonItems['primary']->getIcon()->getIdentifier() !== 'actions-document-save') {
-							continue;
-						}
-
-						$buttonItems['primary']->setShowLabelText(true);
-
-						$saveButtons = array_merge([$buttonItems['primary']], $buttonItems['options']);
-
-						array_splice($buttonBars[$position][$priority], $subButtonKey, 1, $saveButtons);
-						break 3;
-					}
-				}
-			}
-		}
+		// TODO: Add saveAndClose for TYPO3 9
 
 		return $buttonBars;
 	}
