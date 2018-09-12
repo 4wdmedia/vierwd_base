@@ -15,3 +15,7 @@ CREATE TABLE tx_vierwdbase_hyphenation (
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 );
+
+CREATE TABLE sys_file_reference (
+	hotspot text,
+);

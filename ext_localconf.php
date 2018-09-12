@@ -176,3 +176,11 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 		'className' => 'Vierwd\\VierwdBase\\XClass\\Routing\\SiteMatcher',
 	];
 }
+
+// ***************
+// Add HotspotEditor
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1536673649] = [
+	'nodeName' => 'vierwdHotspot',
+	'priority' => '70',
+	'class' => \Vierwd\VierwdBase\Form\Element\HotspotEditorElement::class,
+];
