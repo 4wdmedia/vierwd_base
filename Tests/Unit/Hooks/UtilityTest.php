@@ -96,7 +96,7 @@ class UtilityTest extends UnitTestCase {
 		$TSFE->content = $baseContent;
 		$utility->postProcessHTML([], $TSFE);
 
-		$this->assertEquals($baseContent, $TSFE->content);
+		$this->assertEquals(trim($baseContent), trim($TSFE->content));
 	}
 
 	protected function setupTsfeMock() {

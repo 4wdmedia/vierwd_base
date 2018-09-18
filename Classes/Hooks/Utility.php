@@ -146,22 +146,7 @@ class Utility {
 			throw new \Exception('Could not extract comments: ' . $pcreMessages[preg_last_error()], 1528186643);
 		}
 
-		// This regex is like <script[^>]*>.*?</script>#si, but with much better performance
-		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
-		$regExp = '=<script[^>]*>([^<]*(?:<(?!/script>)[^<]*)*)(*SKIP)</script>=xsi';
-		$regExp = '=
-			# start with <script*>
-			<script[^>]*>
-			(
-				# eat characters until a < is reached
-				[^<]*
-				# check if the < is followed by /script>. if not, eat until next <
-				(?:<(?!/script>)[^<]*)*
-			)(*SKIP)
-			# ends with </script>
-			</script>
-			=xsi';
-
+		$regExp = '#<scrip(?=t)[^>]+>.+?</script>#si';
 		$content = preg_replace_callback($regExp, function($matches) use (&$scriptBlocks) {
 			$scriptBlocks[] = $matches[0];
 			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
