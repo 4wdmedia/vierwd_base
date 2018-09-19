@@ -130,32 +130,12 @@ class Utility {
 		$document = new DOMDocument('1.0', 'utf-8');
 		// Ignore errors caused by HTML5 Doctype
 		libxml_use_internal_errors(true);
-		$scriptBlocks = [];
-		$commentBlocks = [];
 		$content = $TSFE->content;
 
-		// This regex is like #<!--.*?-->#si, but with much better performance
-		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
-		$content = preg_replace_callback('#<!--([^-]*(?:-(?!-)[^-]*)*)(*SKIP)-->#si', function($matches) use (&$commentBlocks) {
-			$commentBlocks[] = $matches[0];
-			return '<!--COMMENT_BLOCK_' . (count($commentBlocks) - 1) . '-->';
-		}, $content);
-		if ($content === null) {
-			$pcreMessages = get_defined_constants(true);
-			$pcreMessages = array_flip($pcreMessages['pcre']);
-			throw new \Exception('Could not extract comments: ' . $pcreMessages[preg_last_error()], 1528186643);
-		}
-
-		$regExp = '#<scrip(?=t)[^>]+>.+?</script>#si';
-		$content = preg_replace_callback($regExp, function($matches) use (&$scriptBlocks) {
-			$scriptBlocks[] = $matches[0];
-			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
-		}, $content);
-		if ($content === null) {
-			$pcreMessages = get_defined_constants(true);
-			$pcreMessages = array_flip($pcreMessages['pcre']);
-			throw new \Exception('Could not extract scripts: ' . $pcreMessages[preg_last_error()], 1528186643);
-		}
+		// Replace comments and scripts within HTML. The PHP DomParser breaks some comments or scripts, if they contain
+		// closing tags without opening tags. <![CDATA[...]]> did not help.
+		$content = $this->replaceComments($content);
+		$content = $this->replaceScripts($content);
 
 		// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
 		$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
@@ -171,12 +151,9 @@ class Utility {
 		$TSFE->content = $document->saveHTML();
 		$TSFE->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $TSFE->content);
 		$TSFE->content = str_replace('<?xml encoding="UTF-8">', '', $TSFE->content);
-		$TSFE->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
-			return $scriptBlocks[$matches[1]];
-		}, $TSFE->content);
-		$TSFE->content = preg_replace_callback('#<!--COMMENT_BLOCK_(\d+)-->#', function($matches) use (&$commentBlocks) {
-			return $commentBlocks[$matches[1]];
-		}, $TSFE->content);
+		$TSFE->content = $this->restoreScripts($TSFE->content);
+		$TSFE->content = $this->restoreComments($TSFE->content);
+
 
 		// Update Content-Length Header, if it is set
 		// Condition taken from TypoScriptFrontendController::processOutput
@@ -189,6 +166,81 @@ class Utility {
 		) {
 			header('Content-Length: ' . strlen($TSFE->content));
 		}
+	}
+
+	protected function replaceComments(string $content): string {
+		$commentBlocks = [];
+		// This regex is like #<!--.*?-->#si, but with much better performance
+		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
+		$content = preg_replace_callback('#<!--([^-]*(?:-(?!-)[^-]*)*)(*SKIP)-->#si', function($matches) use (&$commentBlocks) {
+			$commentBlocks[] = $matches[0];
+			return '<!--COMMENT_BLOCK_' . (count($commentBlocks) - 1) . '-->';
+		}, $content);
+		if ($content === null) {
+			$pcreMessages = get_defined_constants(true);
+			$pcreMessages = array_flip($pcreMessages['pcre']);
+			throw new \Exception('Could not extract comments: ' . $pcreMessages[preg_last_error()], 1528186643);
+		}
+
+		$this->commentBlocks = $commentBlocks;
+
+		return $content;
+	}
+
+	protected function restoreComments(string $content): string {
+		return preg_replace_callback('#<!--COMMENT_BLOCK_(\d+)-->#', function($matches) {
+			return $this->commentBlocks[$matches[1]];
+		}, $content);
+	}
+
+	protected function replaceScripts(string $content): string {
+		$this->scriptBlocks = [];
+
+		// This regex is like <script[^>]*>.*?</script>#si, but with much better performance
+		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
+		$regExp = '/
+			# start with <script*>
+			<scrip(?=t)[^>]+>
+			(?:
+				# eat characters until a < is reached
+				[^<]*
+				# check if the < is followed by \\/script>. if not, eat until next <
+				(?:<(?!\\/script>)[^<]*)+
+			)(*SKIP)
+			# ends with <\\/script>
+			<\\/script>
+			/xsi';
+
+		$regExp = '/<script\b[^<]*(?:(?!<\\/script>)<[^<]*)*<\\/script>/i';
+
+		$replacedContent = preg_replace_callback($regExp, function($matches) {
+			$this->scriptBlocks[] = $matches[0];
+			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($this->scriptBlocks) - 1) . '-->';
+		}, $content);
+		if ($replacedContent === null) {
+			$pcreMessages = get_defined_constants(true);
+			$pcreMessages = array_flip($pcreMessages['pcre']);
+			$error1 = $pcreMessages[preg_last_error()];
+
+			// try again with another regexp (one throws PREG_JIT_STACKLIMIT_ERROR, the other PREG_BACKTRACK_LIMIT_ERROR)
+			$regExp = '#<scrip(?=t)[^>]+>.+?</script>#si';
+			$replacedContent = preg_replace_callback($regExp, function($matches) {
+				$this->scriptBlocks[] = $matches[0];
+				return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($this->scriptBlocks) - 1) . '-->';
+			}, $content);
+
+			if ($replacedContent === null) {
+				$error2 = $pcreMessages[preg_last_error()];
+				throw new \Exception('Could not extract scripts: 1. ' . $error1 . ', 2. ' . $error2, 1528186643);
+			}
+		}
+		return $replacedContent;
+	}
+
+	protected function restoreScripts(string $content): string {
+		return preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) {
+			return $this->scriptBlocks[$matches[1]];
+		}, $content);
 	}
 
 	/**
