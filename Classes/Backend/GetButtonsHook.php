@@ -16,6 +16,10 @@ class GetButtonsHook {
 	public function adjustSaveAndClose(array $params) {
 		$buttonBars = $params['buttons'];
 
+		if (empty($buttonBars) || empty($buttonBars['left'])) {
+			return $buttonBars;
+		}
+
 		// find the save button and replace it
 		foreach ($buttonBars['left'] as &$buttonGroup) {
 			foreach ($buttonGroup as $button) {
