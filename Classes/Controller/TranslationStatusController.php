@@ -99,9 +99,9 @@ class TranslationStatusController extends \Vierwd\VierwdSmarty\Controller\Smarty
 			return;
 		}
 
-		$allKeys = array_merge(...array_values(array_map(function(array $data) {
+		$allKeys = array_unique(array_merge(...array_values(array_map(function(array $data) {
 			return array_keys($data);
-		}, $translations)));
+		}, $translations))));
 
 		if ($showAllLabels) {
 			$diffKeys = $allKeys;
