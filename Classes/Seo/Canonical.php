@@ -2,6 +2,7 @@
 
 namespace Vierwd\VierwdBase\Seo;
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Canonical implements \TYPO3\CMS\Core\SingletonInterface {
