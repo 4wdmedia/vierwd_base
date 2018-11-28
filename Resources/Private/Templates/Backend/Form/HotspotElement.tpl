@@ -17,6 +17,8 @@
 				{/foreach}
 			</select>
 		</div>
+	{else}
+		<input type="hidden" class="vierwd-hotspot__image-variant" value="{key($cropVariants)}">
 	{/if}
 	<div class="form-control-wrap">
 		<select class="vierwd-hotspot__type form-control form-control-adapt">
