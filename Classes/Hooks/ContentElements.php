@@ -435,6 +435,10 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 		// add uid to first element
 		$idAttr = ' id="c' . $this->cObj->data['uid'] . '"';
+		if (isset($this->cObj->data['parentData'], $this->cObj->data['parentData']['uid'])) {
+			// this element is a reference. Make sure the ID does not appear twice on this page
+			$idAttr = ' id="c' . $this->cObj->data['uid'] . '-' . $this->cObj->data['parentData']['uid'] . '"';
+		}
 		if (strpos($content, $idAttr) !== false) {
 			return $additionalId . $content;
 		}
