@@ -56,8 +56,10 @@ class DatabaseCommandController extends CommandController {
 		$this->outputLine('DB Import of %s (%s)', [$importFile, $size]);
 
 
-		// Create backup first
-		$this->createBackup();
+		if (!$this->isDbEmpty()) {
+			// Create backup first
+			$this->createBackup();
+		}
 
 
 		// Perform import
@@ -111,6 +113,12 @@ class DatabaseCommandController extends CommandController {
 	 * @param string $file filename for export
 	 */
 	public function exportCommand(string $file = '') {
+		if ($this->isDbEmpty()) {
+			$this->outputLine('<error>Database is empty</error>');
+			$this->quit(1);
+			return;
+		}
+
 		$command1 = $this->getExportDataTablesCommand();
 		$command2 = $this->getExportStructureTablesCommand();
 
@@ -245,6 +253,15 @@ class DatabaseCommandController extends CommandController {
 			}
 			$this->outputLine(date('Y-m-d H:i', $time) . ' ' . $table->getName());
 		}
+	}
+
+	protected function isDbEmpty(): bool {
+		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+		$connection = $connectionPool->getConnectionByName('Default');
+		$schemaManager = $connection->getSchemaManager();
+		$tables = $schemaManager->listTableNames();
+
+		return !$tables;
 	}
 
 	protected function getIgnoredTables(): array {

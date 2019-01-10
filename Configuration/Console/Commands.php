@@ -13,6 +13,7 @@ return [
 			'vendor' => 'vierwd',
 			'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
 			'controllerCommandName' => 'export',
+			'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL,
 		],
 		'vierwd:database:import' => [
 			'vendor' => 'vierwd',
