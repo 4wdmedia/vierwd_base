@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Console\Command;
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class PostComposerCommandController extends CommandController {
 
@@ -51,9 +52,27 @@ class PostComposerCommandController extends CommandController {
 			}
 		}
 
-		$this->commandDispatcher->executeCommand('cache:flush');
+		// check if database is fully available
+		if ($this->hasValidDatabaseConnection()) {
+			$this->commandDispatcher->executeCommand('cache:flush');
+		}
 		$this->commandDispatcher->executeCommand('cache:flush', ['--force', '--files-only']);
 
 		$this->quit(0);
+	}
+
+	protected function hasValidDatabaseConnection(): bool {
+		if (!file_exists(PATH_site . 'typo3conf/PackageStates.php') || !file_exists(PATH_site . 'typo3conf/LocalConfiguration.php')) {
+			return false;
+		}
+
+		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+		$connection = $connectionPool->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
+		try {
+			$connection->connect();
+			return count($connection->getSchemaManager()->listTableNames()) > 0;
+		} catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+			return false;
+		}
 	}
 }
