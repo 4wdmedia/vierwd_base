@@ -44,10 +44,16 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 	protected function addLicenseHeader($classObject) {
 		$comments = $classObject->getComments();
 		$needsLicenseHeader = true;
-		foreach ($comments as $comment) {
+		foreach ($comments as $key => $comment) {
 			// we do not use GPL
 			if (strpos($comment, 'Copyright notice') !== false) {
 				$needsLicenseHeader = false;
+				if (substr($comment, -2) !== "\n") {
+					$comment = trim($comment) . "\n";
+					$comments[$key] = $comment;
+					$classObject->setComments($comments);
+				}
+				break;
 			}
 		}
 
@@ -55,7 +61,8 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 			$licenseHeader = $this->renderTemplate(
 				'Partials/Classes/licenseHeader.phpt',
 				['persons' => $this->extension->getPersons()]
-			);
+			) . "\n";
+
 			$classObject->addComment($licenseHeader);
 		}
 	}
