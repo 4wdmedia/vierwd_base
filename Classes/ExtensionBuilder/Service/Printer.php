@@ -27,7 +27,8 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 				}
 
 				foreach ($class->getMethods() as $method) {
-					if ($method->getTags() && isset($method->getTags()['return']) && in_array('void', $method->getTags()['return'])) {
+					$returnValues = $method->getTags() && isset($method->getTags()['return']) ? $method->getTags()['return'] : false;
+					if ($returnValues === 'void' || is_array($returnValues) && in_array('void', $returnValues)) {
 						$method->removeTag('return');
 					}
 
