@@ -26,7 +26,7 @@ class PageNotFoundHandler {
 	 * page not found action.
 	 * will try to load "/404" and display it. If the failure is due to a access error, tries to load "/login".
 	 */
-	public function pageNotFound($param, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe) {
+	public function pageNotFound($param, \TYPO3\CMS\Frontend\Controller\ErrorController $controller) {
 		$dirname = dirname($_SERVER['SCRIPT_NAME']);
 		if (substr($dirname, -1) != '/') {
 			$dirname .= '/';
@@ -59,7 +59,7 @@ class PageNotFoundHandler {
 			$headers['Cookie'] = $cookieName . '=' . $_COOKIE[$cookieName];
 		}
 		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
-		if (in_array($tsfe->pageNotFound, [1, 2]) && isset($param['pageAccessFailureReasons']['fe_group']) && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
+		if (in_array($GLOBALS['TSFE']->pageNotFound, [1, 2]) && isset($param['pageAccessFailureReasons']['fe_group']) && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
 			header('HTTP/1.0 403 Forbidden');
 			$url = $host . $dirname . 'login/?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
 		} else {
