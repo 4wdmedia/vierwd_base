@@ -165,17 +165,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = image' . "\n";
 				}
 			}
-			foreach ($config['switchableControllerActions'] as $controller => $actions) {
-				$i = 1;
-
-				if (!is_array($actions)) {
-					$actions = GeneralUtility::trimExplode(',', $actions, true);
-				}
-
-				foreach ($actions as $action) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.switchableControllerActions.' . $controller . '.' . $i++ . ' = ' . $action . "\n";
-				}
-			}
 
 			if (is_array($config['group'])) {
 				foreach ($config['group'] as $group) {
