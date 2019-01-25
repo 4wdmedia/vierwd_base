@@ -159,7 +159,7 @@ class Utility {
 		// Condition taken from TypoScriptFrontendController::processOutput
 		if (
 			(!isset($TSFE->config['config']['enableContentLengthHeader']) || $TSFE->config['config']['enableContentLengthHeader'])
-			&& !$TSFE->beUserLogin
+			&& !$TSFE->isBackendUserLoggedIn()
 			&& !$GLOBALS['TYPO3_CONF_VARS']['FE']['debug']
 			&& !$TSFE->config['config']['debug'] && !$TSFE->doWorkspacePreview()
 			&& !headers_sent()
