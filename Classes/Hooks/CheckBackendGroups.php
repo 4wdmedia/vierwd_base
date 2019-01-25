@@ -29,6 +29,10 @@ class CheckBackendGroups {
 	}
 
 	private function checkContentElements(array &$warnings, array $backendGroups) {
+		if ($GLOBALS['TYPO3_CONF_VARS']['BE']['explicitADmode'] != 'explicitAllow') {
+			return;
+		}
+
 		$contentElements = $this->getContentElements();
 
 		foreach ($backendGroups as $backendGroup) {
