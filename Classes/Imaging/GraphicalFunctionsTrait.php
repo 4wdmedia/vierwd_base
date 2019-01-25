@@ -20,7 +20,8 @@ trait GraphicalFunctionsTrait {
 		// Note: mustCreate has another default value
 
 		$ext = $newExt ?: strtolower(pathinfo($imagefile, PATHINFO_EXTENSION));
-		if ($params && in_array($ext, ['jpeg', 'jpg'])) {
+		$params = (string)$params;
+		if (in_array($ext, ['jpeg', 'jpg'])) {
 			$append = '';
 			if (preg_match('/\s-font\s*$/', $params, $matches)) {
 				// TYPO3 always prepends the parameters before the filename. For some imagemagick commands,
