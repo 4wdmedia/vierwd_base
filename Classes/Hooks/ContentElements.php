@@ -176,6 +176,8 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			unset($config);
 		}
 
+		$FCEs = self::validateFCEs($extensionKey, $FCEs);
+
 		self::$fceConfiguration[$extensionKey] = [
 			'typoScript' => $typoScript,
 			'pageTS' => $pageTS,
@@ -184,10 +186,63 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 	}
 
 	/**
+	 * validate FCEs and return only the valid FCEs.
+	 * If the current request is not a clear cache request, this method will throw an exception if FCEs are invalid
+	 */
+	static protected function validateFCEs(string $extensionKey, array $FCEs): array {
+		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
+		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
+
+		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, $extensionName, $currentPlugins) {
+			if ($config['generatePlugin']) {
+				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']]) && !isset($currentPlugins[$config['pluginName']])) {
+					// a plugin with the same name was added before
+					self::generateException('Duplicate pluginName for extension ' . $extensionKey . ': ' . $config['pluginName'], 1482331342);
+					return false;
+				}
+
+				// check controller names
+				foreach (array_keys($config['controllerActions'] + $config['nonCacheableActions']) as $controllerName) {
+					if (!preg_match('/^[A-Z]/', $controllerName)) {
+						self::generateException('Controller name does not start with an uppercase letter. Extension ' . $extensionKey . '. Element: ' . $config['CType'], 1548429406);
+						return false;
+					}
+				}
+			}
+
+			$name = $config['name'];
+			if (!$name) {
+				self::generateException('Missing FCE name for ' . $config['filename']);
+				return false;
+			}
+
+			$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
+			if (in_array('image', $tcaType) && in_array('media', $tcaType)) {
+				self::generateException('You can only choose either media or image as tcaType, but not both', 1491296754);
+				return false;
+			}
+
+			return true;
+		});
+
+		return $FCEs;
+	}
+
+	/**
+	 * If the current request is not a clear cache request, this method will throw an exception
+	 *
+	 * @throws \Exception
+	 */
+	static protected function generateException(string $message, int $code) {
+		if (!isset($_GET['cacheCmd']) || $_GET['cacheCmd'] !== 'all') {
+			throw new \Exception($message, $code);
+		}
+	}
+
+	/**
 	 * add Content Elements
 	 *
 	 * @param string $extensionKey
-	 * @throws \Exception if the FCE configuration is invalid (missing CType or missing name)
 	 */
 	static public function addFCEs($extensionKey, $isLocalConf = false) {
 		self::initializeFCEs($extensionKey);
@@ -199,16 +254,10 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
 			if ($config['generatePlugin'] && $isLocalConf) {
-				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']]) && !isset($currentPlugins[$config['pluginName']])) {
-					// a plugin with the same name was added before
-					throw new \Exception('Duplicate pluginName for extension ' . $extensionKey . ': ' . $config['pluginName'], 1482331342);
-				}
-
 				ExtensionUtility::configurePlugin(
 					'Vierwd.' . $extensionKey,
 					$config['pluginName'],
 					$config['controllerActions'],
-					// non-cacheable actions
 					$config['nonCacheableActions'],
 					ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 				);
@@ -228,10 +277,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				// ext_tables
 
 				$name = $config['name'];
-
-				if (!$name) {
-					throw new \Exception('Missing FCE name for ' . $config['filename']);
-				}
 
 				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
@@ -319,7 +364,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		return [$GLOBALS['TCA']];
 	}
 
-	static private function validateTCA($tca) {
+	static protected function validateTCA($tca) {
 		$fields = GeneralUtility::trimExplode(',', $tca, true);
 		foreach ($fields as $fieldString) {
 			$fieldArray = GeneralUtility::trimExplode(';', $fieldString);
@@ -354,9 +399,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		}
 
 		if (in_array('media', $tcaType)) {
-			if (in_array('image', $tcaType)) {
-				throw new \Exception('You can only choose either media or image as tcaType, but not both', 1491296754);
-			}
 			$image = '--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media,
 				assets,
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.imagelinks;imagelinks,';
