@@ -31,5 +31,10 @@ return [
 			'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
 			'controllerCommandName' => 'lastChange',
 		],
+		'vierwd:list-words' => [
+			'vendor' => 'vierwd',
+			'controller' => Vierwd\VierwdBase\Console\Command\ListWordsCommandController::class,
+			'controllerCommandName' => 'run',
+		],
 	],
 ];
