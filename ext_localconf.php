@@ -183,7 +183,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['bef
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_writeRecordsPages'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_writeRecordsPages';
 
 // Add gridelement types to PageTsConfig (tt_content.gridtypes.container.section_frame.addItems...)
-if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtilityisLoaded('gridelements')) {
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('gridelements')) {
 	$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\GridelementsContainerTypeValue::class] = [
 		'depends' => [
 			\TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRecordTypeValue::class,
