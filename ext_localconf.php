@@ -61,7 +61,7 @@ $signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \T
 
 // **************
 // Replace encoded mail addresses during indexing
-if (TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search')) {
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search')) {
 	if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = [];
 	}
@@ -181,3 +181,27 @@ if (TYPO3_version >= '8.6.0' && !empty($extConf['forceMyISAM'])) {
 // During initial import, our "All users"-group does not exist yet and will be generated
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_setRelation'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_setRelation';
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_writeRecordsPages'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_writeRecordsPages';
+
+// Add gridelement types to PageTsConfig (tt_content.gridtypes.container.section_frame.addItems...)
+if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtilityisLoaded('gridelements')) {
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\GridelementsContainerTypeValue::class] = [
+		'depends' => [
+			\TYPO3\CMS\Backend\Form\FormDataProvider\DatabaseRecordTypeValue::class,
+		],
+		'before' => [
+			\TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class,
+		],
+	];
+
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\GridelementsMergeTsConfig::class] = [
+		'depends' => [
+			\Vierwd\VierwdBase\Form\FormDataProvider\GridelementsContainerTypeValue::class,
+			\TYPO3\CMS\Backend\Form\FormDataProvider\PageTsConfigMerged::class,
+		],
+		'before' => [
+			\TYPO3\CMS\Backend\Form\FormDataProvider\TcaColumnsOverrides::class,
+			\TYPO3\CMS\Backend\Form\FormDataProvider\TcaSelectItems::class,
+		],
+	];
+
+}
