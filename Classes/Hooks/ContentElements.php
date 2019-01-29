@@ -191,15 +191,16 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 	 */
 	static protected function validateFCEs(string $extensionKey, array $FCEs): array {
 		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
-		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
 
-		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, $extensionName, $currentPlugins) {
+		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
+		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, $extensionName, &$currentPlugins) {
 			if ($config['generatePlugin']) {
-				if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'][$config['pluginName']]) && !isset($currentPlugins[$config['pluginName']])) {
+				if (isset($currentPlugins[$config['pluginName']])) {
 					// a plugin with the same name was added before
 					self::generateException('Duplicate pluginName for extension ' . $extensionKey . ': ' . $config['pluginName'], 1482331342);
 					return false;
 				}
+				$currentPlugins[$config['pluginName']] = true;
 
 				// check controller names
 				foreach (array_keys($config['controllerActions'] + $config['nonCacheableActions']) as $controllerName) {
