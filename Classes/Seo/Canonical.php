@@ -2,8 +2,10 @@
 
 namespace Vierwd\VierwdBase\Seo;
 
+use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\HttpUtility;
 
 class Canonical implements \TYPO3\CMS\Core\SingletonInterface {
 
@@ -24,8 +26,22 @@ class Canonical implements \TYPO3\CMS\Core\SingletonInterface {
 			return '';
 		}
 
-		if ($GLOBALS['TSFE']->cHash) {
-			$query = GeneralUtility::_GET();
+		$request = $GLOBALS['TYPO3_REQUEST'];
+		$pageArguments = $request->getAttribute('routing', null);
+		if ($pageArguments instanceof PageArguments) {
+			$queryParams = $pageArguments->getDynamicArguments();
+		} else {
+			$queryParams = $request->getQueryParams();
+		}
+		$queryParams = array_diff_key($queryParams, ['L' => 0, 'id' => 0]);
+
+		if (!$GLOBALS['TSFE']->cHash && $queryParams) {
+			// some dynamic parameters without a cHash.
+			return '';
+		}
+
+		$query = GeneralUtility::_GET();
+		if ($query) {
 			$removeParameters = (array)$GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'];
 			$removeParameters = array_filter($removeParameters);
 			$queryChanged = false;
