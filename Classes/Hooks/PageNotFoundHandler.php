@@ -11,32 +11,52 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Error\PageErrorHandler\PageErrorHandlerInterface;
+use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * handle page not found actions.
  * Redirect to login, when the reason is missing access
- *
- * @package vierwd_base
  */
-class PageNotFoundHandler {
+class PageNotFoundHandler implements PageErrorHandlerInterface {
 
 	/**
 	 * page not found action.
 	 * will try to load "/404" and display it. If the failure is due to a access error, tries to load "/login".
 	 */
-	public function pageNotFound($param, \TYPO3\CMS\Frontend\Controller\ErrorController $controller) {
-		$dirname = dirname($_SERVER['SCRIPT_NAME']);
-		if (substr($dirname, -1) != '/') {
-			$dirname .= '/';
+	public function pageNotFound($param) {
+		$request = $GLOBALS['TYPO3_REQUEST'];
+		$response = $this->handlePageError($request, $param['reasonText'], $param['pageAccessFailureReasons']);
+		return (string)$response->getBody();
+	}
+
+	public function handlePageError(ServerRequestInterface $request, string $message, array $reasons = []): ResponseInterface {
+		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
+			$response = new HtmlResponse('404 Loop', 404);
+			return $response;
 		}
 
-		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
-			header('HTTP/1.1 200 OK');
-			echo '404 Loop';
-			exit;
+		$language = $request->getAttribute('language');
+		if (!$language) {
+			$language = $request->getAttribute('site')->getDefaultLanguage();
 		}
+
+		$uri = (string)$language->getBase() . '404';
+		$page = $this->load404Page($uri, $message);
+
+		$response = new HtmlResponse($page, 404);
+		return $response;
+	}
+
+	protected function load404Page(string $uri, string $reason = '') {
+		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
+			return '404 Loop';
+		}
+
 		$headers = [
 			'X-PageNotFound' => '1',
 			'User-Agent' => GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
@@ -53,23 +73,16 @@ class PageNotFoundHandler {
 			}
 		}
 
-		$host = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 		$cookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
 		if (isset($_COOKIE[$cookieName])) {
 			$headers['Cookie'] = $cookieName . '=' . $_COOKIE[$cookieName];
 		}
-		// if (is_array($param['pageAccessFailureReasons']['fe_group']) && current($param['pageAccessFailureReasons']['fe_group']) != -1 && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
-		if (in_array($GLOBALS['TSFE']->pageNotFound, [1, 2]) && isset($param['pageAccessFailureReasons']['fe_group']) && $param['pageAccessFailureReasons']['fe_group'] != ['' => 0]) {
-			header('HTTP/1.0 403 Forbidden');
-			$url = $host . $dirname . 'login/?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
-		} else {
-			$url = $host . $dirname . '404/';
-		}
+
 		//$report = [];
 		$report = null;
-		$result = GeneralUtility::getUrl($url, 0, $headers, $report);
+		$result = GeneralUtility::getUrl($uri, 0, $headers, $report);
 		if ($GLOBALS['BE_USER']) {
-			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($param['reasonText']), $result);
+			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($reason), $result);
 		} else {
 			$result = str_replace('%REASON%', '', $result);
 		}
