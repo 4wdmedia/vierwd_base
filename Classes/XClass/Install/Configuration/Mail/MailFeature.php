@@ -9,6 +9,6 @@ class MailFeature extends ParentMailFeature {
 
 	// no detection
 	protected $presetRegistry = [
-    	CustomPreset::class,
+		CustomPreset::class,
 	];
 }

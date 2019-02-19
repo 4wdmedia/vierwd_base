@@ -9,6 +9,6 @@ class ContextFeature extends ParentContextFeature {
 
 	// no detection
 	protected $presetRegistry = [
-    	CustomPreset::class,
+		CustomPreset::class,
 	];
 }

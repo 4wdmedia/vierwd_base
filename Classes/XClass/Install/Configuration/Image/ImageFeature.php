@@ -9,6 +9,6 @@ class ImageFeature extends ParentImageFeature {
 
 	// no detection
 	protected $presetRegistry = [
-    	CustomPreset::class,
+		CustomPreset::class,
 	];
 }
