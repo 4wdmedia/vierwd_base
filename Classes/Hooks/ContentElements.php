@@ -437,9 +437,9 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 			return $content;
 		}
 
-		$additionalId = !empty($this->cObj->data['l18n_parent']) && $this->cObj->data['l18n_parent'] != $this->cObj->data['uid'];
+		$additionalId = !empty($this->cObj->data['_LOCALIZED_UID']) && $this->cObj->data['_LOCALIZED_UID'] != $this->cObj->data['uid'];
 		if ($additionalId) {
-			$additionalIdAttr = ' id="c' . $this->cObj->data['l18n_parent'] . '"';
+			$additionalIdAttr = ' id="c' . $this->cObj->data['_LOCALIZED_UID'] . '"';
 			if (strpos($content, $additionalIdAttr) === false && $GLOBALS['TSFE']->config['config']['tx_vierwd.']['enableL10nAnchor']) {
 				$additionalId = '<a' . $additionalIdAttr . '></a>';
 			} else {
