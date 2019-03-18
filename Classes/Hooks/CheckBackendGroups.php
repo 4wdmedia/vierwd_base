@@ -2,9 +2,8 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Database\DatabaseConnection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Lang\LanguageService;
 
@@ -106,7 +105,7 @@ class CheckBackendGroups {
 	 * @return array
 	 */
 	protected function getBackendGroups() {
-		$queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('be_groups');
+		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('be_groups');
 		$queryBuilder->select('*')->from('be_groups');
 		return $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
 	}

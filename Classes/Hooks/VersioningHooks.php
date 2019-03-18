@@ -2,6 +2,7 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -18,7 +19,7 @@ class VersioningHooks {
 			$previewData = false;
 
 			try {
-				$queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('sys_preview');
+				$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_preview');
 				$previewData = $queryBuilder->select('*')
 					->from('sys_preview')
 					->where($queryBuilder->expr()->eq('keyword', $inputCode))
@@ -26,7 +27,7 @@ class VersioningHooks {
 					->setMaxResults(1)
 					->execute()
 					->rowCount();
-			} catch (\Exception $e) {
+			} catch (\Throwable $e) {
 				// exception might occur when sys_preview table does not exist.
 				// ignore exception. previewData is still false
 			}

@@ -17,7 +17,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 		$codeTemplateAdditionalRootPath = GeneralUtility::getFileAbsFileName($this->settings['codeTemplateAdditionalRootPath']);
 
 		$variables['settings'] = $this->settings;
-		/* @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
+		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
 		$standAloneView = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
 		$standAloneView->setLayoutRootPaths([
 			$codeTemplateAdditionalRootPath,
@@ -90,14 +90,14 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 					$fileContents
 				);
 			}
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			throw new \Exception('Could not generate TCA files, error: ' . $e->getMessage() . $e->getFile());
 		}
 	}
 
 	protected function writeFile($targetFile, $fileContents) {
 		// replace spaces with tabs
-		$fileContents = preg_replace_callback('/^(    )+/m', function($matches) use ($fileContents) {
+		$fileContents = preg_replace_callback('/^(    )+/m', function($matches)  {
 			return str_replace('    ', "\t", $matches[0]);
 		}, $fileContents);
 

@@ -11,15 +11,12 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
-/**
- * @package vierwd_base
- */
-class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
+class ContentElements implements SingletonInterface {
 
 	public static $oldProcFunc;
 
@@ -193,7 +190,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
 
 		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
-		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, $extensionName, &$currentPlugins) {
+		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, &$currentPlugins) {
 			if ($config['generatePlugin']) {
 				if (isset($currentPlugins[$config['pluginName']])) {
 					// a plugin with the same name was added before
@@ -231,8 +228,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * If the current request is not a clear cache request, this method will throw an exception
-	 *
-	 * @throws \Exception
 	 */
 	static protected function generateException(string $message, int $code) {
 		if (!isset($_GET['cacheCmd']) || $_GET['cacheCmd'] !== 'all') {
@@ -340,7 +335,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$GLOBALS['TCA'] = $TCA;
 		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
 			foreach ($configuration['FCEs'] as $config) {
-				$tca = $config['fullTCA'] ? $config['fullTCA'] : self::generateTCA($config);
+				$tca = $config['fullTCA'] ?: self::generateTCA($config);
 
 				if (ExtensionManagementUtility::isLoaded('gridelements') && strpos($tca, 'tx_gridelements_container, tx_gridelements_columns') === false) {
 					$tca .= ', tx_gridelements_container, tx_gridelements_columns';

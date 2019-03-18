@@ -6,8 +6,9 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use Vierwd\VierwdSmarty\Controller\SmartyController;
 
-class TranslationStatusController extends \Vierwd\VierwdSmarty\Controller\SmartyController {
+class TranslationStatusController extends SmartyController {
 
 	/**
 	 * get a list of language files. Returns an array with extensionName and fileName.

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
-use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

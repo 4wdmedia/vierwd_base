@@ -2,12 +2,14 @@
 
 namespace Vierwd\VierwdBase\Resource;
 
+use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
+
 /**
  * Filter files in fileadmin
  */
 class FilterFiles {
 
-	static public function filterFilesCallback($itemName, $itemIdentifier, $parentIdentifier, array $additionalInformation, \TYPO3\CMS\Core\Resource\Driver\DriverInterface $driverInstance) {
+	static public function filterFilesCallback($itemName, $itemIdentifier, $parentIdentifier, array $additionalInformation, DriverInterface $driverInstance) {
 		$ignoreFolders = ['_vti_cnf', '_vti_pvt', '.git', '.svn', 'CVS', 'Thumbs.db', '.DS_Store'];
 		if (in_array($itemName, $ignoreFolders)) {
 			return -1;

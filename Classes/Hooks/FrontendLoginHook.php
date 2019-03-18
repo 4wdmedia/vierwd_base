@@ -1,4 +1,5 @@
 <?php
+
 namespace Vierwd\VierwdBase\Hooks;
 
 class FrontendLoginHook {

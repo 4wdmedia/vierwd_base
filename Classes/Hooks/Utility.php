@@ -20,9 +20,6 @@ use TYPO3\CMS\Extbase\Service\TypoScriptService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
-/**
- * @package vierwd_base
- */
 class Utility {
 
 	/**

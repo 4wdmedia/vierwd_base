@@ -1,9 +1,9 @@
 <?php // PHP 7
 declare(strict_types=1);
+
 namespace Vierwd\VierwdBase\Console\Command;
 
 use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
-use Helhum\Typo3Console\Database\Process\MysqlCommand;
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use Symfony\Component\Process\Process;

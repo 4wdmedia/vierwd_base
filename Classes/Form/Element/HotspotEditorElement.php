@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Vierwd\VierwdBase\Form\Element;
 
 use TYPO3\CMS\Backend\Form\AbstractNode;
+use TYPO3\CMS\Backend\Form\Element\ImageManipulationElement;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 
 use Vierwd\VierwdSmarty\View\StandaloneSmartyView;
@@ -53,11 +55,11 @@ class HotspotEditorElement extends AbstractNode {
 		foreach ($cropVariants as $variantName => $variantConfig) {
 			$crop = $variantCollection->getCropArea($variantName)->makeAbsoluteBasedOnFile($imageFile);
 			$imageSetup = ['crop' => $crop];
-			$croppedImage = $imageFile->process(\TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $imageSetup);
+			$croppedImage = $imageFile->process(ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $imageSetup);
 			$croppedImages[$variantName] = $croppedImage;
 
 			$imageSetup = ['maxWidth' => 1200, 'maxHeight' => 1200, 'crop' => $crop];
-			$scaledImage = $imageFile->process(\TYPO3\CMS\Core\Resource\ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $imageSetup);
+			$scaledImage = $imageFile->process(ProcessedFile::CONTEXT_IMAGECROPSCALEMASK, $imageSetup);
 			$scaledImages[$variantName] = $scaledImage;
 		}
 
@@ -95,7 +97,7 @@ class HotspotEditorElement extends AbstractNode {
 			$cropVariants = $this->data['processedTca']['columns']['crop']['config']['cropVariants'];
 		} else {
 			// unfortunatly the default crop variants are not available publicly
-			$reflectionClass = new \ReflectionClass(\TYPO3\CMS\Backend\Form\Element\ImageManipulationElement::class);
+			$reflectionClass = new \ReflectionClass(ImageManipulationElement::class);
 			$cropVariants = $reflectionClass->getDefaultProperties()['defaultConfig']['cropVariants'];
 		}
 		$variantCollection = CropVariantCollection::create($this->data['databaseRow']['crop'], $cropVariants);

@@ -1,13 +1,15 @@
 <?php
+
 namespace Vierwd\VierwdBase\Backend;
 
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
 use TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Backend\View\BackendLayout\DataProviderInterface;
+use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 
-class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout\DataProviderInterface {
+class BackendLayoutDataProvider implements DataProviderInterface {
 
 	protected $backendLayouts = [];
 
@@ -18,7 +20,7 @@ class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout
 
 		$paths = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'];
 		foreach ($paths as $path) {
-			$parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser::class);
+			$parser = GeneralUtility::makeInstance(TypoScriptParser::class);
 
 			foreach (new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS) as $file) {
 				if (is_dir($file)) {
@@ -49,7 +51,7 @@ class BackendLayoutDataProvider implements \TYPO3\CMS\Backend\View\BackendLayout
 	 * Gets a backend layout by (regular) identifier.
 	 *
 	 * @param string $identifier
-	 * @param integer $pageId
+	 * @param int $pageId
 	 * @return NULL|BackendLayout
 	 */
 	public function getBackendLayout($identifier, $pageId) {

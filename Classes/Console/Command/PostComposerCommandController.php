@@ -1,11 +1,13 @@
 <?php // PHP 7
 declare(strict_types=1);
+
 namespace Vierwd\VierwdBase\Console\Command;
 
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use Doctrine\DBAL\Exception\ConnectionException;
 
 class PostComposerCommandController extends CommandController {
 
@@ -71,7 +73,7 @@ class PostComposerCommandController extends CommandController {
 		try {
 			$connection->connect();
 			return count($connection->getSchemaManager()->listTableNames()) > 0;
-		} catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+		} catch (ConnectionException $e) {
 			return false;
 		}
 	}

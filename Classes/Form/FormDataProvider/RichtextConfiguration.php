@@ -1,5 +1,6 @@
 <?php // PHP 7
 declare(strict_types=1);
+
 namespace Vierwd\VierwdBase\Form\FormDataProvider;
 
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;

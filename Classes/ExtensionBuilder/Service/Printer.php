@@ -3,6 +3,7 @@
 namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
 use EBT\ExtensionBuilder\Domain\Model\File;
+use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Stmt;
 
 class Printer extends \EBT\ExtensionBuilder\Service\Printer {
@@ -93,7 +94,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return preg_replace('/\n\s+\{/', ' {', $string);
 	}
 
-	public function pExpr_Array(\PhpParser\Node\Expr\Array_ $node) {
+	public function pExpr_Array(Array_ $node) {
 		$multiLine = false;
 		$startLine = $node->getAttribute('startLine');
 		$endLine = $node->getAttribute('endLine');

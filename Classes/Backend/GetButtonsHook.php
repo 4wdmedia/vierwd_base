@@ -24,7 +24,7 @@ class GetButtonsHook {
 		foreach ($buttonBars['left'] as &$buttonGroup) {
 			foreach ($buttonGroup as $button) {
 				if ($button instanceof InputButton && $button->getName() === '_savedok') {
-					$saveAndClose = new InputButton;
+					$saveAndClose = new InputButton();
 
 					$saveAndClose->setForm($button->getForm());
 					$saveAndClose->setIcon($this->getIconFactory()->getIcon('actions-document-save-close', Icon::SIZE_SMALL));

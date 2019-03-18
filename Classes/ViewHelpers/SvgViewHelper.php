@@ -19,6 +19,7 @@ use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject
  * </code>
  */
 class SvgViewHelper extends AbstractViewHelper {
+
 	use CompileWithRenderStatic;
 
 	/**
@@ -26,11 +27,6 @@ class SvgViewHelper extends AbstractViewHelper {
 	 */
 	protected $escapeOutput = false;
 
-	/**
-	 * Initialize arguments.
-	 *
-	 * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
-	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerArgument('width', 'integer', 'width');

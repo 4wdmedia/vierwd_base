@@ -1,4 +1,5 @@
 <?php
+
 namespace Vierwd\VierwdBase\Frontend\ContentObject;
 
 /***************************************************************
@@ -11,15 +12,14 @@ namespace Vierwd\VierwdBase\Frontend\ContentObject;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\AbstractContentObject;
 
 use Vierwd\SvgInliner\SvgInliner;
 
 /**
  * Output svg as inline html
- *
- * @author Robert Vock <robert.vock@4wdmedia.de>
  */
-class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObject\AbstractContentObject {
+class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 
 	/**
 	 * @var Vierwd\SvgInliner\SvgInliner;
@@ -31,7 +31,6 @@ class ScalableVectorGraphicsContentObject extends \TYPO3\CMS\Frontend\ContentObj
 	 *
 	 * @param array $conf Array of TypoScript properties
 	 * @return string Empty string (the cObject only sets internal data!)
-	 * @throws \Exception if the SVG is invalid
 	 */
 	public function render($conf = []) {
 		if (!empty($conf['if.']) && !$this->cObj->checkIf($conf['if.'])) {

@@ -3,11 +3,11 @@
 namespace Vierwd\VierwdBase\Seo;
 
 use TYPO3\CMS\Core\Routing\PageArguments;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 
-class Canonical implements \TYPO3\CMS\Core\SingletonInterface {
+class Canonical implements SingletonInterface {
 
 	public function getTag($content, array $params = []) {
 		if (!empty($GLOBALS['TSFE']->no_cache) || !empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {

@@ -11,6 +11,8 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Resource\ResourceCompressor;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
@@ -20,8 +22,6 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  * Javascript will be minified via JSMin, if it is included via page.includeJS*.
  * Javascript files will be inlined if they are smaller than 2000bytes.
  * Additional TypoScript config enabled: config.compressJs = 1 and config.concatenateJs = 1
- *
- * @package vierwd_base
  */
 class JavascriptOptimization {
 	/**
@@ -91,7 +91,7 @@ class JavascriptOptimization {
 	/**
 	 * inline JS which is smaller than 2000 bytes (meaning smaller than one request)
 	 */
-	public function jsCompressHandler($params, \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer) {
+	public function jsCompressHandler($params, PageRenderer $pageRenderer) {
 		// Traverse the arrays, compress files
 		if (count($params['jsInline'])) {
 			foreach ($params['jsInline'] as $name => $properties) {
@@ -151,7 +151,7 @@ class JavascriptOptimization {
 	 */
 	protected function getCompressor() {
 		if ($this->compressor === null) {
-			$this->compressor = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceCompressor::class);
+			$this->compressor = GeneralUtility::makeInstance(ResourceCompressor::class);
 		}
 		return $this->compressor;
 	}
