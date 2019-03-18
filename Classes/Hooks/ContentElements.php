@@ -246,8 +246,6 @@ class ContentElements implements SingletonInterface {
 		$typoScript = self::$fceConfiguration[$extensionKey]['typoScript'];
 		$pageTS = self::$fceConfiguration[$extensionKey]['pageTS'];
 
-		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
-		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
 			if ($config['generatePlugin'] && $isLocalConf) {
 				ExtensionUtility::configurePlugin(

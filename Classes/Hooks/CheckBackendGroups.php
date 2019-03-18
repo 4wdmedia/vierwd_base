@@ -21,7 +21,6 @@ class CheckBackendGroups {
 			return;
 		}
 
-		$contentElements = $this->getContentElements();
 		$backendGroups = $this->getBackendGroups();
 		$this->checkContentElements($warnings, $backendGroups);
 

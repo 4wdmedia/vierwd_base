@@ -1,4 +1,4 @@
-<?php // PHP 7
+<?php
 declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Database;

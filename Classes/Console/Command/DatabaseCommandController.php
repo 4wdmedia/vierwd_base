@@ -1,4 +1,4 @@
-<?php // PHP 7
+<?php
 declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Console\Command;
@@ -70,7 +70,7 @@ class DatabaseCommandController extends CommandController {
 		$process = new Process($commandLine);
 		$process->setTimeout(0.0);
 		$process->inheritEnvironmentVariables();
-		$result = $process->run($this->buildStreamOutput());
+		$process->run($this->buildStreamOutput());
 		$this->outputLine('<info>Import complete</info>');
 
 
@@ -136,7 +136,8 @@ class DatabaseCommandController extends CommandController {
 
 		$process1 = new Process($command1 . '> ' . escapeshellarg($exportPath));
 		$process1->setTimeout(0.0);
-		if ($exitCode = $process1->run()) {
+		$exitCode = $process1->run();
+		if ($exitCode) {
 			$this->outputLine('<error>Could not export database</error>');
 			unlink($exportPath);
 			$this->quit($exitCode);
@@ -145,7 +146,8 @@ class DatabaseCommandController extends CommandController {
 
 		$process2 = new Process($command2 . '>> ' . escapeshellarg($exportPath));
 		$process2->setTimeout(0.0);
-		if ($exitCode = $process2->run()) {
+		$exitCode = $process2->run();
+		if ($exitCode) {
 			$this->outputLine('<error>Could not export database</error>');
 			unlink($exportPath);
 			$this->quit($exitCode);
@@ -154,7 +156,8 @@ class DatabaseCommandController extends CommandController {
 
 		$process3 = new Process(['gzip', $exportPath]);
 		$process3->setTimeout(0.0);
-		if ($exitCode = $process3->run()) {
+		$exitCode = $process3->run();
+		if ($exitCode) {
 			$this->outputLine('<error>Could not gzip export</error>');
 			unlink($exportPath);
 			unlink($exportPath . '.gz');
@@ -308,7 +311,8 @@ class DatabaseCommandController extends CommandController {
 	private function buildConnectionArguments(): array {
 		$arguments = [];
 
-		if ($configFile = $this->createTemporaryMysqlConfigurationFile()) {
+		$configFile = $this->createTemporaryMysqlConfigurationFile();
+		if ($configFile) {
 			$arguments[] = '--defaults-extra-file=' . $configFile;
 		}
 		if (!empty($this->dbConfig['host'])) {

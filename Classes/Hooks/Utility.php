@@ -58,8 +58,6 @@ class Utility {
 		$metaTags = is_array($params['meta.']) ? $params['meta.'] : [];
 		$linkTags = is_array($params['link.']) ? $params['link.'] : [];
 
-		$endingSlash = $GLOBALS['TSFE']->xhtmlVersion ? ' /' : '';
-
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
 
