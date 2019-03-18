@@ -123,6 +123,10 @@ class Utility {
 			return;
 		}
 
+		if (!$TSFE->content) {
+			return;
+		}
+
 
 		$document = new DOMDocument('1.0', 'utf-8');
 		// Ignore errors caused by HTML5 Doctype
