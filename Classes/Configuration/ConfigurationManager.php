@@ -2,7 +2,7 @@
 
 namespace Vierwd\VierwdBase\Configuration;
 
-use TYPO3\CMS\Core\Utility;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 /**
  * TYPO3 installation tries to guess some variables and sets these based on the current system.
@@ -15,9 +15,9 @@ class ConfigurationManager extends \TYPO3\CMS\Core\Configuration\ConfigurationMa
 		$localConfiguration = $this->getLocalConfiguration();
 		foreach ($pairs as $path => $value) {
 			if ($this->isValidLocalConfigurationPath($path)) {
-				if (!Utility\ArrayUtility::isValidPath($localConfiguration, $path) || $path == 'SYS/isInitialInstallationInProgress') {
+				if (!ArrayUtility::isValidPath($localConfiguration, $path) || $path == 'SYS/isInitialInstallationInProgress') {
 					// only set a new value if no old value exists
-					$localConfiguration = Utility\ArrayUtility::setValueByPath($localConfiguration, $path, $value);
+					$localConfiguration = ArrayUtility::setValueByPath($localConfiguration, $path, $value);
 				}
 			}
 		}

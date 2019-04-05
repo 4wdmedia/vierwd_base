@@ -2,12 +2,15 @@
 
 namespace Vierwd\VierwdBase\Command;
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Mail\Mailer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\MVC\Controller\CommandController;
 
 /**
  * A dummy Command Controller with a noop command which simply echoes the argument
  */
-class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\CommandController {
+class CronjobCommandController extends CommandController {
 
 	/**
 	 * Send mails with errors since last run.
@@ -51,7 +54,6 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 			}
 
 			$details = $row['details'];
-			$tstamp = $row['tstamp'];
 
 			if (!isset($distinctErrors[$details])) {
 				$distinctErrors[$details] = [];
@@ -73,7 +75,7 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 			$mail .= "\n";
 		}
 
-		$mailer = new \TYPO3\CMS\Core\Mail\Mailer;
+		$mailer = new Mailer();
 		$message = $mailer->createMessage();
 
 		$message->setFrom($this->getSender());
@@ -99,7 +101,7 @@ class CronjobCommandController extends \TYPO3\CMS\Extbase\MVC\Controller\Command
 		$domain = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
 			$select = 'domainName',
 			$from   = 'sys_domain',
-			$where  = '1' . \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields('sys_domain'),
+			$where  = '1' . BackendUtility::BEenableFields('sys_domain'),
 			$group  = '',
 			$order  = 'sorting',
 			$limit  = ''

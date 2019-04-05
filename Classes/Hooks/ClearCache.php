@@ -2,7 +2,10 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -11,7 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * add new cache configuration "complete" which empties ALL (frontend and system) caches.
  * @see http://forge.typo3.org/issues/59173
  */
-class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface {
+class ClearCache implements ClearCacheActionsHookInterface {
 
 	public function addCompleteCacheGroup() {
 		$cacheManager = $this->getCacheManager();
@@ -94,7 +97,7 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 		$optionValues[] = 'complete';
 	}
 
-	public function clearCacheCmd(array $params, \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler) {
+	public function clearCacheCmd(array $params, DataHandler $dataHandler) {
 		if (!isset($params['cacheCmd'])) {
 			return;
 		}
@@ -127,6 +130,6 @@ class ClearCache implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInte
 	 * @return \TYPO3\CMS\Core\Cache\CacheManager
 	 */
 	protected function getCacheManager() {
-		return GeneralUtility::makeInstance(\TYPO3\CMS\Core\Cache\CacheManager::class);
+		return GeneralUtility::makeInstance(CacheManager::class);
 	}
 }

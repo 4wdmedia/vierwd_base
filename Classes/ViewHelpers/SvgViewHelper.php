@@ -3,8 +3,8 @@
 namespace Vierwd\VierwdBase\ViewHelpers;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
@@ -19,6 +19,7 @@ use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject
  * </code>
  */
 class SvgViewHelper extends AbstractViewHelper {
+
 	use CompileWithRenderStatic;
 
 	/**
@@ -28,8 +29,6 @@ class SvgViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Initialize arguments.
-	 *
-	 * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();

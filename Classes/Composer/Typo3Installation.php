@@ -3,9 +3,8 @@
 namespace Vierwd\VierwdBase\Composer;
 
 use Composer\EventDispatcher\ScriptExecutionException;
-use Composer\Script\Event;
-use Composer\Installer\PackageEvent;
 use Composer\Package\PackageInterface;
+use Composer\Script\Event;
 use Composer\Util\ProcessExecutor;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -13,7 +12,6 @@ class Typo3Installation {
 
 	/**
 	 * @see \Composer\EventDispatcher\EventDispatcher::getPhpExecCommand
-	 * @throws \RuntimeException when php executable cannot be found
 	 */
 	protected static function getPhpExecCommand() {
 		$finder = new PhpExecutableFinder();
@@ -54,7 +52,6 @@ class Typo3Installation {
 	/**
 	 * perform a composer install into another vendor directory and change the paths
 	 * after the update
-	 * @throws ScriptExecutionException when composer is too old
 	 */
 	public static function safeInstall(Event $event) {
 		$consoleIO = $event->getIO();
@@ -69,7 +66,8 @@ class Typo3Installation {
 
 		// $COMPOSER_BINARY config vendor-dir .vendor-prev
 		$setVendorDir = $composerCommand . ' config vendor-dir .vendor-prev';
-		if (0 !== ($exitCode = $process->execute($setVendorDir))) {
+		$exitCode = $process->execute($setVendorDir);
+		if (0 !== $exitCode) {
 			throw new ScriptExecutionException('Error Output: ' . $process->getErrorOutput(), $exitCode);
 		}
 
@@ -77,7 +75,8 @@ class Typo3Installation {
 
 		// $COMPOSER_BINARY install --no-dev || exit 1
 		$setConfig = $composerCommand . ' install --no-dev';
-		if (0 !== ($exitCode = $process->execute($setConfig))) {
+		$exitCode = $process->execute($setConfig);
+		if (0 !== $exitCode) {
 			throw new ScriptExecutionException('Error Output: ' . $process->getErrorOutput(), $exitCode);
 		}
 
@@ -87,7 +86,8 @@ class Typo3Installation {
 
 		// $COMPOSER_BINARY config vendor-dir vendor
 		$resetVendorDir = $composerCommand . ' config vendor-dir vendor';
-		if (0 !== ($exitCode = $process->execute($resetVendorDir))) {
+		$exitCode = $process->execute($resetVendorDir);
+		if (0 !== $exitCode) {
 			throw new ScriptExecutionException('Error Output: ' . $process->getErrorOutput(), $exitCode);
 		}
 
@@ -101,8 +101,6 @@ class Typo3Installation {
 		$consoleIO = $event->getIO();
 
 		$composer = $event->getComposer();
-
-		$requires = $composer->getPackage()->getRequires();
 
 		$packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
 		$packages = array_filter($packages, function(PackageInterface $package) {

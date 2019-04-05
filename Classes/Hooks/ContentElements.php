@@ -11,15 +11,12 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
-/**
- * @package vierwd_base
- */
-class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
+class ContentElements implements SingletonInterface {
 
 	public static $oldProcFunc;
 
@@ -175,7 +172,8 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 				}
 
 				foreach ($actions as $action) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.switchableControllerActions.' . $controller . '.' . $i++ . ' = ' . $action . "\n";
+					$typoScript .= 'tt_content.' . $config['CType'] . '.switchableControllerActions.' . $controller . '.' . $i . ' = ' . $action . "\n";
+					$i++;
 				}
 			}
 
@@ -200,7 +198,6 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 	 * add Content Elements
 	 *
 	 * @param string $extensionKey
-	 * @throws \Exception if the FCE configuration is invalid (missing CType or missing name)
 	 */
 	static public function addFCEs($extensionKey, $isLocalConf = false) {
 		self::initializeFCEs($extensionKey);
@@ -315,7 +312,7 @@ class ContentElements implements \TYPO3\CMS\Core\SingletonInterface {
 		$GLOBALS['TCA'] = $TCA;
 		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
 			foreach ($configuration['FCEs'] as $config) {
-				$tca = $config['fullTCA'] ? $config['fullTCA'] : self::generateTCA($config);
+				$tca = $config['fullTCA'] ?: self::generateTCA($config);
 
 				if (ExtensionManagementUtility::isLoaded('gridelements') && strpos($tca, 'tx_gridelements_container, tx_gridelements_columns') === false) {
 					$tca .= ', tx_gridelements_container, tx_gridelements_columns';

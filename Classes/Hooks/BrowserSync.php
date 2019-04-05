@@ -3,9 +3,10 @@
 namespace Vierwd\VierwdBase\Hooks;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class BrowserSync {
-	public function enable($params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $TSFE) {
+	public function enable($params, TypoScriptFrontendController $TSFE) {
 		if (empty($_SERVER['4WD_CONFIG'])) {
 			return;
 		}

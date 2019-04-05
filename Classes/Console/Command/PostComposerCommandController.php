@@ -1,5 +1,6 @@
-<?php // PHP 7
+<?php
 declare(strict_types=1);
+
 namespace Vierwd\VierwdBase\Console\Command;
 
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;

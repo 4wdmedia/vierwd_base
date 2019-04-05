@@ -12,12 +12,11 @@ namespace Vierwd\VierwdBase\Hooks;
  ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * handle page not found actions.
  * Redirect to login, when the reason is missing access
- *
- * @package vierwd_base
  */
 class PageNotFoundHandler {
 
@@ -25,7 +24,7 @@ class PageNotFoundHandler {
 	 * page not found action.
 	 * will try to load "/404" and display it. If the failure is due to a access error, tries to load "/login".
 	 */
-	public function pageNotFound($param, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe) {
+	public function pageNotFound($param, TypoScriptFrontendController $tsfe) {
 		$dirname = dirname($_SERVER['SCRIPT_NAME']);
 		if (substr($dirname, -1) != '/') {
 			$dirname .= '/';

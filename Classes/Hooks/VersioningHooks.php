@@ -2,6 +2,7 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -22,7 +23,7 @@ class VersioningHooks {
 					$where = 'keyword=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($inputCode, 'sys_preview') . ' AND endtime>' . $GLOBALS['EXEC_TIME'];
 					$previewData = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow('*', 'sys_preview', $where);
 				} else {
-					$queryBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class)->getQueryBuilderForTable('sys_preview');
+					$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_preview');
 					$previewData = $queryBuilder->select('*')
 						->from('sys_preview')
 						->where($queryBuilder->expr()->eq('keyword', $inputCode))

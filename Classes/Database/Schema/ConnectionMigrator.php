@@ -1,4 +1,4 @@
-<?php // PHP7
+<?php
 
 namespace Vierwd\VierwdBase\Database\Schema;
 

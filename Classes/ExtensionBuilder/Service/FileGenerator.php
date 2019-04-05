@@ -17,7 +17,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 		$codeTemplateAdditionalRootPath = GeneralUtility::getFileAbsFileName($this->settings['codeTemplateAdditionalRootPath']);
 
 		$variables['settings'] = $this->settings;
-		/* @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
+		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
 		$standAloneView = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
 		$standAloneView->setLayoutRootPaths([
 			$codeTemplateAdditionalRootPath,
@@ -90,7 +90,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 	protected function writeFile($targetFile, $fileContents) {
 		// replace spaces with tabs
-		$fileContents = preg_replace_callback('/^(    )+/m', function($matches) use ($fileContents) {
+		$fileContents = preg_replace_callback('/^(    )+/m', function($matches)  {
 			return str_replace('    ', "\t", $matches[0]);
 		}, $fileContents);
 

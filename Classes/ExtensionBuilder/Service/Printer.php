@@ -2,7 +2,8 @@
 
 namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
-use \PhpParser\Node\Stmt;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Stmt;
 
 class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 	protected $indentToken = "\t";
@@ -17,7 +18,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return str_replace(LF . '{', ' {', $string);
 	}
 
-	public function pExpr_Array(\PhpParser\Node\Expr\Array_ $node) {
+	public function pExpr_Array(Array_ $node) {
 		$multiLine = false;
 		$startLine = $node->getAttribute('startLine');
 		$endLine = $node->getAttribute('endLine');
