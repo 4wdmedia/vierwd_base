@@ -18,7 +18,8 @@
 	"require": {
 		"php": ">=5.5.0",
 		"typo3/cms-core": "^7.6 || ^8.0",
-		"vierwd/svg-inliner": "^1.0"
+		"vierwd/svg-inliner": "^1.0",
+		"masterminds/html5": "^2.6"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^4.7",
@@ -39,7 +40,6 @@
 		}
 	},
 	"replace": {
-		"vierwd_base": "self.version",
 		"vierwd/typo3_base": "self.version"
 	},
 	"config": {

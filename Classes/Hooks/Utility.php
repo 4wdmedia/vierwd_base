@@ -14,15 +14,14 @@ namespace Vierwd\VierwdBase\Hooks;
 use DOMDocument;
 use DOMXPath;
 
+use Masterminds\HTML5;
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Extbase\Service\TypoScriptService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
-/**
- * @package vierwd_base
- */
 class Utility {
 
 	/**
@@ -130,72 +129,19 @@ class Utility {
 			return;
 		}
 
+		if (!$TSFE->content) {
+			return;
+		}
 
-		$document = new DOMDocument('1.0', 'utf-8');
-		// Ignore errors caused by HTML5 Doctype
-		libxml_use_internal_errors(true);
-		$scriptBlocks = [];
-		$commentBlocks = [];
 		$content = $TSFE->content;
 
-		// This regex is like #<!--.*?-->#si, but with much better performance
-		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
-		$content = preg_replace_callback('#<!--([^-]*(?:-(?!-)[^-]*)*)(*SKIP)-->#si', function($matches) use (&$commentBlocks) {
-			$commentBlocks[] = $matches[0];
-			return '<!--COMMENT_BLOCK_' . (count($commentBlocks) - 1) . '-->';
-		}, $content);
-		if ($content === null) {
-			$pcreMessages = get_defined_constants(true);
-			$pcreMessages = array_flip($pcreMessages['pcre']);
-			throw new \Exception('Could not extract comments: ' . $pcreMessages[preg_last_error()], 1528186643);
-		}
-
-		// This regex is like <script[^>]*>.*?</script>#si, but with much better performance
-		// https://stackoverflow.com/questions/50539908/regular-expression-preg-backtrack-limit-error-when-extracting-really-long-text-n/50547822#50547822
-		$regExp = '=<script[^>]*>([^<]*(?:<(?!/script>)[^<]*)*)(*SKIP)</script>=xsi';
-		$regExp = '=
-			# start with <script*>
-			<script[^>]*>
-			(
-				# eat characters until a < is reached
-				[^<]*
-				# check if the < is followed by /script>. if not, eat until next <
-				(?:<(?!/script>)[^<]*)*
-			)(*SKIP)
-			# ends with </script>
-			</script>
-			=xsi';
-
-		$content = preg_replace_callback($regExp, function($matches) use (&$scriptBlocks) {
-			$scriptBlocks[] = $matches[0];
-			return '<!--HYPHENATION_SCRIPT_BLOCK_' . (count($scriptBlocks) - 1) . '-->';
-		}, $content);
-		if ($content === null) {
-			$pcreMessages = get_defined_constants(true);
-			$pcreMessages = array_flip($pcreMessages['pcre']);
-			throw new \Exception('Could not extract scripts: ' . $pcreMessages[preg_last_error()], 1528186643);
-		}
-
-		// DOMDocument needs old meta-charset declaration. Otherwise saving will encode entities
-		$content = str_replace('<meta charset="utf-8">', '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $content);
-		if (strpos($content, '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"') === false) {
-			$content = '<?xml encoding="utf-8">' . $content;
-		}
-		$document->loadHTML($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOXMLDECL);
-		libxml_use_internal_errors(false);
+		$html5 = new HTML5();
+		$document = $html5->loadHTML($content);
 
 		$this->addHyphenation($document);
 		$this->addNoopener($document);
 
-		$TSFE->content = $document->saveHTML();
-		$TSFE->content = str_replace('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '<meta charset="utf-8">', $TSFE->content);
-		$TSFE->content = str_replace('<?xml encoding="UTF-8">', '', $TSFE->content);
-		$TSFE->content = preg_replace_callback('#<!--HYPHENATION_SCRIPT_BLOCK_(\d+)-->#', function($matches) use (&$scriptBlocks) {
-			return $scriptBlocks[$matches[1]];
-		}, $TSFE->content);
-		$TSFE->content = preg_replace_callback('#<!--COMMENT_BLOCK_(\d+)-->#', function($matches) use (&$commentBlocks) {
-			return $commentBlocks[$matches[1]];
-		}, $TSFE->content);
+		$TSFE->content = $html5->saveHTML($document);
 
 		// Update Content-Length Header, if it is set
 		// Condition taken from TypoScriptFrontendController::processOutput
