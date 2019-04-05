@@ -71,8 +71,11 @@ class UtilityTest extends UnitTestCase {
 
 		$expectedContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/HyphenationExpected.html');
 		$expectedContent = str_replace('%SHY%', html_entity_decode('&shy;', 0, 'UTF-8'), $expectedContent);
+		$expectedContent = str_replace("\n", '', $expectedContent);
 
-		$this->assertEquals($expectedContent, $TSFE->content);
+		$actualContent = str_replace("\n", '', $TSFE->content);
+
+		$this->assertEquals($expectedContent, $actualContent);
 	}
 
 	/**
@@ -96,7 +99,10 @@ class UtilityTest extends UnitTestCase {
 		$TSFE->content = $baseContent;
 		$utility->postProcessHTML([], $TSFE);
 
-		$this->assertEquals(trim($baseContent), trim($TSFE->content));
+		$expectedContent = str_replace("\n", '', trim($baseContent));
+		$actualContent = str_replace("\n", '', trim($TSFE->content));
+
+		$this->assertEquals($expectedContent, $actualContent);
 	}
 
 	protected function setupTsfeMock() {
