@@ -1,4 +1,4 @@
-<?php
+<?php // PHP 7
 declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Console\Command;

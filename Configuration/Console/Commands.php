@@ -1,4 +1,4 @@
-<?php
+<?php // PHP 7.2
 declare(strict_types=1);
 
 return [
@@ -7,7 +7,7 @@ return [
 			'vendor' => 'vierwd',
 			'controller' => Vierwd\VierwdBase\Console\Command\PostComposerCommandController::class,
 			'controllerCommandName' => 'run',
-			'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE,
+			'runLevel' => Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE,
 		],
 		'vierwd:database:export' => [
 			'vendor' => 'vierwd',
@@ -18,7 +18,7 @@ return [
 			'vendor' => 'vierwd',
 			'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
 			'controllerCommandName' => 'import',
-			'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL,
+			'runLevel' => Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL,
 		],
 		'vierwd:database:kb-import' => [
 			'vendor' => 'vierwd',
