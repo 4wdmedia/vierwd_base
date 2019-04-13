@@ -22,7 +22,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 					$class->setDescription('');
 				}
 
-				if ($class->getDescription() === 'The repository for ' . Inflector(str_replace('Repository', '', $class->getName()))) {
+				if ($class->getDescription() === 'The repository for ' . Inflector::pluralize(str_replace('Repository', '', $class->getName()))) {
 					$class->setDescription('');
 				}
 
