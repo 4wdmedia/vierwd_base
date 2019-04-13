@@ -3,6 +3,7 @@
 namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
 use EBT\ExtensionBuilder\Domain\Model\File;
+use EBT\ExtensionBuilder\Utility\Inflector;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Stmt;
 
@@ -18,6 +19,10 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		foreach ($fileObject->getNamespaces() as $namespace) {
 			foreach ($namespace->getClasses() as $class) {
 				if ($class->getDescription() === $class->getName()) {
+					$class->setDescription('');
+				}
+
+				if ($class->getDescription() === 'The repository for ' . Inflector(str_replace('Repository', '', $class->getName()))) {
 					$class->setDescription('');
 				}
 
