@@ -202,6 +202,8 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('gridelements')
 // Remove canonical URL generation and hreflang generation from TYPO3 seo extension.
 // The generated links might contain malicous query strings.
 // @see https://forge.typo3.org/issues/87105
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\CMS\Frontend\Page\PageGenerator']['generateMetaTags'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\CMS\Frontend\Page\PageGenerator']['generateMetaTags'], function($method) {
-	return !in_array($method, ['TYPO3\CMS\Seo\HrefLang\HrefLangGenerator->generate', 'TYPO3\CMS\Seo\Canonical\CanonicalGenerator->generate']);
-});
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Page\\PageGenerator']['generateMetaTags'])) {
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Page\\PageGenerator']['generateMetaTags'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Page\\PageGenerator']['generateMetaTags'], function($method) {
+		return !in_array($method, ['TYPO3\\CMS\\Seo\\HrefLang\\HrefLangGenerator->generate', 'TYPO3\\CMS\\Seo\\Canonical\\CanonicalGenerator->generate']);
+	});
+}
