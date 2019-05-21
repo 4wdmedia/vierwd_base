@@ -40,29 +40,52 @@ class ContentElements implements SingletonInterface {
 			}
 		}
 
-		$groups = array_combine(array_keys(self::$groups), array_fill(0, count(self::$groups), []));
+		$defaultGroups = [
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.standard' => 'common',
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.lists' => 'lists',
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.menu' => 'menu',
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.special' => 'special',
+			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.forms' => 'forms',
+		];
 
-		$params['items'] = array_filter($params['items'], function($element) use (&$groups, $CTypes) {
-			$CType = $element[1];
-
-			if (isset($CTypes[$CType])) {
-				$groupKey = $CTypes[$CType];
-				$groups[$groupKey][] = $element;
-				return false;
+		$groups = [];
+		$currentGroup = '';
+		foreach ($params['items'] as $item) {
+			if ($item[1] === '--div--') {
+				// it's a group
+				$groupName = $defaultGroups[$item[0]] ?? $item[0];
+				$currentGroup = $groupName;
+				continue;
 			}
 
-			return true;
-		});
+			// convert the name
+			$item[0] = $GLOBALS['LANG']->sL($item[0]);
 
-		foreach ($groups as $groupKey => $elements) {
-			$params['items'][] = [self::$groupNames[$groupKey], '--div--'];
-
-			usort($elements, function($plugin1, $plugin2) {
-				return strnatcasecmp($plugin1[0], $plugin2[0]);
-			});
-
-			$params['items'] = array_merge($params['items'], $elements);
+			if (isset($CTypes[$item[1]])) {
+				$group = $CTypes[$item[1]];
+				$groups[$group][] = $item;
+			} else {
+				$groups[$currentGroup][] = $item;
+			}
 		}
+
+		$defaultGroups = array_flip($defaultGroups);
+		$items = [];
+		foreach ($groups as $groupKey => $elements) {
+			$groupName = self::$groupNames[$groupKey] ?? $defaultGroups[$groupKey];
+			$items[] = [$groupName, '--div--'];
+
+			if (self::$groupNames[$groupKey]) {
+				// Custom group -> sort
+				usort($elements, function(array $plugin1, array $plugin2): int {
+					return strnatcasecmp($plugin1[0], $plugin2[0]);
+				});
+			}
+
+			$items = array_merge($items, $elements);
+		}
+
+		$params['items'] = $items;
 
 		return $params['items'];
 	}
