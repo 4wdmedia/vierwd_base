@@ -28,7 +28,7 @@ class ContentElements implements SingletonInterface {
 	/**
 	 * process the CType and sort custom FCEs into a special group
 	 */
-	public function processCType($params, $refObj) {
+	public function processCType(array $params, $refObj): array {
 		if (static::$oldProcFunc) {
 			GeneralUtility::callUserFunction(static::$oldProcFunc, $params, $refObj);
 		}
@@ -67,7 +67,7 @@ class ContentElements implements SingletonInterface {
 		return $params['items'];
 	}
 
-	static public function initializeFCEs($extensionKey) {
+	static public function initializeFCEs(string $extensionKey): void {
 		if (isset(self::$fceConfiguration[$extensionKey])) {
 			return;
 		}
@@ -120,7 +120,7 @@ class ContentElements implements SingletonInterface {
 			$FCEs[] = $config;
 		}
 
-		usort($FCEs, function($FCE1, $FCE2) {
+		usort($FCEs, function(array $FCE1, array $FCE2): int {
 			return strcasecmp($FCE1['name'], $FCE2['name']);
 		});
 
@@ -190,7 +190,7 @@ class ContentElements implements SingletonInterface {
 		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
 
 		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
-		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, &$currentPlugins) {
+		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, &$currentPlugins): bool {
 			if ($config['generatePlugin']) {
 				if (isset($currentPlugins[$config['pluginName']])) {
 					// a plugin with the same name was added before
@@ -229,7 +229,7 @@ class ContentElements implements SingletonInterface {
 	/**
 	 * If the current request is not a clear cache request, this method will throw an exception
 	 */
-	static protected function generateException(string $message, int $code) {
+	static protected function generateException(string $message, int $code): void {
 		if (!isset($_GET['cacheCmd']) || $_GET['cacheCmd'] !== 'all') {
 			throw new \Exception($message, $code);
 		}
@@ -240,7 +240,7 @@ class ContentElements implements SingletonInterface {
 	 *
 	 * @param string $extensionKey
 	 */
-	static public function addFCEs($extensionKey, $isLocalConf = false) {
+	static public function addFCEs(string $extensionKey, bool $isLocalConf = false): void {
 		self::initializeFCEs($extensionKey);
 
 		$typoScript = self::$fceConfiguration[$extensionKey]['typoScript'];
@@ -329,7 +329,7 @@ class ContentElements implements SingletonInterface {
 	 * @param array $TCA
 	 * @return array modified $TCA
 	 */
-	static public function addTCA($TCA) {
+	static public function addTCA(array $TCA): array {
 		$GLOBALS['TCA'] = $TCA;
 		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
 			foreach ($configuration['FCEs'] as $config) {
@@ -358,7 +358,7 @@ class ContentElements implements SingletonInterface {
 		return [$GLOBALS['TCA']];
 	}
 
-	static protected function validateTCA($tca) {
+	static protected function validateTCA(string $tca): void {
 		$fields = GeneralUtility::trimExplode(',', $tca, true);
 		foreach ($fields as $fieldString) {
 			$fieldArray = GeneralUtility::trimExplode(';', $fieldString);
@@ -375,7 +375,7 @@ class ContentElements implements SingletonInterface {
 		}
 	}
 
-	static public function generateTCA(array $config) {
+	static public function generateTCA(array $config): string {
 		$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
 
 		// bodytext,richtext,image,fullheaders
