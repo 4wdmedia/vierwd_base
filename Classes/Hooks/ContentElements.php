@@ -380,9 +380,9 @@ class ContentElements implements SingletonInterface {
 
 		// bodytext,richtext,image,fullheaders
 		if (in_array('fullheaders', $tcaType)) {
-			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.headers;headers,';
+			$header = '--palette--;;headers,';
 		} else if (in_array('simpleheaders', $tcaType)) {
-			$header = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.header;header,';
+			$header = '--palette--;;header,';
 		} else {
 			$header = 'header;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:header.ALT.div_formlabel,';
 		}
@@ -409,26 +409,24 @@ class ContentElements implements SingletonInterface {
 			$flexform = '';
 		}
 
-		if (isset($GLOBALS['TCA']['tt_content']['palettes']['visibility'])) {
-			$paletteVisibility = '--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.visibility;visibility,';
-		} else if (isset($GLOBALS['TCA']['tt_content']['palettes']['hidden'])) {
-			$paletteVisibility = '--palette--;;hidden,';
-		} else {
-			$paletteVisibility = 'hidden,';
-		}
-
 		$tca = '
-				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,
+			--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+				--palette--;;general,
 				' . $header . '
 				' . $bodytext . '
 				' . $flexform . '
 				' . $image . '
 			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,
-				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames,
-			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
-				' . $paletteVisibility . '
-				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
-			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.extended';
+				--palette--;;frames,
+				--palette--;;appearanceLinks,
+			--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
+				--palette--;;language,
+			--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+				--palette--;;hidden,
+				--palette--;;access,
+			--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:notes,
+				rowDescription,
+			--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended,';
 
 		return $tca;
 	}
