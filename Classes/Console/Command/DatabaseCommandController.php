@@ -7,10 +7,15 @@ use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class DatabaseCommandController extends CommandController {
+
+	private const CONNECTION_LOCAL = 'local';
+	private const CONNECTION_REMOTE = 'remote';
 
 	/**
 	 * @var string
@@ -84,11 +89,35 @@ class DatabaseCommandController extends CommandController {
 	 * This completly overwrites the current DB. As a security measure, we export the DB before importing a new one
 	 */
 	public function kbImportCommand() {
-		// TODO: import from service area
-		// TODO: add option to configure server details (username, domain, path)
+		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+		if (!$config || !$config['ssh']) {
+			$this->outputLine('<error>No SSH config found</error>');
+			$this->quit(1);
+		}
 
 		// create backup first
 		$this->createBackup();
+
+		$commandLine = array_merge(['mysql'], $this->buildConnectionArguments(), ['--default-character-set=utf8mb4']);
+		$localMysqlProcess = new Process($commandLine);
+
+		$commandLine = $this->getExportDataTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null';
+		$remoteMysqlProcess = new Process($commandLine);
+
+		$command = [
+			'ssh',
+			'-C',
+			$config['ssh']['arguments'],
+			$config['ssh']['liveUser'] . '@' . $config['ssh']['liveHost'],
+			$remoteMysqlProcess->getCommandLine(),
+		];
+		$importProcess = new Process(array_filter($command));
+
+		$importProcess = new Process($importProcess->getCommandLine() . ' | ' . $localMysqlProcess->getCommandLine());
+		$importProcess->setTimeout(0.0);
+		$importProcess->inheritEnvironmentVariables();
+		$importProcess->run($this->buildStreamOutput());
+		$this->outputLine('<info>Import complete</info>');
 
 		// Clear cache
 		$this->commandDispatcher->executeCommand('cache:flush');
@@ -188,7 +217,7 @@ class DatabaseCommandController extends CommandController {
 	/**
 	 * get the command line to export all tables containing export worthy data
 	 */
-	protected function getExportDataTablesCommand(): string {
+	protected function getExportDataTablesCommand(string $type = self::CONNECTION_LOCAL): string {
 		$additionalArguments = [
 			'--default-character-set=utf8mb4',
 			'--set-charset',
@@ -200,7 +229,8 @@ class DatabaseCommandController extends CommandController {
 			$additionalArguments[] = sprintf('--ignore-table=%s.%s', $this->dbConfig['dbname'], $table);
 		}
 
-		$commandLine = array_merge(['mysqldump'], $this->buildConnectionArguments(), $additionalArguments);
+		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
+		$commandLine = array_merge(['mysqldump'], $connectionArguments, $additionalArguments);
 		$process = new Process($commandLine);
 		return $process->getCommandLine();
 	}
@@ -208,7 +238,7 @@ class DatabaseCommandController extends CommandController {
 	/**
 	 * get the command line to export all tables where we only need the structure
 	 */
-	protected function getExportStructureTablesCommand(): string {
+	protected function getExportStructureTablesCommand(string $type = self::CONNECTION_LOCAL): string {
 		$additionalArguments = [
 			'--default-character-set=utf8mb4',
 			'--set-charset',
@@ -219,7 +249,8 @@ class DatabaseCommandController extends CommandController {
 			$additionalArguments[] = $table;
 		}
 
-		$commandLine = array_merge(['mysqldump'], $this->buildConnectionArguments(), $additionalArguments);
+		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
+		$commandLine = array_merge(['mysqldump'], $connectionArguments, $additionalArguments);
 		$process = new Process($commandLine);
 		return $process->getCommandLine();
 	}
@@ -303,6 +334,36 @@ class DatabaseCommandController extends CommandController {
 				$this->output('<error>' . $output . '</error>');
 			}
 		};
+	}
+
+	private function buildRemoteConnectionArguments(): array {
+		$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+
+		$dbConfiguration = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+
+		$arguments = [];
+		if (!empty($dbConfiguration['user'])) {
+			$arguments[] = '-u';
+			$arguments[] = $dbConfiguration['user'];
+		}
+		if (!empty($dbConfiguration['password'])) {
+			$arguments[] = '-p' . $dbConfiguration['password'];
+		}
+		if (!empty($dbConfiguration['host'])) {
+			$arguments[] = '-h';
+			$arguments[] = $dbConfiguration['host'];
+		}
+		if (!empty($dbConfiguration['port'])) {
+			$arguments[] = '-P';
+			$arguments[] = $dbConfiguration['port'];
+		}
+		if (!empty($dbConfiguration['unix_socket'])) {
+			$arguments[] = '-S';
+			$arguments[] = $dbConfiguration['unix_socket'];
+		}
+		$arguments[] = $dbConfiguration['dbname'];
+
+		return $arguments;
 	}
 
 	/**

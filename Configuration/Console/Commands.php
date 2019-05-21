@@ -36,5 +36,11 @@ return [
 			'controller' => Vierwd\VierwdBase\Console\Command\ListWordsCommandController::class,
 			'controllerCommandName' => 'run',
 		],
+
+		'vierwd:rsync:down' => [
+			'vendor' => 'vierwd',
+			'controller' => Vierwd\VierwdBase\Console\Command\RsyncCommandController::class,
+			'controllerCommandName' => 'down',
+		],
 	],
 ];

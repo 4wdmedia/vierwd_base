@@ -5,7 +5,21 @@ serviceUsername =
 servicePassword =
 
 # cat=basic//10; type=string; label=Inhaltselemente, die nur für Admins bearbeitbar sind (Komma getrennt)
-adminElements = textpic, login, list, html, form_formframework, mailform, menu_abstract, menu_categorized_content, menu_categorized_pages, menu_pages, menu_subpages, menu_section, menu_section_pages, menu_recently_updated, menu_related_pages, menu_sitemap, menu_sitemap_pages
+adminElements = textpic, list, html, form_formframework, mailform, menu_abstract, menu_categorized_content, menu_categorized_pages, menu_pages, menu_subpages, menu_section, menu_section_pages, menu_recently_updated, menu_related_pages, menu_sitemap, menu_sitemap_pages
 
 # cat=basic//10; type=boolean; label=Tabellen in MyISAM umwandeln
 forceMyISAM = 0
+
+ssh {
+	# cat=SSH; type=string; label=SSH Benutzer
+	liveUser = ssh-77916-4wd
+
+	# cat=SSH; type=string; label=SSH Host
+	liveHost = 4wdmedia.de
+
+	# cat=SSH; type=string; label=Weitere SSH Parameter
+	arguments =
+
+	# cat=SSH; type=string; label=Pfad auf dem Server
+	serverPath = ~/kundenbereich/
+}
