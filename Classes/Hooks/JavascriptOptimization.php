@@ -11,6 +11,8 @@ namespace Vierwd\VierwdBase\Hooks;
  *
  ***************************************************************/
 
+use JSMin;
+
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\ResourceCompressor;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -39,7 +41,7 @@ class JavascriptOptimization {
 			return '';
 		}
 		// autoloaded via composer
-		return \JSMin::minify($params['script']);
+		return JSMin::minify($params['script']);
 	}
 
 	public function minifyJsFiles(array $jsFiles) {
