@@ -403,6 +403,11 @@ class ContentElements implements SingletonInterface {
 			$paletteVisibility = 'hidden,';
 		}
 
+		$language = '';
+		if (TYPO3_version >= '8.0.0') {
+			$language = '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,--palette--;;language,';
+		}
+
 		$tca = '
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.general;general,
 				' . $header . '
@@ -411,6 +416,7 @@ class ContentElements implements SingletonInterface {
 				' . $image . '
 			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.appearance,
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.frames;frames,
+				' . $language . '
 			--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
 				' . $paletteVisibility . '
 				--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access;access,
