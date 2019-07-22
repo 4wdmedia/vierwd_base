@@ -25,6 +25,8 @@ class ContentElements implements SingletonInterface {
 
 	protected static $fceConfiguration = [];
 
+	protected static $usedUids = [];
+
 	/**
 	 * process the CType and sort custom FCEs into a special group
 	 */
@@ -469,24 +471,32 @@ class ContentElements implements SingletonInterface {
 			return $content;
 		}
 
-		$additionalId = !empty($this->cObj->data['_LOCALIZED_UID']) && $this->cObj->data['_LOCALIZED_UID'] != $this->cObj->data['uid'];
-		if ($additionalId) {
-			$additionalIdAttr = ' id="c' . $this->cObj->data['_LOCALIZED_UID'] . '"';
+		$additionalIdTag = '';
+		$useAdditionalId = !empty($this->cObj->data['_LOCALIZED_UID']) && $this->cObj->data['_LOCALIZED_UID'] != $this->cObj->data['uid'];
+		if ($useAdditionalId) {
+			$additionalId = 'c' . $this->cObj->data['_LOCALIZED_UID'];
+			$additionalIdAttr = ' id="' . $additionalId . '"';
 			if (strpos($content, $additionalIdAttr) === false && $GLOBALS['TSFE']->config['config']['tx_vierwd.']['enableL10nAnchor']) {
-				$additionalId = '<a' . $additionalIdAttr . '></a>';
+				self::$usedUids[$additionalId] = true;
+				$additionalIdTag = '<a' . $additionalIdAttr . '></a>';
 			} else {
-				$additionalId = false;
+				$additionalIdTag = '';
 			}
 		}
 
 		// add uid to first element
-		$idAttr = ' id="c' . $this->cObj->data['uid'] . '"';
-		if (isset($this->cObj->data['parentData'], $this->cObj->data['parentData']['uid'])) {
-			// this element is a reference. Make sure the ID does not appear twice on this page
-			$idAttr = ' id="c' . $this->cObj->data['uid'] . '-' . $this->cObj->data['parentData']['uid'] . '"';
+		$id = 'c' . $this->cObj->data['uid'];
+		if (isset(self::$usedUids[$id])) {
+			if (isset($this->cObj->data['parentData'], $this->cObj->data['parentData']['uid'])) {
+				// this element is a reference. Make sure the ID does not appear twice on this page
+				$id = 'c' . $this->cObj->data['uid'] . '-' . $this->cObj->data['parentData']['uid'];
+			}
 		}
+		$idAttr = ' id="' . $id . '"';
+		self::$usedUids[$id] = true;
+
 		if (strpos($content, $idAttr) !== false) {
-			return $additionalId . $content;
+			return $additionalIdTag . $content;
 		}
 
 		// no-cache elements (COA_INT and USER_INT are marked with <!--INT_SCRIPT.MD5-HASH--> and replaced later)
@@ -494,14 +504,14 @@ class ContentElements implements SingletonInterface {
 		// Solution: Wrap the cache-marker
 		$isINTIncScript = substr($content, 0, strlen('<!--INT_SCRIPT.')) === '<!--INT_SCRIPT.';
 		if ($isINTIncScript) {
-			return $additionalId . '<div' . $idAttr . '>' . $content . '</div>';
+			return $additionalIdTag . '<div' . $idAttr . '>' . $content . '</div>';
 		}
 
 		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || substr($content, 0, strlen('<!--')) === '<!--') {
 			// id already present or comment -> add anchor before the element
-			return $additionalId . '<a' . $idAttr . '></a>' . $content;
+			return $additionalIdTag . '<a' . $idAttr . '></a>' . $content;
 		}
 
-		return $additionalId . preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
+		return $additionalIdTag . preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
 	}
 }
