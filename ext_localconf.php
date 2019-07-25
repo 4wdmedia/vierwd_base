@@ -30,7 +30,7 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'] = $_SERVER['SERVER_ADDR'] && $_SERVE
 
 // ***************
 // BackendLayoutDataProvider
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider'][$_EXTKEY] = 'Vierwd\\VierwdBase\\Backend\\BackendLayoutDataProvider';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['vierwd_base'] = \Vierwd\VierwdBase\Backend\BackendLayoutDataProvider::class;
 
 // ***************
 // eID for TYPO3 Version
@@ -79,7 +79,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\ContentObje
 
 // ****************
 // Enable Browser Sync as Post-Processing (better performance than USER_INT)
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][$_EXTKEY . '-browserSync'] = 'Vierwd\\VierwdBase\\Hooks\\BrowserSync->enable';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output']['vierwd_base-browserSync'] = 'Vierwd\\VierwdBase\\Hooks\\BrowserSync->enable';
 
 // **************
 // Filter files/folders
@@ -153,7 +153,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRe
 
 // ***************
 // Add custom content Elements. Configure in Configuration/FCE/*.php
-\Vierwd\VierwdBase\Hooks\ContentElements::addFCEs($_EXTKEY, true);
+\Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base', true);
 
 $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']);
 if (!empty($extConf['forceMyISAM'])) {
@@ -165,8 +165,8 @@ if (!empty($extConf['forceMyISAM'])) {
 // Add Hook for Import/Export which imports the groupid for pages.
 // By default groupid for pages would be set to the group of the current user.
 // During initial import, our "All users"-group does not exist yet and will be generated
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_setRelation'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_setRelation';
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_writeRecordsPages'][$_EXTKEY] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_writeRecordsPages';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_setRelation']['vierwd_base'] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_setRelation';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/impexp/class.tx_impexp.php']['before_writeRecordsPages']['vierwd_base'] = \Vierwd\VierwdBase\Hooks\ImportExport::class . '->before_writeRecordsPages';
 
 // ***************
 // Add HotspotEditor

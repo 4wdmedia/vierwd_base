@@ -27,16 +27,16 @@ if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) {
 
 // Add custom Icons
 $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
-$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:' . $_EXTKEY . '/Resources/Public/Icons/');
+$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Public/Icons/');
 foreach (new \GlobIterator($path . '*.svg') as $icon) {
 	$iconRegistry->registerIcon('vierwd-' . $icon->getBasename('.svg'), \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class, [
-		'source' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/' . $icon->getFilename(),
+		'source' => 'EXT:vierwd_base/Resources/Public/Icons/' . $icon->getFilename(),
 	]);
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_vierwdbase_hyphenation');
 
-\Vierwd\VierwdBase\Hooks\ContentElements::addFCEs($_EXTKEY);
+\Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base');
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:vierwd_base/Configuration/PageTSconfig/page.ts">');
 
@@ -51,9 +51,9 @@ if (TYPO3_MODE === 'BE') {
 		],
 		[
 			'access' => 'admin',
-			'icon'   => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/translation-status.svg',
+			'icon'   => 'EXT:vierwd_base/Resources/Public/Icons/translation-status.svg',
 			'labels' => 'LLL:EXT:vierwd_base/Resources/Private/Language/locallang_mod.xlf',
-			'name'   => 'tools_TranslationStatus'
+			'name'   => 'tools_TranslationStatus',
 		]
 	);
 }
