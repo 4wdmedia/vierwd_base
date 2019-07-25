@@ -132,9 +132,11 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('workspaces')) 
 	array_unshift($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'], 'Vierwd\\VierwdBase\\Hooks\\VersioningHooks->removeExpiredPreviewCookie');
 }
 
-// *****************
-// Add TCA from FCEs
-$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', 'Vierwd\\VierwdBase\\Hooks\\ContentElements', 'addTCA');
+if (version_compare(TYPO3_version, '10.0.0', '<')) {
+	// *****************
+	// Add TCA from FCEs
+	$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', 'Vierwd\\VierwdBase\\Hooks\\ContentElements', 'addTCA');
+}
 
 // *****************
 // Warn when no editor has access to edit some content elements
