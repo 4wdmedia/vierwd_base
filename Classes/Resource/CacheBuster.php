@@ -32,9 +32,9 @@ class CacheBuster {
 
 			// copied from typo3/sysext/core/Classes/Resource/ResourceStorage.php
 			if ($publicUrl !== null && $relativeToCurrentScript && !GeneralUtility::isValidUrl($publicUrl)) {
-				$absolutePathToContainingFolder = PathUtility::dirname(Environment::getPublic() . '/' . $publicUrl);
+				$absolutePathToContainingFolder = PathUtility::dirname(Environment::getPublicPath() . '/' . $publicUrl);
 				$pathPart = PathUtility::getRelativePathTo($absolutePathToContainingFolder);
-				$filePart = substr(Environment::getPublic() . '/' . $publicUrl, strlen($absolutePathToContainingFolder) + 1);
+				$filePart = substr(Environment::getPublicPath() . '/' . $publicUrl, strlen($absolutePathToContainingFolder) + 1);
 				$publicUrl = $pathPart . $filePart;
 			}
 

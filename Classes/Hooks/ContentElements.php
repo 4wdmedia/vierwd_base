@@ -175,7 +175,7 @@ class ContentElements implements SingletonInterface {
 					$template = 'EXT:' . $extensionKey . '/Resources/Private/Templates/' . $template;
 				}
 
-				$typoScript .= 'tt_content.' . $config['CType'] . ' < plugin.tx_vierwdsmarty' . "\n";
+				$typoScript .= 'tt_content.' . $config['CType'] . ' =< plugin.tx_vierwdsmarty' . "\n";
 				$typoScript .= 'tt_content.' . $config['CType'] . '.settings.template = ' . $template . "\n";
 
 				$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
