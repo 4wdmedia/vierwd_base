@@ -13,6 +13,7 @@ namespace Vierwd\VierwdBase\Hooks;
 
 use JSMin;
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\ResourceCompressor;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -68,7 +69,7 @@ class JavascriptOptimization {
 	 */
 	public function minifyJsFile($filename) {
 		// generate the unique name of the file
-		$filenameAbsolute = PATH_site . $filename;
+		$filenameAbsolute = Environment::getPublicPath() . '/' . $filename;
 		if (@file_exists($filenameAbsolute)) {
 			$fileStatus = stat($filenameAbsolute);
 			$unique = $filenameAbsolute . $fileStatus['mtime'] . $fileStatus['size'] . '-min';
@@ -78,14 +79,14 @@ class JavascriptOptimization {
 		$pathinfo = PathUtility::pathinfo($filename);
 		$targetFile = 'typo3temp/assets/compressor/' . $pathinfo['filename'] . '-' . md5($unique) . '.js';
 		// only create it, if it doesn't exist, yet
-		if (!file_exists(PATH_site . $targetFile)) {
+		if (!file_exists(Environment::getPublicPath() . '/' . $targetFile)) {
 			$contents = GeneralUtility::getUrl($filenameAbsolute);
 			$contents = GeneralUtility::minifyJavaScript($contents);
 			// make sure the folder exists
-			if (!is_dir(PATH_site . 'typo3temp/assets/compressor/')) {
-				GeneralUtility::mkdir_deep(PATH_site . 'typo3temp/assets/compressor/');
+			if (!is_dir(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/')) {
+				GeneralUtility::mkdir_deep(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/');
 			}
-			GeneralUtility::writeFile(PATH_site . $targetFile, $contents);
+			GeneralUtility::writeFile(Environment::getPublicPath() . '/' . $targetFile, $contents);
 		}
 		return $targetFile;
 	}

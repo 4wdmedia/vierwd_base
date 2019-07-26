@@ -2,6 +2,7 @@
 
 namespace Vierwd\VierwdBase\Resource;
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
 use TYPO3\CMS\Core\Resource\ResourceInterface;
@@ -31,9 +32,9 @@ class CacheBuster {
 
 			// copied from typo3/sysext/core/Classes/Resource/ResourceStorage.php
 			if ($publicUrl !== null && $relativeToCurrentScript && !GeneralUtility::isValidUrl($publicUrl)) {
-				$absolutePathToContainingFolder = PathUtility::dirname(PATH_site . $publicUrl);
+				$absolutePathToContainingFolder = PathUtility::dirname(Environment::getPublic() . '/' . $publicUrl);
 				$pathPart = PathUtility::getRelativePathTo($absolutePathToContainingFolder);
-				$filePart = substr(PATH_site . $publicUrl, strlen($absolutePathToContainingFolder) + 1);
+				$filePart = substr(Environment::getPublic() . '/' . $publicUrl, strlen($absolutePathToContainingFolder) + 1);
 				$publicUrl = $pathPart . $filePart;
 			}
 

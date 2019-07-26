@@ -5,9 +5,10 @@ namespace Vierwd\VierwdBase\Console\Command;
 
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Helhum\Typo3Console\Mvc\Controller\CommandController;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use Doctrine\DBAL\Exception\ConnectionException;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PostComposerCommandController extends CommandController {
 
@@ -25,16 +26,16 @@ class PostComposerCommandController extends CommandController {
 	 */
 	public function runCommand() {
 		// create typo3temp, if it does not exist
-		if (!file_exists(PATH_site . 'typo3temp')) {
-			GeneralUtility::mkdir(PATH_site . 'typo3temp');
+		if (!file_exists(Environment::getPublicPath() . '/typo3temp')) {
+			GeneralUtility::mkdir(Environment::getPublicPath() . '/typo3temp');
 			$this->outputLine('<info>Created typo3temp.</info>');
 		}
 
 		if (!empty($_SERVER['VIERWD_CONFIG'])) {
 			// create symlink to static resources, if the link does not exist and this is the dev-environment
-			$staticResources = PATH_site . 'static-resources';
+			$staticResources = Environment::getPublicPath() . '/static-resources';
 			if (!is_link($staticResources)) {
-				$composerFile = dirname(PATH_site) . '/composer.json';
+				$composerFile = Environment::getProjectPath() . '/composer.json';
 				$composerInfo = json_decode(file_get_contents($composerFile), true);
 				if ($composerInfo && isset($composerInfo['extra'], $composerInfo['extra']['extensionName'])) {
 					$target = 'typo3conf/ext/' . $composerInfo['extra']['extensionName'] . '/Resources/Public/static';
@@ -46,8 +47,8 @@ class PostComposerCommandController extends CommandController {
 			}
 
 			// create AdditionalConfiguration.php if it does not exist
-			$additionalConfiguration = PATH_site . 'typo3conf/AdditionalConfiguration.php';
-			$sampleAdditionalConfiguration = PATH_site . 'typo3conf/AdditionalConfiguration.sample.php';
+			$additionalConfiguration = Environment::getLegacyConfigPath() . '/AdditionalConfiguration.php';
+			$sampleAdditionalConfiguration = Environment::getLegacyConfigPath() . '/AdditionalConfiguration.sample.php';
 			if (!file_exists($additionalConfiguration) && file_exists($sampleAdditionalConfiguration)) {
 				file_put_contents($additionalConfiguration, file_get_contents($sampleAdditionalConfiguration));
 				$this->outputLine('<info>Added AdditionalConfiguration.php.</info>');
@@ -64,7 +65,7 @@ class PostComposerCommandController extends CommandController {
 	}
 
 	protected function hasValidDatabaseConnection(): bool {
-		if (!file_exists(PATH_site . 'typo3conf/PackageStates.php') || !file_exists(PATH_site . 'typo3conf/LocalConfiguration.php')) {
+		if (!file_exists(Environment::getLegacyConfigPath() . '/PackageStates.php') || !file_exists(Environment::getLegacyConfigPath() . '/LocalConfiguration.php')) {
 			return false;
 		}
 

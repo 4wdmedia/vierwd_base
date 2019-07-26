@@ -9,6 +9,7 @@ use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -47,7 +48,7 @@ class DatabaseCommandController extends CommandController {
 	 */
 	public function importCommand(string $file = '') {
 		$importFile = $file ? basename($file) : 'backup.sql.gz';
-		$databaseFolder = dirname(PATH_site) . '/database';
+		$databaseFolder = Environment::getProjectPath() . '/database';
 		$importPath = $databaseFolder . '/' . $importFile;
 		if (!file_exists($importPath)) {
 			$this->outputLine('<error>Import file %s not found</error>', [$importFile]);
@@ -152,7 +153,7 @@ class DatabaseCommandController extends CommandController {
 		$command2 = $this->getExportStructureTablesCommand();
 
 		$exportFile = $file ? basename($file, '.gz') : 'backup.sql';
-		$databaseFolder = dirname(PATH_site) . '/database';
+		$databaseFolder = Environment::getProjectPath() . '/database';
 		if (!is_dir($databaseFolder)) {
 			GeneralUtility::mkdir($databaseFolder);
 		}
