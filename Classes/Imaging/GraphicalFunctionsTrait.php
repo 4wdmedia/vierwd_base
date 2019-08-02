@@ -49,23 +49,26 @@ trait GraphicalFunctionsTrait {
 	}
 
 	public function imageMagickExec($input, $output, $params, $frame = 0) {
-		if ($this->NO_IMAGE_MAGICK) {
+		if (!$this->processorEnabled) {
 			return '';
 		}
 		// If addFrameSelection is set in the Install Tool, a frame number is added to
 		// select a specific page of the image (by default this will be the first page)
-		$frame  = $this->addFrameSelection ? '[' . (int)$frame . ']' : '';
-		$inputFile = CommandUtility::escapeShellArgument($input . $frame);
+		$frame = $this->addFrameSelection ? (int)$frame : null;
+		$inputFile = ImageMagickFile::fromFilePath($input, $frame);
 		$outputFile = CommandUtility::escapeShellArgument($output);
 		if (strpos($params, '%INPUT%') !== false) {
 			$params = str_replace('%INPUT%', $inputFile, $params);
-			$inputFile = '';
+		} else {
+			$params .= ' ' . $inputFile;
 		}
 		if (strpos($params, '%OUTPUT%') !== false) {
 			$params = str_replace('%OUTPUT%', $outputFile, $params);
-			$outputFile = '';
+		} else {
+			$params .= $outputFile;
 		}
-		$cmd = CommandUtility::imageMagickCommand('convert', $params . ' ' . $inputFile  . ' ' . $outputFile);
+
+		$cmd = CommandUtility::imageMagickCommand('convert', $params);
 		$this->IM_commands[] = [$output, $cmd];
 		$ret = CommandUtility::exec($cmd);
 		// Change the permissions of the file
