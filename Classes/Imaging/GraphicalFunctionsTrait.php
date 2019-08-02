@@ -2,6 +2,7 @@
 
 namespace Vierwd\VierwdBase\Imaging;
 
+use TYPO3\CMS\Core\Imaging\ImageMagickFile;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
