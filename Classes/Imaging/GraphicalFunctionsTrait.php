@@ -66,7 +66,7 @@ trait GraphicalFunctionsTrait {
 		if (strpos($params, '%OUTPUT%') !== false) {
 			$params = str_replace('%OUTPUT%', $outputFile, $params);
 		} else {
-			$params .= $outputFile;
+			$params .= ' ' . $outputFile;
 		}
 
 		$cmd = CommandUtility::imageMagickCommand('convert', $params);
