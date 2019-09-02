@@ -45,10 +45,17 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			$language = $request->getAttribute('site')->getDefaultLanguage();
 		}
 
-		$uri = (string)$language->getBase() . '404';
+		if ($reasons && $reasons['code'] === 'access.page') {
+			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
+			$statusCode = 403;
+		} else {
+			$uri = (string)$language->getBase() . '404';
+			$statusCode = 404;
+		}
+
 		$page = $this->load404Page($uri, $message);
 
-		$response = new HtmlResponse($page, 404);
+		$response = new HtmlResponse($page, $statusCode);
 		return $response;
 	}
 
