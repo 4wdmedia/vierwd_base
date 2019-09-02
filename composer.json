@@ -17,6 +17,7 @@
 	}],
 	"require": {
 		"php": ">=7.2.0",
+		"helhum/typo3-console": "^5.5.5",
 		"typo3/cms-core": "^9.4 || ^10.0",
 		"vierwd/svg-inliner": "^1.0",
 		"masterminds/html5": "^2.6",
