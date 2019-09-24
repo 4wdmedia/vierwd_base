@@ -209,3 +209,22 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Pa
 		return !in_array($method, ['TYPO3\\CMS\\Seo\\HrefLang\\HrefLangGenerator->generate', 'TYPO3\\CMS\\Seo\\Canonical\\CanonicalGenerator->generate']);
 	});
 }
+
+// Log Deprecations
+if (!empty($_SERVER['VIERWD_CONFIG'])) {
+	\TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TYPO3_CONF_VARS'], [
+		'LOG' => [
+			'TYPO3' => [
+				'CMS' => [
+					'deprecations' => [
+						'writerConfiguration' => [
+							\TYPO3\CMS\Core\Log\LogLevel::NOTICE => [
+								\Vierwd\VierwdBase\Log\Writer\DeprecationWriter::class => [],
+							],
+						],
+					],
+				],
+			],
+		],
+	]);
+}
