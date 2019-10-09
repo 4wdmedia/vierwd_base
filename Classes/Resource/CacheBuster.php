@@ -45,7 +45,7 @@ class CacheBuster {
 		// for some projects (picture-configuration.ts) and this would lead to duplicate prefixes.
 		// Projects running TYPO3 7 must handle these issues themselves. But most are still using baseURL and do not need
 		// an absolute path
-		if (TYPO3_MODE === 'FE' && isset($GLOBALS['TSFE']) && preg_match('/^[a-z]/i', $params['publicUrl'])) {
+		if (TYPO3_MODE === 'FE' && isset($GLOBALS['TSFE']) && preg_match('/^[a-z]/i', $params['publicUrl']) && $GLOBALS['TSFE']->config['config']['tx_vierwd.']['prependAbsRefPrefixToPublicUrl']) {
 			// Force absolute path
 			$params['publicUrl'] = $GLOBALS['TSFE']->absRefPrefix . $params['publicUrl'];
 		}
