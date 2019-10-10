@@ -7,10 +7,6 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class BrowserSync {
 	public function enable($params, TypoScriptFrontendController $TSFE) {
-		if (empty($_SERVER['4WD_CONFIG'])) {
-			return;
-		}
-
 		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['browserSync']) && !$TSFE->config['config.']['tx_vierwd.']['browserSync']) {
 			return;
 		}

@@ -11,12 +11,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\P
 	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\Printer',
 ];
 
-// *****************************
-// disable https on dev-machines
-if (!empty($_SERVER['4WD_CONFIG'])) {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPageOverlay'][] = 'Vierwd\\VierwdBase\\Hooks\\NoHttps';
-}
-
 // ***************
 // minify JS hook
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = 'Vierwd\\VierwdBase\\Hooks\\JavascriptOptimization->jsMinify';
@@ -77,10 +71,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\ContentObje
 	'className' => 'Vierwd\\VierwdBase\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject',
 ];
 
-// ****************
-// Enable Browser Sync as Post-Processing (better performance than USER_INT)
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output']['vierwd_base-browserSync'] = 'Vierwd\\VierwdBase\\Hooks\\BrowserSync->enable';
-
 // **************
 // Filter files/folders
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = ['Vierwd\\VierwdBase\\Resource\\FilterFiles', 'filterFilesCallback'];
@@ -88,14 +78,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = ['Vierwd
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver'] = [
 	'className' => 'Vierwd\\VierwdBase\\Resource\\LocalDriver',
 ];
-
-// **************
-// Allow Shift-Reload even without admin login in local context
-if (!empty($_SERVER['4WD_CONFIG']) && !empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['headerNoCache'][] = function($params) {
-		$params['disableAcquireCacheData'] = true;
-	};
-}
 
 // **************
 // Make save-and-close the default action
@@ -202,8 +184,24 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Pa
 	});
 }
 
-// Log Deprecations
 if (!empty($_SERVER['VIERWD_CONFIG'])) {
+	// *****************************
+	// disable https on dev-machines
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPageOverlay'][] = \Vierwd\VierwdBase\Hooks\NoHttps::class;
+
+	// ****************
+	// Enable Browser Sync as Post-Processing (better performance than USER_INT)
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output']['vierwd_base-browserSync'] = \Vierwd\VierwdBase\Hooks\BrowserSync::class . '->enable';
+
+	// **************
+	// Allow Shift-Reload even without admin login in local context
+	if (!empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['headerNoCache'][] = function($params) {
+			$params['disableAcquireCacheData'] = true;
+		};
+	}
+
+	// Log Deprecations
 	\TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TYPO3_CONF_VARS'], [
 		'LOG' => [
 			'TYPO3' => [
