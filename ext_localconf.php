@@ -90,10 +90,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\Drive
 ];
 
 // **************
-// Automatically set BaseUrl
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['configArrayPostProc'][] = 'Vierwd\\VierwdBase\\Hooks\\BaseURL->setLocalBaseUrl';
-
-// **************
 // Allow Shift-Reload even without admin login in local context
 if (!empty($_SERVER['4WD_CONFIG']) && !empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['headerNoCache'][] = function($params) {
