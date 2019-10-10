@@ -3,22 +3,22 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = ['paths' => []];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\FileGenerator'] = [
-	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\FileGenerator',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\FileGenerator::class] = [
+	'className' => \Vierwd\VierwdBase\ExtensionBuilder\Service\FileGenerator::class,
 ];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['EBT\\ExtensionBuilder\\Service\\Printer'] = [
-	'className' => 'Vierwd\\VierwdBase\\ExtensionBuilder\\Service\\Printer',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\Printer::class] = [
+	'className' => Vierwd\VierwdBase\ExtensionBuilder\Service\Printer::class,
 ];
 
 // ***************
 // minify JS hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = 'Vierwd\\VierwdBase\\Hooks\\JavascriptOptimization->jsMinify';
-$GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = 'Vierwd\\VierwdBase\\Hooks\\JavascriptOptimization->jsCompressHandler';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsMinify';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsCompressHandler';
 
 // ***************
 // 404-PageNotFoundHandling
-$GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:Vierwd\\VierwdBase\\Hooks\\PageNotFoundHandler->pageNotFound';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:' . \Vierwd\VierwdBase\Hooks\PageNotFoundHandler::class . '->pageNotFound';
 // Disable lockIP, if the server is requesting the 404-page
 $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'] = $_SERVER['SERVER_ADDR'] && $_SERVER['SERVER_ADDR'] == \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR') ? false : $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'];
 
@@ -28,7 +28,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['vierwd_b
 
 // ***************
 // eID for TYPO3 Version
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = 'Vierwd\\VierwdBase\\Controller\\Typo3Version::main';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = \Vierwd\VierwdBase\Controller\Typo3Version::class . '::main';
 
 // disable html_errors, if this is an ajax request
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
@@ -37,12 +37,12 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 
 // **************
 // Add cache-buster to all publicURLs
-$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
-$signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PreGeneratePublicUrl, 'Vierwd\\VierwdBase\\Resource\\CacheBuster', 'getPublicUrl');
+$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
+$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Resource\ResourceStorage::class, \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PreGeneratePublicUrl, \Vierwd\VierwdBase\Resource\CacheBuster::class, 'getPublicUrl');
 
 // **************
 // Check for duplicte files after upload
-$signalSlotDispatcher->connect('TYPO3\\CMS\\Core\\Resource\\ResourceStorage', \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PostFileAdd, 'Vierwd\\VierwdBase\\Resource\\DuplicateFiles', 'checkForDuplicateFiles');
+$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Resource\ResourceStorage::class, \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PostFileAdd, \Vierwd\VierwdBase\Resource\DuplicateFiles::class, 'checkForDuplicateFiles');
 
 // **************
 // Replace encoded mail addresses during indexing
@@ -51,49 +51,49 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = [];
 	}
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'], function($class) {
-		return $class !== 'TYPO3\\CMS\\IndexedSearch\\Indexer';
+		return $class !== \TYPO3\CMS\IndexedSearch\Indexer::class;
 	});
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'][] = 'Vierwd\\VierwdBase\\Hooks\\Indexer';
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'][] = \Vierwd\VierwdBase\Hooks\Indexer::class;
 }
 
 // ****************
 // Force progressive jpegs
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Imaging\\GraphicalFunctions'] = [
-	'className' => 'Vierwd\\VierwdBase\\Imaging\\GraphicalFunctions',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Imaging\GraphicalFunctions::class] = [
+	'className' => \Vierwd\VierwdBase\Imaging\GraphicalFunctions::class,
 ];
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\Imaging\\GifBuilder'] = [
-	'className' => 'Vierwd\\VierwdBase\\Imaging\\GifBuilder',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Frontend\Imaging\GifBuilder::class] = [
+	'className' => \Vierwd\VierwdBase\Imaging\GifBuilder::class,
 ];
 
 // ****************
 // X-Class for SVGContentObject
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject'] = [
-	'className' => 'Vierwd\\VierwdBase\\Frontend\\ContentObject\\ScalableVectorGraphicsContentObject',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Frontend\ContentObject\ScalableVectorGraphicsContentObject::class] = [
+	'className' => \Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject::class,
 ];
 
 // **************
 // Filter files/folders
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = ['Vierwd\\VierwdBase\\Resource\\FilterFiles', 'filterFilesCallback'];
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['defaultFilterCallbacks'][] = [\Vierwd\VierwdBase\Resource\FilterFiles::class, 'filterFilesCallback'];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Resource\\Driver\\LocalDriver'] = [
-	'className' => 'Vierwd\\VierwdBase\\Resource\\LocalDriver',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\Driver\LocalDriver::class] = [
+	'className' => \Vierwd\VierwdBase\Resource\LocalDriver::class,
 ];
 
 // **************
 // Make save-and-close the default action
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook'][] = 'Vierwd\\VierwdBase\\Backend\\GetButtonsHook->adjustSaveAndClose';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook'][] = \Vierwd\VierwdBase\Backend\GetButtonsHook::class . '->adjustSaveAndClose';
 
 // **************
 // Improve handling of parallel requests
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageLoadedFromCache'][] = 'Vierwd\\VierwdBase\\Frontend\\PageLoadedFromCache->stallTempPage';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageLoadedFromCache'][] = \Vierwd\VierwdBase\Frontend\PageLoadedFromCache::class . '->stallTempPage';
 
 // **************
 // Fix incorrect umlauts during editing of data
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = 'Vierwd\\VierwdBase\\Hooks\\DataHandler';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = \Vierwd\VierwdBase\Hooks\DataHandler::class;
 
 // **************
 // Hyphenate words in generated html
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = 'Vierwd\\VierwdBase\\Hooks\\Utility->postProcessHTML';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
 
 // **************
 // Expired Preview links throw an exception. The only solution is to delete the cookie
@@ -103,22 +103,22 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('workspaces')) 
 	if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'])) {
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'] = [];
 	}
-	array_unshift($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'], 'Vierwd\\VierwdBase\\Hooks\\VersioningHooks->removeExpiredPreviewCookie');
+	array_unshift($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['connectToDB'], \Vierwd\VierwdBase\Hooks\VersioningHooks::class . '->removeExpiredPreviewCookie');
 }
 
 if (version_compare(TYPO3_version, '10.0.0', '<')) {
 	// *****************
 	// Add TCA from FCEs
-	$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', 'Vierwd\\VierwdBase\\Hooks\\ContentElements', 'addTCA');
+	$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', \Vierwd\VierwdBase\Hooks\ContentElements::class, 'addTCA');
 }
 
 // *****************
 // Warn when no editor has access to edit some content elements
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = 'Vierwd\\VierwdBase\\Hooks\\CheckBackendGroups';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = \Vierwd\VierwdBase\Hooks\CheckBackendGroups::class;
 
 // Database connection with correct utf8mb4 charset
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\Schema\\ConnectionMigrator'] = [
-	'className' => 'Vierwd\\VierwdBase\\Database\\Schema\\ConnectionMigrator',
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Database\Schema\ConnectionMigrator::class] = [
+	'className' => \Vierwd\VierwdBase\Database\Schema\ConnectionMigrator::class,
 ];
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\RichtextConfiguration::class] = [
@@ -133,8 +133,8 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRe
 
 $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']);
 if (!empty($extConf['forceMyISAM'])) {
-	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Core\\Database\\Schema\\SqlReader'] = [
-		'className' => 'Vierwd\\VierwdBase\\Database\\ForceMyISAM',
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Database\Schema\SqlReader::class] = [
+		'className' => \Vierwd\VierwdBase\Database\ForceMyISAM::class,
 	];
 }
 
@@ -178,9 +178,9 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('gridelements')
 // Remove canonical URL generation and hreflang generation from TYPO3 seo extension.
 // The generated links might contain malicous query strings.
 // @see https://forge.typo3.org/issues/87105
-if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Page\\PageGenerator']['generateMetaTags'])) {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Page\\PageGenerator']['generateMetaTags'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['TYPO3\\CMS\\Frontend\\Page\\PageGenerator']['generateMetaTags'], function($method) {
-		return !in_array($method, ['TYPO3\\CMS\\Seo\\HrefLang\\HrefLangGenerator->generate', 'TYPO3\\CMS\\Seo\\Canonical\\CanonicalGenerator->generate']);
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Frontend\Page\PageGenerator::class]['generateMetaTags'])) {
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Frontend\Page\PageGenerator::class]['generateMetaTags'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Frontend\Page\PageGenerator::class]['generateMetaTags'], function($method) {
+		return !in_array($method, [\TYPO3\CMS\Seo\HrefLang\HrefLangGenerator::class . '->generate', \TYPO3\CMS\Seo\Canonical\CanonicalGenerator::class . '->generate']);
 	});
 }
 
