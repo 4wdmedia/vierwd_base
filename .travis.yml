@@ -23,11 +23,6 @@ matrix:
       env: SNIFF=1
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - parallel
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -60,18 +55,18 @@ script:
   - >
     if [[ "$SNIFF" != "1" && "${TRAVIS_PHP_VERSION:0:3}" < "7.0" ]]; then
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7' | xargs -n1 -P8 php -l > /dev/null ;
     fi
 
   - >
     if [[ "$SNIFF" != "1" && "${TRAVIS_PHP_VERSION:0:1}" > "5" ]]; then
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7\.[1-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7\.[1-9]' | xargs -n1 -P8 php -l > /dev/null ;
     fi
   - >
     if [[ "$SNIFF" != "1" && "${TRAVIS_PHP_VERSION:0:3}" > "7.0" ]]; then
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7\.[2-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7\.[2-9]' | xargs -n1 -P8 php -l > /dev/null ;
     fi
 
   - if [[ "$SNIFF" == "1" ]]; then .Build/bin/phpcs --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/; fi
