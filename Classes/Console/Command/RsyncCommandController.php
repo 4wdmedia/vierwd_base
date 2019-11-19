@@ -98,7 +98,7 @@ class RsyncCommandController extends CommandController {
 		if ($publicPrefix !== '/') {
 			$publicPrefix = '/' . $publicPrefix;
 		}
-		$serverPath = trim($sshConfig['serverPath'], '/') .'/';
+		$serverPath = rtrim($sshConfig['serverPath'], '/') . '/';
 
 		$folders = array_map(function(string $path) use ($sshConfig, $serverPath, $publicPrefix) {
 			$path = $serverPath . '.' . $publicPrefix . $path;
