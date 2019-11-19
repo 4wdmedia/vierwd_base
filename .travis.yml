@@ -4,7 +4,7 @@ php:
   - 7.2
 
 env:
-  - TYPO3_VERSION="^9.3.0"
+  - TYPO3_VERSION="^9.5.0"
 
 matrix:
   exclude:
@@ -14,11 +14,6 @@ matrix:
     - php: 7.2
       env: SNIFF=1
 sudo: false
-
-addons:
-  apt:
-    packages:
-      - parallel
 
 cache:
   directories:
@@ -47,7 +42,7 @@ script:
 
   - >
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match --regexp '<\?php // PHP\s*7\.[3-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match --regexp '<\?php // PHP\s*7\.[3-9]' | xargs -n1 -P8 php -l > /dev/null ;
 
   - if [[ "$SNIFF" == "1" ]]; then .Build/bin/phpcs --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/; fi
 
