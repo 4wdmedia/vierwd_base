@@ -20,7 +20,7 @@ class DeprecationWriter extends AbstractWriter {
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {
-		if (!$this->checkTrace()) {
+		if (TYPO3_MODE !== 'FE' || !$this->checkTrace()) {
 			return $this;
 		}
 
