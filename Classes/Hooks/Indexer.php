@@ -2,6 +2,8 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Indexer {
@@ -13,18 +15,22 @@ class Indexer {
 			$pObj->content = str_replace($pObj->config['config']['spamProtectEmailAddresses_atSubst'], '@', $pObj->content);
 		}
 
-		$oldLanguageContent = $pObj->sys_language_content;
-		if ($pObj->sys_language_uid != $pObj->sys_language_content) {
+		$context = GeneralUtility::makeInstance(Context::class);
+		$languageAspect = $context->getAspect('language');
+
+		$oldLanguageAspect = $languageAspect;
+		if ($languageAspect->getId() != $languageAspect->getContentId()) {
 			// Current page shows fallback content of another language.
 			// Normally this would not be indexed. But if this is just another locale (de_CH and fallback to de_DE)
 			// we want this to be indexed
-			$pObj->sys_language_content = $pObj->sys_language_uid;
+			$indexLanguageAspect = GeneralUtility::makeInstance(LanguageAspect::class, $languageAspect->getId(), $languageAspect->getId(), $languageAspect->getOverlayType(), $languageAspect->getFallbackChain());
+			$context->setAspect('language', $indexLanguageAspect);
 		}
 
 		$_procObj = GeneralUtility::makeInstance(\TYPO3\CMS\IndexedSearch\Indexer::class);
 		$_procObj->hook_indexContent($pObj);
 
 		$pObj->content = $contentBefore;
-		$pObj->sys_language_content = $oldLanguageContent;
+		$context->setAspect('language', $oldLanguageAspect);
 	}
 }
