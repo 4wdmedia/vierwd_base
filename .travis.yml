@@ -38,8 +38,10 @@ before_install:
   - composer --version
 
 install:
-  - if [[ "$TYPO3_VERSION" ]]; then composer require "typo3/cms" "$TYPO3_VERSION"; git checkout .; export TYPO3_PATH_WEB=$PWD/.Build/Web; fi
-  - if [[ "$SNIFF" == "1" ]]; then composer install; fi
+  - if [[ "$TYPO3_VERSION" && "${TRAVIS_PHP_VERSION:0:3}" < "7.2" ]]; then composer require "typo3/cms:$TYPO3_VERSION" "nimut/testing-framework:^1.1" "phpunit/phpunit:^4.7"; export TYPO3_PATH_WEB=$PWD/.Build/Web; fi
+  - if [[ "$TYPO3_VERSION" && "${TRAVIS_PHP_VERSION:0:3}" > "7.1" ]]; then composer require "typo3/cms:$TYPO3_VERSION" "nimut/testing-framework:^3.0.0" "phpunit/phpunit:^6.0.0"; export TYPO3_PATH_WEB=$PWD/.Build/Web; fi
+  - git checkout .
+  - if [[ "$SNIFF" == "1" ]]; then composer require --dev "friendsofphp/php-cs-fixer" "^1.13"; fi
 
 # before_script:
 #   - composer require typo3/cms="$TYPO3_VERSION"
@@ -49,25 +51,27 @@ install:
 
 script:
   - >
+    if [[ "$SNIFF" != "1" ]]; then
     echo;
     echo "Running unit tests";
-    .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/
-
-  - >
-    if [[ "${TRAVIS_PHP_VERSION:0:3}" < "7.0" ]]; then
-    echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/;
     fi
 
   - >
-    if [[ "${TRAVIS_PHP_VERSION:0:1}" > "5" ]]; then
+    if [[ "$SNIFF" != "1" && "${TRAVIS_PHP_VERSION:0:3}" < "7.0" ]]; then
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7\.[1-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    fi
+
+  - >
+    if [[ "$SNIFF" != "1" && "${TRAVIS_PHP_VERSION:0:1}" > "5" ]]; then
+    echo "Running php lint";
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7\.[1-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
     fi
   - >
-    if [[ "${TRAVIS_PHP_VERSION:0:3}" > "7.0" ]]; then
+    if [[ "$SNIFF" != "1" && "${TRAVIS_PHP_VERSION:0:3}" > "7.0" ]]; then
     echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | xargs grep -L -e '<\?php // PHP\s*7\.[2-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
+    find . -name \*.php ! -path "./.Build/*" | xargs grep --files-without-match -e '<\?php // PHP\s*7\.[2-9]' | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \; ;
     fi
 
   - if [[ "$SNIFF" == "1" ]]; then .Build/bin/phpcs --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/; fi
