@@ -255,7 +255,7 @@ class ContentElements implements SingletonInterface {
 
 				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
-				if ($config['adminOnly']) {
+				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
 					$last['adminOnly'] = true;
 					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
