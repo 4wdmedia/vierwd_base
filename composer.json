@@ -38,6 +38,7 @@
 		}
 	},
 	"replace": {
+		"vierwd_base": "self.version",
 		"vierwd/typo3_base": "self.version"
 	},
 	"config": {
