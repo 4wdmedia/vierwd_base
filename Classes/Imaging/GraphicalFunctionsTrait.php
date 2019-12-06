@@ -15,6 +15,7 @@ trait GraphicalFunctionsTrait {
 		parent::init();
 		$this->cmds['jpg'] .= ' -interlace Plane';
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
+		$this->cmds['webp'] = ' -interlace Plane -quality 85';
 	}
 
 	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {
@@ -44,6 +45,16 @@ trait GraphicalFunctionsTrait {
 			}
 
 			$params .= $append;
+		}
+		if ($ext === 'webp') {
+			// check if interlace plane and quality is set
+			if (strpos($params, '-quality') === false) {
+				$params .= ' -quality 85';
+			}
+
+			if (strpos($params, '-interlace') === false) {
+				$params .= ' -interlace Plane';
+			}
 		}
 
 		return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
