@@ -1,14 +1,7 @@
 <?php // PHP 7.2
 declare(strict_types=1);
 
-if (!defined('TYPO3_version')) {
-	return [
-		'controllers' => [],
-		'runLevels' => [],
-		'bootingSteps' => [],
-		'commands' => [],
-	];
-} else if (version_compare(TYPO3_version, '8.0.0', '<')) {
+if (!defined('TYPO3_version') || version_compare(TYPO3_version, '8.0.0', '<')) {
 	return [
 		'controllers' => [],
 		'runLevels' => [],
