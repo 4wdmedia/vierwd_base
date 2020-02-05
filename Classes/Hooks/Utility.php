@@ -191,7 +191,7 @@ class Utility {
 			$XPath = new DOMXPath($document);
 			$nodes = $XPath->evaluate('.//text()', $body);
 			foreach ($nodes as $node) {
-				if ($node->nodeType === XML_TEXT_NODE) {
+				if ($node->nodeType === XML_TEXT_NODE && $node->parentNode->nodeName !== 'script' && $node->parentNode->nodeName !== 'style') {
 					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue);
 				}
 			}
