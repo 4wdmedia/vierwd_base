@@ -57,6 +57,13 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 			if (!file_exists($file)) {
 				return '';
 			}
+
+			if (isset($_SERVER['VIERWD_CONFIG'])) {
+				// check if filename is written correctly
+				if (!glob($file . '*')) {
+					throw new \Exception('SVG not found ' . $src . "\nMaybe incorrect case of filename?", 1581686825);
+				}
+			}
 			$value = trim(file_get_contents($file));
 			$identifier = 'svg-' . pathinfo($file, PATHINFO_FILENAME);
 		} else {
