@@ -274,7 +274,7 @@ class ContentElements implements SingletonInterface {
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
 			if ($config['generatePlugin'] && $isLocalConf) {
 				ExtensionUtility::configurePlugin(
-					'Vierwd.' . $extensionKey,
+					$config['vendorName'] . '.' . $extensionKey,
 					$config['pluginName'],
 					$config['controllerActions'],
 					$config['nonCacheableActions'],

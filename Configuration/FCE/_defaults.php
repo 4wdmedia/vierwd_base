@@ -3,6 +3,7 @@
 return [
 	'adminOnly' => false,
 	'group' => 'vierwd',
+	'vendorName' => 'Vierwd',
 	'pluginName' => '',
 	'name' => '',
 	'description' => '',
