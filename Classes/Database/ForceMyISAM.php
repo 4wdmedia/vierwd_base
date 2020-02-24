@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace Vierwd\VierwdBase\Database;
 
 use Doctrine\DBAL\Schema\Schema;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Schema\Parser\Parser;
+use TYPO3\CMS\Core\Database\Schema\SqlReader;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * TYPO3 tables are generated as InnoDB by default. Many tables would be better
@@ -14,7 +15,7 @@ use TYPO3\CMS\Core\Database\Schema\Parser\Parser;
  * the performance is way faster on our DomainFactory server with MyISAM instead
  * of InnoDB.
  */
-class ForceMyISAM extends \TYPO3\CMS\Core\Database\Schema\SqlReader {
+class ForceMyISAM extends SqlReader {
 
 	private static $MyISAMTables = [
 		'sys_file',
