@@ -290,6 +290,15 @@ class ContentElements implements SingletonInterface {
 				} else {
 					$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $config['pluginSignature'] . ".20\n";
 				}
+
+				$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
+				if (in_array('media', $tcaType)) {
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = assets' . "\n";
+				} else if (in_array('image', $tcaType)) {
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
+					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = image' . "\n";
+				}
 			}
 
 			if (!$isLocalConf) {
