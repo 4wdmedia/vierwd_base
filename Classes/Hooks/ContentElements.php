@@ -217,7 +217,7 @@ class ContentElements implements SingletonInterface {
 				}
 
 				ExtensionUtility::configurePlugin(
-					'Vierwd.' . $extensionKey,
+					$config['vendorName'] . '.' . $extensionKey,
 					$config['pluginName'],
 					$config['controllerActions'],
 					// non-cacheable actions
