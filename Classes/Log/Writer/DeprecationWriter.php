@@ -29,6 +29,12 @@ class DeprecationWriter extends AbstractWriter {
 		}
 
 		$message = $record->getMessage();
+		$location = $this->getVierwdClass();
+		if ($location['class'] && $location['function']) {
+			$message .= "\n" . $location['class'] . ($location['type'] ?? '->') . $location['function'];
+		} else if ($location['file'] && isset($location['line'])) {
+			$message .= "\n" . $location['file'] . ':' . $location['line'];
+		}
 		$message = str_replace(Environment::getPublicPath(), '', $message);
 		$message = str_replace(Environment::getProjectPath(), '', $message);
 		$message = str_replace('Core: Error handler (FE): TYPO3 Deprecation Notice: ', '', $message);
@@ -55,6 +61,33 @@ class DeprecationWriter extends AbstractWriter {
 		}
 
 		return true;
+	}
+
+	protected function getVierwdClass(): ?array {
+		$trace = debug_backtrace();
+		// only look at the first 20 classes
+		$trace = array_slice($trace, 0, 20);
+
+		$classes = array_filter($trace, function(array $traceEntry): bool {
+			$class = !empty($traceEntry['class']) && StringUtility::beginsWith($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
+			$template = !empty($traceEntry['file']) && StringUtility::endsWith($traceEntry['file'], 'smarty_template_resource_base.php');
+			return $class || $template;
+		});
+		if (!$classes) {
+			return null;
+		}
+
+		$traceEntry = current($classes);
+		if (!empty($traceEntry['file']) && StringUtility::endsWith($traceEntry['file'], 'smarty_template_resource_base.php')) {
+			if ($traceEntry['args'][0] instanceof \Smarty_Internal_Template) {
+				return [
+					'file' => $traceEntry['args'][0]->template_resource,
+					'line' => 0,
+				];
+			}
+		}
+
+		return $traceEntry;
 	}
 
 	protected function registerShutdownFunction(): void {
@@ -84,6 +117,7 @@ class DeprecationWriter extends AbstractWriter {
 	container.style.maxWidth = '800px';
 	container.style.border = '1px solid #f99';
 	container.style.wordWrap = 'break-word';
+	container.style.whiteSpace = 'pre-wrap';
 
 	let p = document.createElement('p');
 	let strong = document.createElement('strong');
@@ -110,7 +144,9 @@ class DeprecationWriter extends AbstractWriter {
 		container.append(p);
 	});
 
-	document.body.append(container);
+	if (!document.getElementById('krumo-1')) {
+		document.body.append(container);
+	}
 }());
 </script>
 EOT;
