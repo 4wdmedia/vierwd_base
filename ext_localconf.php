@@ -218,3 +218,5 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 		],
 	]);
 }
+
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['AutomaticSlugPatternMapper'] = \Vierwd\VierwdBase\Routing\Aspect\AutomaticSlugPatternMapper::class;
