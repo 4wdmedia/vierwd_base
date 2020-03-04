@@ -12,6 +12,7 @@ namespace Vierwd\VierwdBase\Hooks;
  ***************************************************************/
 
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
@@ -74,12 +75,15 @@ class ContentElements implements SingletonInterface {
 			return;
 		}
 
+		$baseFceDir = ExtensionManagementUtility::extPath('vierwd_base') . 'Configuration/FCE/';
 		$fceDir = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/';
 
 		$pageTS = '';
 		$typoScript = '';
 
-		$defaults = include $fceDir . '_defaults.php';
+		$defaults = include $baseFceDir . '_defaults.php';
+		$additionalDefaults = include $fceDir . '_defaults.php';
+		ArrayUtility::mergeRecursiveWithOverrule($defaults, $additionalDefaults);
 
 		// Load all groups
 		$groupsFile = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/_groups.php';
