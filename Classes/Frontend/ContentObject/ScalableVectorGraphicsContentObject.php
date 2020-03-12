@@ -65,10 +65,10 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 				}
 			}
 			$value = trim(file_get_contents($file));
-			$identifier = 'svg-' . pathinfo($file, PATHINFO_FILENAME);
-		} else {
-			$identifier = 'svg-' . md5($value);
+			$class .= ' svg-' . pathinfo($file, PATHINFO_FILENAME);
 		}
+
+		$identifier = 'svg-' . md5($value);
 
 		$options = [
 			'width' => $width,
