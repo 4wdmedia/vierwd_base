@@ -6,7 +6,6 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Page\PageRenderer;
 
 use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject;
 
@@ -18,7 +17,7 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSvg() {
-		$TSFE = $this->getMockBuilder('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController')
+		$TSFE = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -32,6 +31,6 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 			],
 		]);
 
-		$this->assertEquals('a<svg class="svg svg-b66f1e058e1ad1dcce61ce377e908fa9"></svg>b', $svg);
+		$this->assertEquals('a<svg class="svg"></svg>b', $svg);
 	}
 }
