@@ -77,8 +77,19 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 			'identifier' => $identifier,
 		];
 
-		if (isset($conf['excludeFromConcatenation'])) {
-			$options['excludeFromConcatenation'] = $conf['excludeFromConcatenation'];
+		$allowedOptions = [
+			'excludeFromConcatenation',
+			'ignoreDuplicateIds',
+			'removeComments',
+		];
+		foreach ($allowedOptions as $optionName) {
+			if (isset($conf[$optionName])) {
+				$options[$optionName] = $conf[$optionName];
+			}
+		}
+
+		if (isset($conf['additionalOptions']) && is_array($conf['additionalOptions'])) {
+			$options += $conf['additionalOptions'];
 		}
 
 		$value = self::$svgInliner->renderSVG($value, $options);
