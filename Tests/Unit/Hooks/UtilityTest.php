@@ -4,6 +4,7 @@ namespace Vierwd\VierwdBase\Tests\Unit\View;
 
 use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -17,6 +18,10 @@ class UtilityTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testMetaTags() {
+		// Initialize Application, because a valid Service Container is needed
+		$classLoader = include PHPUNIT_COMPOSER_INSTALL;
+		Bootstrap::init($classLoader, true);
+
 		$utility = GeneralUtility::makeInstance(BaseUtility::class);
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$cObj->start([], '_NO_TABLE');
@@ -46,6 +51,9 @@ class UtilityTest extends UnitTestCase {
 <meta name="google" content="notranslate" />
 <meta name="meta.og:image:width" content="400" />
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">', $pageRenderer->render());
+
+		// Bootstrap::init starts output buffering
+		ob_end_clean();
 	}
 
 	/**
