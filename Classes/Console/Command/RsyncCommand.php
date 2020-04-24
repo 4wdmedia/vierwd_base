@@ -97,6 +97,10 @@ class RsyncCommand extends Command {
 			}
 		}
 
+		if (is_dir(Environment::getPublicPath() . '/uploads/')) {
+			$folders[] = 'uploads/';
+		}
+
 		return $folders;
 	}
 
