@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
-use Helhum\Typo3Console\Mvc\Controller\CommandController;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
@@ -11,31 +14,33 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Service\FlexFormService;
 
-class RsyncCommandController extends CommandController {
+class RsyncCommand extends Command {
 
-	/**
-	 * Import database from the current ServiceArea or Live-Server.
-	 * This completly overwrites the current DB. As a security measure, we export the DB before importing a new one
-	 *
-	 * @param bool $dryRun
-	 */
-	public function downCommand(bool $dryRun = false) {
+	protected function configure() {
+		$this->setDescription('Import database from the current ServiceArea or Live-Server');
+		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');
+		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
+	}
+
+	protected function execute(InputInterface $input, OutputInterface $output): int {
+		$dryRun = $input->getOption('dry-run');
+
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 		if (!$config || !$config['ssh']) {
-			$this->outputLine('<error>No SSH config found</error>');
-			$this->quit(1);
+			$output->writeln('<error>No SSH config found</error>');
+			return 1;
 		}
 
 		if ($config['ssh']['serverPath'] === '~/kundenbereich/') {
 			// serverPath still has default value
-			$this->outputLine('<error>No ssh server path set in extension configuration</error>');
-			$this->quit(1);
+			$output->writeln('<error>No ssh server path set in extension configuration</error>');
+			return 1;
 		}
 
 		$folders = $this->getRsyncFolders();
 		if (!$folders) {
-			$this->outputLine('<error>No folders configured for rsync</error>');
-			$this->quit(1);
+			$output->writeln('<error>No folders configured for rsync</error>');
+			return 1;
 		}
 		$folders = $this->transformFolders($folders, $config['ssh']);
 
@@ -60,10 +65,12 @@ class RsyncCommandController extends CommandController {
 		$importProcess->run($this->buildStreamOutput());
 
 		if ($importProcess->getExitCode()) {
-			$this->outputLine('<error>Import failed</error>');
+			$output->writeln('<error>Import failed</error>');
 		} else if (!$dryRun) {
-			$this->outputLine('<info>Import complete</info>');
+			$output->writeln('<info>Import complete</info>');
 		}
+
+		return 0;
 	}
 
 	protected function getRsyncFolders(): array {

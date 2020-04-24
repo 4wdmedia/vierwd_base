@@ -4,48 +4,34 @@ declare(strict_types=1);
 return [
 	'vierwd:post-composer' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\PostComposerCommandController::class,
-		'controllerCommandName' => 'run',
+		'class' => Vierwd\VierwdBase\Console\Command\PostComposerCommand::class,
 		'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE,
 	],
 	'vierwd:database:export' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
-		'controllerCommandName' => 'export',
+		'class' => Vierwd\VierwdBase\Console\Command\Database\ExportCommand::class,
 		'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL,
 	],
 	'vierwd:database:import' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
-		'controllerCommandName' => 'import',
+		'class' => Vierwd\VierwdBase\Console\Command\Database\ImportCommand::class,
 		'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL,
 	],
 	'vierwd:database:kb-import' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
-		'controllerCommandName' => 'kbImport',
+		'class' => Vierwd\VierwdBase\Console\Command\Database\KbImportCommand::class,
 	],
 	'vierwd:database:last-change' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\DatabaseCommandController::class,
-		'controllerCommandName' => 'lastChange',
+		'class' => Vierwd\VierwdBase\Console\Command\Database\LastChangeCommand::class,
 	],
 	'vierwd:list-words' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\ListWordsCommandController::class,
-		'controllerCommandName' => 'run',
+		'class' => Vierwd\VierwdBase\Console\Command\ListWordsCommand::class,
 	],
 
 	'vierwd:rsync:down' => [
 		'vendor' => 'vierwd',
-		'class' => \Helhum\Typo3Console\Mvc\Cli\Symfony\Command\DummyCommand::class,
-		'controller' => Vierwd\VierwdBase\Console\Command\RsyncCommandController::class,
-		'controllerCommandName' => 'down',
+		'class' => Vierwd\VierwdBase\Console\Command\RsyncCommand::class,
 	],
 ];

@@ -3,32 +3,27 @@ declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
-use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
-use Helhum\Typo3Console\Mvc\Controller\CommandController;
 use Doctrine\DBAL\Exception\ConnectionException;
+use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class PostComposerCommandController extends CommandController {
+class PostComposerCommand extends Command {
 
-	/**
-	 * @var CommandDispatcher
-	 */
-	private $commandDispatcher;
-
-	public function __construct(CommandDispatcher $commandDispatcher = null) {
-		$this->commandDispatcher = $commandDispatcher ?: CommandDispatcher::createFromCommandRun();
+	protected function configure() {
+		$this->setDescription('Tasks to run after composer install/update');
+		$this->setHelp('Ensure some folders exist after composer installation');
 	}
 
-	/**
-	 * ensure some folders exist after composer installation
-	 */
-	public function runCommand() {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		// create typo3temp, if it does not exist
 		if (!file_exists(Environment::getPublicPath() . '/typo3temp')) {
 			GeneralUtility::mkdir(Environment::getPublicPath() . '/typo3temp');
-			$this->outputLine('<info>Created typo3temp.</info>');
+			$output->writeln('<info>Created typo3temp.</info>');
 		}
 
 		if (!empty($_SERVER['VIERWD_CONFIG'])) {
@@ -42,30 +37,32 @@ class PostComposerCommandController extends CommandController {
 					$target = escapeshellarg($target);
 					$staticResources = escapeshellarg($staticResources);
 					`ln -s $target $staticResources`;
-					$this->outputLine('<info>Added Link for static-resources.</info>');
+					$output->writeln('<info>Added Link for static-resources.</info>');
 				}
 			}
 
 			// create AdditionalConfiguration.php if it does not exist
-			$additionalConfiguration = Environment::getLegacyConfigPath() . '/AdditionalConfiguration.php';
-			$sampleAdditionalConfiguration = Environment::getLegacyConfigPath() . '/AdditionalConfiguration.sample.php';
+			$additionalConfiguration = Environment::getConfigPath() . '/AdditionalConfiguration.php';
+			$sampleAdditionalConfiguration = Environment::getConfigPath() . '/AdditionalConfiguration.sample.php';
 			if (!file_exists($additionalConfiguration) && file_exists($sampleAdditionalConfiguration)) {
 				file_put_contents($additionalConfiguration, file_get_contents($sampleAdditionalConfiguration));
-				$this->outputLine('<info>Added AdditionalConfiguration.php.</info>');
+				$output->writeln('<info>Added AdditionalConfiguration.php.</info>');
 			}
 		}
 
+		$commandDispatcher = CommandDispatcher::createFromCommandRun();
+
 		// check if database is fully available
 		if ($this->hasValidDatabaseConnection()) {
-			$this->commandDispatcher->executeCommand('cache:flush');
+			$commandDispatcher->executeCommand('cache:flush');
 		}
-		$this->commandDispatcher->executeCommand('cache:flush', ['--force', '--files-only']);
+		$commandDispatcher->executeCommand('cache:flush', ['--force', '--files-only']);
 
-		$this->quit(0);
+		return 0;
 	}
 
 	protected function hasValidDatabaseConnection(): bool {
-		if (!file_exists(Environment::getLegacyConfigPath() . '/PackageStates.php') || !file_exists(Environment::getLegacyConfigPath() . '/LocalConfiguration.php')) {
+		if (!file_exists(Environment::getConfigPath() . '/PackageStates.php') || !file_exists(Environment::getConfigPath() . '/LocalConfiguration.php')) {
 			return false;
 		}
 

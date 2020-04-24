@@ -1,0 +1,240 @@
+<?php
+declare(strict_types=1);
+
+namespace Vierwd\VierwdBase\Console\Command\Database;
+
+use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
+use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+abstract class BaseDatabaseCommand extends Command {
+
+	protected const CONNECTION_LOCAL = 'local';
+	protected const CONNECTION_REMOTE = 'remote';
+
+	/** @var string */
+	private static $mysqlTempFile;
+
+	/** @var ConnectionConfiguration */
+	private $connectionConfiguration;
+
+	/** @var array */
+	private $dbConfig;
+
+	/** @var InputInterface */
+	protected $input;
+
+	/** @var OutputInterface */
+	protected $output;
+
+	public function __construct(string $name = null, ConnectionConfiguration $connectionConfiguration = null) {
+		parent::__construct($name);
+		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
+	}
+
+	protected function initialize(InputInterface $input, OutputInterface $output) {
+		parent::initialize($input, $output);
+
+		$this->input = $input;
+		$this->output = $output;
+
+		$this->dbConfig = $this->connectionConfiguration->build();
+
+		$this->commandDispatcher = CommandDispatcher::createFromCommandRun();
+	}
+
+	/**
+	 * create a backup of the database.
+	 */
+	protected function createBackup() {
+		$this->output->writeln('Creating a backup first');
+		$exportFile = 'backup-' . date('Y-m-d-H:i:s') . '.sql.gz';
+		$output = $this->commandDispatcher->executeCommand('vierwd:database:export', ['--file', $exportFile]);
+		$this->output->writeln(' ' . str_replace("\n", "\n  ", $output));
+	}
+
+	/**
+	 * get the command line to export all tables containing export worthy data
+	 */
+	protected function getExportDataTablesCommand(string $type = self::CONNECTION_LOCAL): string {
+		$additionalArguments = [
+			'--default-character-set=utf8mb4',
+			'--set-charset',
+			'--net_buffer_length=16000',
+			'--extended-insert',
+		];
+
+		foreach ($this->getIgnoredTables() as $table) {
+			$additionalArguments[] = sprintf('--ignore-table=%s.%s', $this->dbConfig['dbname'], $table);
+		}
+
+		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
+		$commandLine = array_merge(['mysqldump'], $connectionArguments, $additionalArguments);
+		$process = new Process($commandLine);
+		return $process->getCommandLine();
+	}
+
+	/**
+	 * get the command line to export all tables where we only need the structure
+	 */
+	protected function getExportStructureTablesCommand(string $type = self::CONNECTION_LOCAL): string {
+		$additionalArguments = [
+			'--default-character-set=utf8mb4',
+			'--set-charset',
+			'--no-data',
+		];
+
+		foreach ($this->getIgnoredTables() as $table) {
+			$additionalArguments[] = $table;
+		}
+
+		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
+		$commandLine = array_merge(['mysqldump'], $connectionArguments, $additionalArguments);
+		$process = new Process($commandLine);
+		return $process->getCommandLine();
+	}
+
+	protected function isDbEmpty(): bool {
+		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+		$connection = $connectionPool->getConnectionByName('Default');
+		$schemaManager = $connection->getSchemaManager();
+		$tables = $schemaManager->listTableNames();
+
+		return !$tables;
+	}
+
+	protected function getIgnoredTables(): array {
+		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+		$connection = $connectionPool->getConnectionByName('Default');
+		$schemaManager = $connection->getSchemaManager();
+		$tables = $schemaManager->listTableNames();
+
+		$ignoreTables = [
+			'sys_log',
+			'sys_file_processedfile',
+			'tx_extensionmanager_domain_model_extension',
+		];
+		$ignoreTables = array_intersect($ignoreTables, $tables);
+		$prefixes = ['cf_', 'zzz_deleted_', 'cache_', 'index_', 'tx_realurl_'];
+		foreach ($tables as $table) {
+			foreach ($prefixes as $prefix) {
+				if (substr($table, 0, strlen($prefix)) === $prefix) {
+					$ignoreTables[] = $table;
+				}
+			}
+		}
+
+		return $ignoreTables;
+	}
+
+	/**
+	 * stream output of a process to our output
+	 */
+	protected function buildStreamOutput() {
+		return function ($type, $output) {
+			if (Process::OUT === $type) {
+				// Explicitly just echo out for now (avoid symfony console formatting)
+				echo $output;
+			} else {
+				$this->output('<error>' . $output . '</error>');
+			}
+		};
+	}
+
+	private function buildRemoteConnectionArguments(): array {
+		$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+
+		$dbConfiguration = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+
+		$arguments = [];
+		if (!empty($dbConfiguration['user'])) {
+			$arguments[] = '-u';
+			$arguments[] = $dbConfiguration['user'];
+		}
+		if (!empty($dbConfiguration['password'])) {
+			$arguments[] = '-p' . $dbConfiguration['password'];
+		}
+		if (!empty($dbConfiguration['host'])) {
+			$arguments[] = '-h';
+			$arguments[] = $dbConfiguration['host'];
+		}
+		if (!empty($dbConfiguration['port'])) {
+			$arguments[] = '-P';
+			$arguments[] = $dbConfiguration['port'];
+		}
+		if (!empty($dbConfiguration['unix_socket'])) {
+			$arguments[] = '-S';
+			$arguments[] = $dbConfiguration['unix_socket'];
+		}
+		$arguments[] = $dbConfiguration['dbname'];
+
+		return $arguments;
+	}
+
+	/**
+	 * copied from \Helhum\Typo3Console\Database\Process\MysqlCommand
+	 */
+	protected function buildConnectionArguments(): array {
+		$arguments = [];
+
+		$configFile = $this->createTemporaryMysqlConfigurationFile();
+		if ($configFile) {
+			$arguments[] = '--defaults-extra-file=' . $configFile;
+		}
+		if (!empty($this->dbConfig['host'])) {
+			$arguments[] = '-h';
+			$arguments[] = $this->dbConfig['host'];
+		}
+		if (!empty($this->dbConfig['port'])) {
+			$arguments[] = '-P';
+			$arguments[] = $this->dbConfig['port'];
+		}
+		if (!empty($this->dbConfig['unix_socket'])) {
+			$arguments[] = '-S';
+			$arguments[] = $this->dbConfig['unix_socket'];
+		}
+		$arguments[] = $this->dbConfig['dbname'];
+
+		return $arguments;
+	}
+
+	/**
+	 * copied from \Helhum\Typo3Console\Database\Process\MysqlCommand
+	 */
+	private function createTemporaryMysqlConfigurationFile() {
+		if (empty($this->dbConfig['user']) && !isset($this->dbConfig['password'])) {
+			return null;
+		}
+		if (self::$mysqlTempFile !== null && file_exists(self::$mysqlTempFile)) {
+			return self::$mysqlTempFile;
+		}
+		$userDefinition = '';
+		$passwordDefinition = '';
+		if (!empty($this->dbConfig['user'])) {
+			$userDefinition = sprintf('user="%s"', $this->dbConfig['user']);
+		}
+		if (!empty($this->dbConfig['password'])) {
+			$passwordDefinition = sprintf('password="%s"', $this->dbConfig['password']);
+		}
+		$confFileContent = <<<EOF
+[mysqldump]
+$userDefinition
+$passwordDefinition
+
+[client]
+$userDefinition
+$passwordDefinition
+EOF;
+		self::$mysqlTempFile = tempnam(sys_get_temp_dir(), 'typo3_console_my_cnf_');
+		file_put_contents(self::$mysqlTempFile, $confFileContent);
+		register_shutdown_function('unlink', self::$mysqlTempFile);
+
+		return self::$mysqlTempFile;
+	}
+}

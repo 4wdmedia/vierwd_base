@@ -3,16 +3,19 @@ declare(strict_types=1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
-use Helhum\Typo3Console\Mvc\Controller\CommandController;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ListWordsCommandController extends CommandController {
+class ListWordsCommand extends Command {
 
-	/**
-	 * list all words used on the website
-	 */
-	public function runCommand() {
+	protected function configure() {
+		$this->setDescription('List all words used on the website');
+	}
+
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
 
@@ -31,7 +34,7 @@ class ListWordsCommandController extends CommandController {
 			$header = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $header);
 			$headerWords = array_map('trim', preg_split('/\b/u', $header));
 			foreach ($headerWords as $word) {
-				$words[$word] = mb_strlen($word);
+				$words[$word] = mb_strlen((string)$word);
 			}
 		});
 
@@ -40,7 +43,7 @@ class ListWordsCommandController extends CommandController {
 			$text = strip_tags($text);
 			$textWords = array_map('trim', preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
-				$words[$word] = mb_strlen($word);
+				$words[$word] = mb_strlen((string)$word);
 			}
 		});
 
@@ -56,11 +59,14 @@ class ListWordsCommandController extends CommandController {
 		$words = $currentHypenationWords + $words;
 
 		uksort($words, function($word1, $word2) {
-			return mb_strlen($word2) - mb_strlen($word1);
+			return mb_strlen((string)$word2) - mb_strlen((string)$word1);
 		});
 
 		echo implode("\n", $words);
 		echo "\n";
+
+		// everything ok
+		return 0;
 	}
 
 	protected function getHyphenationWords(): array {
