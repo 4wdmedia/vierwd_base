@@ -56,7 +56,7 @@ class PostComposerCommand extends Command {
 		if ($this->hasValidDatabaseConnection()) {
 			$commandDispatcher->executeCommand('cache:flush');
 		}
-		$commandDispatcher->executeCommand('cache:flush', ['--force', '--files-only']);
+		$commandDispatcher->executeCommand('cache:flush', ['--files-only']);
 
 		return 0;
 	}
