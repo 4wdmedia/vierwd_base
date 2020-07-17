@@ -35,7 +35,7 @@ class Canonical implements SingletonInterface {
 		}
 		$queryParams = array_diff_key($queryParams, ['L' => 0, 'id' => 0]);
 
-		if (!$GLOBALS['TSFE']->cHash && $queryParams) {
+		if (!$pageArguments['cHash'] && $queryParams) {
 			// some dynamic parameters without a cHash.
 			return '';
 		}

@@ -16,11 +16,11 @@ use DOMXPath;
 
 use Masterminds\HTML5;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class Utility {
 
@@ -129,7 +129,7 @@ class Utility {
 
 		$content = $TSFE->content;
 
-		$html5 = new HTML5();
+		$html5 = new HTML5(['disable_html_ns' => true]);
 		$document = $html5->loadHTML($content);
 
 		$this->addHyphenation($document);
