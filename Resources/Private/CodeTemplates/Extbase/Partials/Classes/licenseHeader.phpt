@@ -3,7 +3,7 @@
  *
  *  Copyright notice
  *
-<k:copyright persons="{persons}" date="{f:format.date(format: 'Y', date: 'now')}"/>
+<k:copyright persons="{extension.persons}" date="{f:format.date(format: 'Y', date: 'now')}"/>
  *
  *  All rights reserved
  *

@@ -2,44 +2,7 @@
 
 namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
-
-	public function renderTemplate($filePath, $variables) {
-		if (isset($this->codeTemplateRootPaths)) {
-			// extension_builder starting with f4cc45ae has support for multiple template root paths
-			return parent::renderTemplate($filePath, $variables);
-		}
-
-		// add support for multiple template root paths
-
-		$codeTemplateAdditionalRootPath = GeneralUtility::getFileAbsFileName($this->settings['codeTemplateAdditionalRootPath']);
-
-		$variables['settings'] = $this->settings;
-		/** @var \TYPO3\CMS\Fluid\View\StandaloneView $standAloneView */
-		$standAloneView = $this->objectManager->get('TYPO3\\CMS\\Fluid\\View\\StandaloneView');
-		$standAloneView->setLayoutRootPaths([
-			$codeTemplateAdditionalRootPath,
-			$this->codeTemplateRootPath,
-		]);
-		$standAloneView->setPartialRootPaths([
-			$codeTemplateAdditionalRootPath . 'Partials',
-			$this->codeTemplateRootPath . 'Partials',
-		]);
-		$standAloneView->setFormat('txt');
-		if (file_exists($codeTemplateAdditionalRootPath . $filePath)) {
-			$templatePathAndFilename = $codeTemplateAdditionalRootPath .  $filePath;
-		} else {
-			$templatePathAndFilename = $this->codeTemplateRootPath .  $filePath;
-		}
-		$standAloneView->setTemplatePathAndFilename($templatePathAndFilename);
-		$standAloneView->assignMultiple($variables);
-		$renderedContent = $standAloneView->render();
-
-		// remove all double empty lines (coming from fluid)
-		return preg_replace('/^\\s*\\n[\\t ]*$/m', '', $renderedContent);
-	}
 
 	protected function addLicenseHeader($classObject) {
 		$comments = $classObject->getComments();
@@ -57,11 +20,12 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 			}
 		}
 
-		if ($needsLicenseHeader) {
+		$extensionSettings = $this->extension->getSettings();
+		if ($needsLicenseHeader && empty($extensionSettings['skipDocComment'])) {
 			$licenseHeader = $this->renderTemplate(
 				'Partials/Classes/licenseHeader.phpt',
-				['persons' => $this->extension->getPersons()]
-			) . "\n";
+				['extension' => $this->extension]
+			);
 
 			$classObject->addComment($licenseHeader);
 		}
