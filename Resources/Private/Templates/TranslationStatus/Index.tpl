@@ -61,7 +61,7 @@
 	<div class="typo3-listOptions">
 		<div class="checkbox">
 			<label for="check-show-all-translations">
-				<input type="checkbox" class="checkbox" onclick="jumpToUrl('{uri_action arguments=[extensionName => $currentExtensionName, fileName => $currentFileName, showAllLabels => !$currentShowAllLabels]}')" id="check-show-all-translations" value="1"{if $currentShowAllLabels} checked{/if}>Alle Labels anzeigen
+				<input type="checkbox" class="checkbox" onclick="window.location.href = '{uri_action arguments=[extensionName => $currentExtensionName, fileName => $currentFileName, showAllLabels => !$currentShowAllLabels]}'; return false;" id="check-show-all-translations" value="1"{if $currentShowAllLabels} checked{/if}>Alle Labels anzeigen
 			</label>
 		</div>
 	</div>
