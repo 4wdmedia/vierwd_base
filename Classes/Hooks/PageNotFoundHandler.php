@@ -1,15 +1,7 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Hooks;
-
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2015 Robert Vock <robert.vock@4wdmedia.de>, FORWARD MEDIA
- *
- *  All rights reserved
- *
- ***************************************************************/
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,7 +20,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 	 * page not found action.
 	 * will try to load "/404" and display it. If the failure is due to a access error, tries to load "/login".
 	 */
-	public function pageNotFound($param) {
+	public function pageNotFound(array $param) {
 		$request = $GLOBALS['TYPO3_REQUEST'];
 		$response = $this->handlePageError($request, $param['reasonText'], $param['pageAccessFailureReasons']);
 		return (string)$response->getBody();
@@ -71,7 +63,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		if ($_SERVER['Authorization']) {
 			$headers['Authorization'] = $_SERVER['Authorization'];
 		} else if ($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
-			$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] .':' . $_SERVER['PHP_AUTH_PW']);
+			$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
 		} else if ($_SERVER['AUTH_TYPE'] == 'Basic') {
 			// Kundenbereich
 			$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
@@ -85,7 +77,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			$headers['Cookie'] = $cookieName . '=' . $_COOKIE[$cookieName];
 		}
 
-		//$report = [];
+		// $report = [];
 		$report = null;
 		$result = GeneralUtility::getUrl($uri, 0, $headers, $report);
 		if ($GLOBALS['BE_USER']) {

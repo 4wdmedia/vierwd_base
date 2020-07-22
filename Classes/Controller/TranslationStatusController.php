@@ -1,11 +1,12 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Controller;
 
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use Vierwd\VierwdSmarty\Controller\SmartyController;
 
 class TranslationStatusController extends SmartyController {
