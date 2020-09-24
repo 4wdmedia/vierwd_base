@@ -50,7 +50,6 @@ class ImportCommand extends BaseDatabaseCommand {
 
 		$process = Process::fromShellCommandline($commandLine);
 		$process->setTimeout(0.0);
-		$process->inheritEnvironmentVariables();
 		$process->run($this->buildStreamOutput());
 		$output->writeln('<info>Import complete</info>');
 

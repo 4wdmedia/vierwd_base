@@ -11,8 +11,8 @@ use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Service\FlexFormService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RsyncCommand extends Command {
 
@@ -61,8 +61,7 @@ class RsyncCommand extends Command {
 
 		$importProcess = new Process($command);
 		$importProcess->setTimeout(0.0);
-		$importProcess->inheritEnvironmentVariables();
-		$importProcess->run($this->buildStreamOutput());
+		$importProcess->run($this->buildStreamOutput($output));
 
 		if ($importProcess->getExitCode()) {
 			$output->writeln('<error>Import failed</error>');
@@ -125,13 +124,13 @@ class RsyncCommand extends Command {
 	/**
 	 * stream output of a process to our output
 	 */
-	protected function buildStreamOutput() {
-		return function ($type, $output) {
+	protected function buildStreamOutput(OutputInterface $symfonyOutput) {
+		return function ($type, $output) use ($symfonyOutput) {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)
 				echo $output;
 			} else {
-				$this->output('<error>' . $output . '</error>');
+				$symfonyOutput->write('<error>' . $output . '</error>');
 			}
 		};
 	}

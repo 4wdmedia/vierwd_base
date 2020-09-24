@@ -47,7 +47,6 @@ class KbImportCommand extends BaseDatabaseCommand {
 
 		$importProcess = Process::fromShellCommandline($importProcess->getCommandLine() . ' | ' . $localMysqlProcess->getCommandLine());
 		$importProcess->setTimeout(0.0);
-		$importProcess->inheritEnvironmentVariables();
 		$importProcess->run($this->buildStreamOutput());
 		$output->writeln('<info>Import complete</info>');
 
