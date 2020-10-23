@@ -14,12 +14,7 @@ class Typo3Version {
 
 	public function main(RequestInterface $request, Message $response = null) {
 		$stream = fopen('php://memory', 'r+');
-		if (class_exists('Typo3Version')) {
-			fwrite($stream, (new VersionInformation())->getVersion());
-		} else {
-			// @extensionScannerIgnoreLine
-			fwrite($stream, TYPO3_version);
-		}
+		fwrite($stream, (new VersionInformation())->getVersion());
 		rewind($stream);
 		$stream = new Stream($stream);
 

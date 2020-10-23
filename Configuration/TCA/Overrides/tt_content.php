@@ -52,9 +52,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('gridelements')
 }
 
 
-if (version_compare(TYPO3_version, '10.0.0', '>=')) {
-	// Add TCA from FCEs
-	// we cannot use the signal "tcaIsBeingBuilt" in TYPO3 v10, because it throws an exception.
-	// Adding TCA here might be a bit too early, if there are extensions which are installed after the base extension which additionally modify the TCA
-	\Vierwd\VierwdBase\Hooks\ContentElements::addTCA($GLOBALS['TCA']);
-}
+// Add TCA from FCEs
+// we cannot use the signal "tcaIsBeingBuilt" in TYPO3 v10, because it throws an exception.
+// Adding TCA here might be a bit too early, if there are extensions which are installed after the base extension which additionally modify the TCA
+\Vierwd\VierwdBase\Hooks\ContentElements::addTCA($GLOBALS['TCA']);
