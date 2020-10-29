@@ -28,7 +28,9 @@
 		"friendsofphp/php-cs-fixer": "^2.12.0",
 		"nimut/testing-framework": "^5.0.0",
 		"vierwd/coding-standard": "^1.0",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+		"phpstan/extension-installer": "^1.0",
+		"saschaegerer/phpstan-typo3": "^0.13.1"
 	},
 	"autoload": {
 		"psr-4": {
