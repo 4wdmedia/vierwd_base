@@ -15,7 +15,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 	/**
 	 * @var \Vierwd\SvgInliner\SvgInliner;
 	 */
-	protected static $svgInliner;
+	protected static $svgInliner = null;
 
 	/**
 	 * Rendering the cObject, SVG
@@ -28,7 +28,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 			return '';
 		}
 
-		if (!self::$svgInliner) {
+		if (self::$svgInliner === null) {
 			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
 		}
 

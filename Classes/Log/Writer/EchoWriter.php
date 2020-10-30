@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class EchoWriter extends AbstractWriter {
 
 	/** @var OutputInterface */
-	private $output;
+	private $output = null;
 
 	public function __construct(array $options = []) {
 		parent::__construct($options);
@@ -39,7 +39,7 @@ class EchoWriter extends AbstractWriter {
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {
-		if (!$this->output) {
+		if ($this->output === null) {
 			return $this;
 		}
 

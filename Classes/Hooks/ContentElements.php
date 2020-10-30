@@ -11,7 +11,7 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 class ContentElements implements SingletonInterface {
 
 	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
-	public $cObj;
+	public $cObj = null;
 
 	public static $oldProcFunc;
 
@@ -470,7 +470,7 @@ class ContentElements implements SingletonInterface {
 	 * but this would interfere with :first-child pseudo elements
 	 */
 	public function elementUid($content, $params) {
-		if (!$content || $content[0] != '<' || !$this->cObj || !$this->cObj->data['uid']) {
+		if (!$content || $content[0] != '<' || $this->cObj === null || !$this->cObj->data['uid']) {
 			return $content;
 		}
 
