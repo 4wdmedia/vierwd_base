@@ -31,6 +31,10 @@ class ExportCommand extends BaseDatabaseCommand {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$file = $input->getOption('file');
+		if (!is_string($file)) {
+			$output->writeln('<error>Please enter a single file name</error>');
+			return 1;
+		}
 
 		if ($this->isDbEmpty()) {
 			$output->writeln('<error>Database is empty</error>');
@@ -80,7 +84,7 @@ class ExportCommand extends BaseDatabaseCommand {
 			return $exitCode;
 		}
 
-		$bytes = filesize($exportPath . '.gz');
+		$bytes = (int)filesize($exportPath . '.gz');
 		$size = GeneralUtility::formatSize($bytes, 'B|Kb|Mb|Gb|Tb|Pb', 1024);
 		$output->writeln(sprintf('<info>Export complete (%s)</info>', $size));
 

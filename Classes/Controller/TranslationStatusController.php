@@ -29,7 +29,7 @@ class TranslationStatusController extends SmartyController {
 				continue;
 			}
 
-			$languageFiles = glob($path . '/*.xlf');
+			$languageFiles = glob($path . '/*.xlf') ?: [];
 
 			// remove language files which are translations
 			$languageFiles = array_filter($languageFiles, function(string $pathName) {
@@ -56,7 +56,7 @@ class TranslationStatusController extends SmartyController {
 	protected function getAvailableLanguages(string $pathName): array {
 		$directory = dirname($pathName);
 		$fileName = basename($pathName);
-		$translations = glob($directory . '/*.' . $fileName);
+		$translations = glob($directory . '/*.' . $fileName) ?: [];
 
 		// get language prefix
 		$translations = array_map(function(string $pathName) {
@@ -75,6 +75,7 @@ class TranslationStatusController extends SmartyController {
 
 		$translations = [];
 
+		/** @var array $data */
 		$data = $localizationFactory->getParsedData($fileReference, 'default');
 		// get the source label
 		$data = array_map(function(array $row) {
@@ -85,6 +86,7 @@ class TranslationStatusController extends SmartyController {
 		$availableLanguages = $this->getAvailableLanguages($fileReference);
 
 		foreach ($availableLanguages as $languageKey) {
+			/** @var array $data */
 			$data = $localizationFactory->getParsedData($fileReference, $languageKey);
 			$data = $data[$languageKey];
 

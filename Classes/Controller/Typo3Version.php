@@ -15,12 +15,11 @@ class Typo3Version {
 
 	public function main(RequestInterface $request, Message $response = null): ResponseInterface {
 		$stream = fopen('php://memory', 'r+');
-		if (class_exists('Typo3Version')) {
-			fwrite($stream, (new VersionInformation())->getVersion());
-		} else {
-			// @extensionScannerIgnoreLine
-			fwrite($stream, TYPO3_version);
+		if ($stream === false) {
+			return GeneralUtility::makeInstance(Response::class, '', 500);
 		}
+
+		fwrite($stream, (new VersionInformation())->getVersion());
 		rewind($stream);
 		$stream = new Stream($stream);
 

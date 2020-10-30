@@ -127,7 +127,7 @@ class ContentElements implements SingletonInterface {
 
 		// Load configs for FCEs
 		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($fceDir, \FilesystemIterator::SKIP_DOTS)) as $fceConfigFile) {
-			if ($fceConfigFile->isDir() || substr($fceConfigFile->getFilename(), 0, 1) == '_') {
+			if (!$fceConfigFile instanceof \SplFileInfo || $fceConfigFile->isDir() || substr($fceConfigFile->getFilename(), 0, 1) == '_') {
 				continue;
 			}
 
@@ -136,7 +136,7 @@ class ContentElements implements SingletonInterface {
 			}
 
 			$config = include $fceConfigFile->getPathname();
-			if (!$config) {
+			if (!$config || !is_array($config)) {
 				continue;
 			}
 			$config = $config + $defaults;
@@ -155,6 +155,7 @@ class ContentElements implements SingletonInterface {
 
 		// Process FCEs
 		foreach ($FCEs as &$config) {
+			/** @var array{'filename': string, 'adminOnly': bool, 'group': string|array, 'vendorName': string, 'pluginName': string, 'name': string, 'description': string, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': string} $config */
 			if (!empty($config['pluginName'])) {
 				// create a new plugin
 				$pluginSignature = strtolower(str_replace('_', '', $extensionKey) . '_' . $config['pluginName']);
@@ -230,7 +231,7 @@ class ContentElements implements SingletonInterface {
 
 				// check controller names
 				foreach (array_keys($config['controllerActions'] + $config['nonCacheableActions']) as $controllerName) {
-					if (!preg_match('/^[A-Z]/', $controllerName)) {
+					if (!preg_match('/^[A-Z]/', (string)$controllerName)) {
 						self::generateException('Controller name does not start with an uppercase letter. Extension ' . $extensionKey . '. Element: ' . $config['CType'], 1548429406);
 						return false;
 					}

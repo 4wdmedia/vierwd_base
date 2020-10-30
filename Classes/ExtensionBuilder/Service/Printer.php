@@ -87,7 +87,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 			$code = "\n" . $code;
 		}
 
-		$code = preg_replace('/(namespace.*;)\n{3,}/', "$1\n\n", $code);
+		$code = (string)preg_replace('/(namespace.*;)\n{3,}/', "$1\n\n", $code);
 
 		return $code;
 	}
@@ -96,11 +96,11 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 	 * @phpstan-return string
 	 */
 	public function pStmt_Class(Stmt\Class_ $node) {
-		$string = parent::pStmt_Class($node);
+		$string = (string)parent::pStmt_Class($node);
 		$string = str_replace(LF . '{', ' {', $string);
 
 		// replace methods without newline between them and previous line
-		$string = preg_replace('/([;}])(\n[\t ]*public)/', "\$1\n\$2", $string);
+		$string = (string)preg_replace('/([;}])(\n[\t ]*public)/', "\$1\n\$2", $string);
 
 		return $string;
 	}
@@ -109,7 +109,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 	 * @phpstan-return string
 	 */
 	public function pStmt_ClassMethod(Stmt\ClassMethod $node) {
-		$string = parent::pStmt_ClassMethod($node);
-		return preg_replace('/\n\s+\{/', ' {', $string);
+		$string = (string)parent::pStmt_ClassMethod($node);
+		return (string)preg_replace('/\n\s+\{/', ' {', $string);
 	}
 }

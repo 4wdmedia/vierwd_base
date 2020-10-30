@@ -27,7 +27,7 @@ class UtilityTest extends UnitTestCase {
 		$cObj->start([], '_NO_TABLE');
 		$utility->cObj = $cObj;
 
-		$baseContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
+		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
 		$params = [
 			'meta.' => [
 				'google' => 'notranslate',
@@ -73,12 +73,12 @@ class UtilityTest extends UnitTestCase {
 		$cObj->start([], '_NO_TABLE');
 		$utility->cObj = $cObj;
 
-		$baseContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
+		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
 		$TSFE = $this->setupTsfeMock();
 		$TSFE->content = $baseContent;
 		$utility->postProcessHTML([], $TSFE);
 
-		$expectedContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/HyphenationExpected.html');
+		$expectedContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/HyphenationExpected.html');
 		$expectedContent = str_replace('%SHY%', html_entity_decode('&shy;', 0, 'UTF-8'), $expectedContent);
 		$expectedContent = str_replace("\n", '', $expectedContent);
 
@@ -104,7 +104,7 @@ class UtilityTest extends UnitTestCase {
 		$cObj->start([], '_NO_TABLE');
 		$utility->cObj = $cObj;
 
-		$baseContent = file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
+		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
 		$TSFE = $this->setupTsfeMock();
 		$TSFE->content = $baseContent;
 		$utility->postProcessHTML([], $TSFE);

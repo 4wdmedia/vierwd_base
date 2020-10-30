@@ -93,14 +93,15 @@ class MailWriter extends AbstractWriter {
 		}
 
 		$mailer = new Mailer();
+		/** @var \Swift_Message $message */
 		$message = $mailer->createMessage();
 
 		$subject = sprintf($this->subject, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 
-		$message->from($this->sender);
-		$message->to($this->receiver);
-		$message->subject($subject);
-		$message->text(implode("\n", $this->buffer));
+		$message->setFrom($this->sender);
+		$message->setTo($this->receiver);
+		$message->setSubject($subject);
+		$message->setBody(implode("\n", $this->buffer));
 
 		$mailer->send($message);
 	}

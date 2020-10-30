@@ -8,7 +8,6 @@ return [
 	'name' => '',
 	'description' => '',
 	'iconIdentifier' => 'content-plugin',
-	'switchableControllerActions' => [],
 	'controllerActions' => [],
 	'nonCacheableActions' => [],
 	'template' => '',

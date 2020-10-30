@@ -24,6 +24,10 @@ class ImportCommand extends BaseDatabaseCommand {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$file = $input->getOption('file');
+		if (!is_string($file)) {
+			$output->writeln('<error>Please enter a single file name</error>');
+			return 1;
+		}
 
 		$importFile = $file ? basename($file) : 'backup.sql.gz';
 		$databaseFolder = Environment::getProjectPath() . '/database';
@@ -35,7 +39,7 @@ class ImportCommand extends BaseDatabaseCommand {
 
 
 		// Show info about import
-		$bytes = filesize($importPath);
+		$bytes = (int)filesize($importPath);
 		$size = GeneralUtility::formatSize($bytes, 'B|Kb|Mb|Gb|Tb|Pb', 1024);
 		$output->writeln(sprintf('DB Import of %s (%s)', $importFile, $size));
 
