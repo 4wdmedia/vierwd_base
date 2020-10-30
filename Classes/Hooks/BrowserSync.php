@@ -19,6 +19,6 @@ class BrowserSync {
 		}
 
 		$browserSync = '<script async src="http' . (GeneralUtility::getIndpEnv('TYPO3_SSL') ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync/browser-sync-client.js"></script>';
-		$TSFE->content = preg_replace('#</body>#', $browserSync . "\n</body>", $TSFE->content, 1, $count);
+		$TSFE->content = (string)preg_replace('#</body>#', $browserSync . "\n</body>", $TSFE->content, 1, $count);
 	}
 }

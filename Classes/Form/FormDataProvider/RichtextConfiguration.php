@@ -47,7 +47,7 @@ class RichtextConfiguration implements FormDataProviderInterface {
 				$contentsCss = $rteConfiguration['editor']['config']['contentsCss'];
 				if (is_string($contentsCss) && substr($contentsCss, 0, 4) === 'EXT:') {
 					$contentsCss = GeneralUtility::getFileAbsFileName($contentsCss);
-					$contentsCss = rtrim(PathUtility::getRelativePathTo($contentsCss), '/');
+					$contentsCss = rtrim((string)PathUtility::getRelativePathTo($contentsCss), '/');
 					$contentsCss = GeneralUtility::createVersionNumberedFilename($contentsCss);
 					$contentsCss = PathUtility::getAbsoluteWebPath($contentsCss);
 				}

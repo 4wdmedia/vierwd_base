@@ -136,7 +136,7 @@ class JavascriptOptimization {
 					$replace = '';
 				}
 
-				$content = preg_replace('-\n//# sourceMappingURL=([^\n]*)$-s', $replace, $content);
+				$content = (string)preg_replace('-\n//# sourceMappingURL=([^\n]*)$-s', $replace, $content);
 			}
 
 			if ($properties['section'] == $pageRenderer::PART_FOOTER) {

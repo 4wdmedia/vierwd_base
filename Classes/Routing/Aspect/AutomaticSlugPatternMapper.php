@@ -80,7 +80,7 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 		$value = $charsetConverter->utf8_char_mapping($value);
 		$value = trim($value);
 
-		$value = preg_replace('/\W+/u', '-', $value);
+		$value = (string)preg_replace('/\W+/u', '-', $value);
 		if (strlen($value) > 50) {
 			$value = substr($value, 0, 50);
 		}
