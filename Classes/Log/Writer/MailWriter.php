@@ -23,16 +23,22 @@ use TYPO3\CMS\Core\Mail\Mailer;
  */
 class MailWriter extends AbstractWriter {
 
+	/** @var array */
 	protected $buffer = [];
 
+	/** @var bool */
 	protected $sendMail = true;
 
+	/** @var int */
 	protected $minErrorLevel;
 
+	/** @var string */
 	protected $sender;
 
+	/** @var string */
 	protected $receiver;
 
+	/** @var string */
 	protected $subject = 'TYPO3 Errors on site %s';
 
 	public function __construct(array $options) {
@@ -44,20 +50,20 @@ class MailWriter extends AbstractWriter {
 		parent::__construct($options);
 	}
 
-	public function setMinErrorLevel(int $minErrorLevel) {
+	public function setMinErrorLevel(int $minErrorLevel): void {
 		$this->sendMail = false;
 		$this->minErrorLevel = $minErrorLevel;
 	}
 
-	public function setSender($sender) {
+	public function setSender(string $sender): void {
 		$this->sender = $sender;
 	}
 
-	public function setReceiver($receiver) {
+	public function setReceiver(string $receiver): void {
 		$this->receiver = $receiver;
 	}
 
-	public function setSubject(string $subject) {
+	public function setSubject(string $subject): void {
 		$this->subject = $subject;
 	}
 

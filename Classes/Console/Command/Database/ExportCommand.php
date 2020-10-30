@@ -12,6 +12,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExportCommand extends BaseDatabaseCommand {
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function configure() {
 		$this->setDescription('Export database');
 		$this->addOption('file', null, InputOption::VALUE_OPTIONAL, 'Filename for export', 'backup.sql.gz');

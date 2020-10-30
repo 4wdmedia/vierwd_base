@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Canonical implements SingletonInterface {
 
-	public function getTag($content, array $params = []) {
+	public function getTag(?string $content, array $params = []): string {
 		if (!empty($GLOBALS['TSFE']->no_cache) || !empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
 			return '';
 		}
@@ -21,7 +21,7 @@ class Canonical implements SingletonInterface {
 		return $url;
 	}
 
-	static public function getUrl() {
+	static public function getUrl(): string {
 		if (!empty($GLOBALS['TSFE']->no_cache)) {
 			return '';
 		}

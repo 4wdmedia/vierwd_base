@@ -13,6 +13,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class DeprecationWriter extends AbstractWriter {
 
+	/** @var array */
 	protected $messages = [];
 
 	/**

@@ -5,10 +5,11 @@ namespace Vierwd\VierwdBase\Hooks;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class Indexer {
 
-	public function hook_indexContent(&$pObj) {
+	public function hook_indexContent(TypoScriptFrontendController &$pObj): void {
 		$contentBefore = $pObj->content;
 
 		if ($pObj->config && $pObj->config['config']['spamProtectEmailAddresses_atSubst']) {

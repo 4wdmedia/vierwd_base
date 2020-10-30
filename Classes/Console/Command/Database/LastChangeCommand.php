@@ -11,6 +11,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LastChangeCommand extends Command {
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function configure() {
 		$this->setDescription('Show the last changed timestamps for all tables.');
 		$this->setHelp('This only works for tables which have the default TYPO3 tstamp or crdate fields');

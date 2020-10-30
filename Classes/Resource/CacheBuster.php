@@ -13,7 +13,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 
 class CacheBuster {
 
-	public function getPublicUrl(ResourceStorage $storage, DriverInterface $driver, ResourceInterface $resource, $relativeToCurrentScript, $params) {
+	public function getPublicUrl(ResourceStorage $storage, DriverInterface $driver, ResourceInterface $resource, bool $relativeToCurrentScript, array $params): void {
 		if ($storage->isPublic() && $resource instanceof Resource\FileInterface) {
 			$publicUrl = $driver->getPublicUrl($resource->getIdentifier());
 			if ($resource instanceof Resource\ProcessedFile || $resource instanceof Resource\FileReference) {

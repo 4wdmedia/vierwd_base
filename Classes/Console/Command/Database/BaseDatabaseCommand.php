@@ -41,6 +41,9 @@ abstract class BaseDatabaseCommand extends Command {
 		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
 	}
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function initialize(InputInterface $input, OutputInterface $output) {
 		parent::initialize($input, $output);
 
@@ -55,7 +58,7 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * create a backup of the database.
 	 */
-	protected function createBackup() {
+	protected function createBackup(): void {
 		$this->output->writeln('Creating a backup first');
 		$exportFile = 'backup-' . date('Y-m-d-H:i:s') . '.sql.gz';
 		$output = $this->commandDispatcher->executeCommand('vierwd:database:export', ['--file', $exportFile]);
@@ -139,7 +142,7 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * stream output of a process to our output
 	 */
-	protected function buildStreamOutput() {
+	protected function buildStreamOutput(): \closure {
 		return function ($type, $output) {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)
@@ -210,7 +213,7 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * copied from \Helhum\Typo3Console\Database\Process\MysqlCommand
 	 */
-	private function createTemporaryMysqlConfigurationFile() {
+	private function createTemporaryMysqlConfigurationFile(): ?string {
 		if (empty($this->dbConfig['user']) && !isset($this->dbConfig['password'])) {
 			return null;
 		}

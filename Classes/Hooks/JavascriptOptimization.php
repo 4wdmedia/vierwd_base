@@ -32,7 +32,7 @@ class JavascriptOptimization {
 	 * @see http://forge.typo3.org/issues/31832
 	 * @see http://wonko.com/post/jsmin-isnt-welcome-on-google-code
 	 */
-	public function jsMinify($params) {
+	public function jsMinify(array $params): string {
 		if (empty($params['script'])) {
 			return '';
 		}
@@ -40,7 +40,7 @@ class JavascriptOptimization {
 		return JSMin::minify($params['script']);
 	}
 
-	public function minifyJsFiles(array $jsFiles) {
+	public function minifyJsFiles(array $jsFiles): array {
 		$filesAfterMinification = [];
 		foreach ($jsFiles as $fileName => $fileOptions) {
 			// If compression is enabled
@@ -89,7 +89,7 @@ class JavascriptOptimization {
 	/**
 	 * inline JS which is smaller than 2000 bytes (meaning smaller than one request)
 	 */
-	public function jsCompressHandler($params, PageRenderer $pageRenderer) {
+	public function jsCompressHandler(array $params, PageRenderer $pageRenderer): void {
 		// Traverse the arrays, compress files
 		if (count($params['jsInline'])) {
 			foreach ($params['jsInline'] as $name => $properties) {
@@ -120,7 +120,7 @@ class JavascriptOptimization {
 			// the file is smaller than 2000 byte. inline it for better performance (will use one less request)
 			unset($params['jsFiles'][$key]);
 
-			$content = substr($file, -5) == '.gzip' ? $this->gzdecode(file_get_contents($file)) : file_get_contents($file);
+			$content = substr($file, -5) == '.gzip' ? gzdecode(file_get_contents($file)) : file_get_contents($file);
 
 			if (preg_match('-\n//# sourceMappingURL=([^\n]*)$-s', $content, $matches)) {
 				// adjust sourceMappingURL, if present
@@ -142,26 +142,10 @@ class JavascriptOptimization {
 		}
 	}
 
-	/**
-	 * Returns instance of \TYPO3\CMS\Core\Resource\ResourceCompressor
-	 *
-	 * @return \TYPO3\CMS\Core\Resource\ResourceCompressor
-	 */
-	protected function getCompressor() {
+	protected function getCompressor(): ResourceCompressor {
 		if ($this->compressor === null) {
 			$this->compressor = GeneralUtility::makeInstance(ResourceCompressor::class);
 		}
 		return $this->compressor;
-	}
-
-	/**
-	 * PHP 5.3 compatibility. Gzdecode is PHP >= 5.4
-	 */
-	protected function gzdecode($data) {
-		if (function_exists('gzdecode')) {
-			return gzdecode($data);
-		} else {
-			return gzinflate(substr($data, 10, -8));
-		}
 	}
 }

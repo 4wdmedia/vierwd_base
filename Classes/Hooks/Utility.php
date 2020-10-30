@@ -27,7 +27,7 @@ class Utility {
 	 * 10.file = EXT:vierwd_example/Resources/Public/static/vars.css
 	 * 10.stdWrap.wrap = <style id="css-vars">|</style>
 	 */
-	public function outputFile($content, $params) {
+	public function outputFile(?string $content, array $params): string {
 		$file = $params['file'];
 		if (isset($params['file.'])) {
 			$file = $this->cObj->stdWrap($file, $params['file.']);
@@ -39,14 +39,14 @@ class Utility {
 			return '';
 		}
 
-		return file_get_contents($file);
+		return (string)file_get_contents($file);
 	}
 
 	/**
 	 * TYPO3 adds meta-tags with the name-attribute and not with the property-attribute.
 	 * OpenGraph needs the property-attribute.
 	 */
-	public function addMetaTags($content, $params) {
+	public function addMetaTags(?string $content, array $params): ?string {
 		if (empty($params['meta.']) && empty($params['link.'])) {
 			return $content;
 		}
@@ -107,7 +107,7 @@ class Utility {
 		return $content;
 	}
 
-	public function postProcessHTML($params, TypoScriptFrontendController $TSFE) {
+	public function postProcessHTML(array $params, TypoScriptFrontendController $TSFE): void {
 		if (!empty($TSFE->config['config']['disableAllHeaderCode'])) {
 			// do not process content, if all headers are disabled. Probably plain text variant
 			return;
@@ -147,7 +147,7 @@ class Utility {
 	/**
 	 * get all hyphenation words
 	 */
-	protected function getHyphenationWords() {
+	protected function getHyphenationWords(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
 		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 		$hyphenationRows = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
@@ -160,7 +160,7 @@ class Utility {
 		return $words;
 	}
 
-	private function addHyphenation(DOMDocument $document) {
+	private function addHyphenation(DOMDocument $document): void {
 		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['hyphenation']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['hyphenation']) {
 			return;
 		}
@@ -197,7 +197,7 @@ class Utility {
 	 *
 	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
 	 */
-	private function addNoopener(DOMDocument $document) {
+	private function addNoopener(DOMDocument $document): void {
 		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['noopener']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['noopener']) {
 			return;
 		}

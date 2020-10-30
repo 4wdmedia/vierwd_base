@@ -15,11 +15,14 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		$this->options['shortArraySyntax'] = true;
 	}
 
-	protected function trimTrailingWhitespace($code) {
-		return preg_replace('/ +$/m', '', $code);
+	protected function trimTrailingWhitespace(string $code): string {
+		return (string)preg_replace('/ +$/m', '', $code);
 	}
 
-	public function renderFileObject(File $fileObject, $prependPHPTag = false) {
+	/**
+	 * @param bool $addDeclareStrictTypes
+	 */
+	public function renderFileObject(File $fileObject, $addDeclareStrictTypes = true) {
 		// remove comments which say nothing (set title for a setTitle method, or "title" for a $title property)
 		foreach ($fileObject->getNamespaces() as $namespace) {
 			foreach ($namespace->getClasses() as $class) {
@@ -73,7 +76,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 				}
 			}
 		}
-		return parent::renderFileObject($fileObject, $prependPHPTag);
+		return parent::renderFileObject($fileObject, $addDeclareStrictTypes);
 	}
 
 	public function render($stmts) {
@@ -89,6 +92,9 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return $code;
 	}
 
+	/**
+	 * @phpstan-return string
+	 */
 	public function pStmt_Class(Stmt\Class_ $node) {
 		$string = parent::pStmt_Class($node);
 		$string = str_replace(LF . '{', ' {', $string);
@@ -99,6 +105,9 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return $string;
 	}
 
+	/**
+	 * @phpstan-return string
+	 */
 	public function pStmt_ClassMethod(Stmt\ClassMethod $node) {
 		$string = parent::pStmt_ClassMethod($node);
 		return preg_replace('/\n\s+\{/', ' {', $string);

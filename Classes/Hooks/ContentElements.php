@@ -13,17 +13,23 @@ class ContentElements implements SingletonInterface {
 	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
 	public $cObj = null;
 
+	/** @var string */
 	public static $oldProcFunc;
 
+	/** @var array */
 	protected static $groups = ['vierwd' => []];
+	/** @var array */
 	protected static $groupNames = ['vierwd' => 'FORWARD MEDIA'];
 
+	/** @var array */
 	protected static $fceConfiguration = [];
 
+	/** @var array */
 	protected static $usedUids = [];
 
 	/**
 	 * process the CType and sort custom FCEs into a special group
+	 * @param object|null $refObj
 	 */
 	public function processCType(array $params, $refObj): array {
 		if (static::$oldProcFunc) {
@@ -469,7 +475,7 @@ class ContentElements implements SingletonInterface {
 	 * Normally TYPO3 would add those links with a link (<a id="cXX"></a>) or in the default wrapper,
 	 * but this would interfere with :first-child pseudo elements
 	 */
-	public function elementUid($content, $params) {
+	public function elementUid(?string $content, array $params): string {
 		if (!$content || $content[0] != '<' || $this->cObj === null || !$this->cObj->data['uid']) {
 			return $content;
 		}

@@ -2,6 +2,8 @@
 
 namespace Vierwd\VierwdBase\Frontend;
 
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 /**
  * when two requests hit TYPO3 in parallel, the first request will write a "Page is being generated." message as cache-entry for the page.
  * The second request will load this page from cache and not generate the page as well.
@@ -9,7 +11,7 @@ namespace Vierwd\VierwdBase\Frontend;
  */
 class PageLoadedFromCache {
 
-	public function stallTempPage(array $params, $TSFE) {
+	public function stallTempPage(array $params, TypoScriptFrontendController $TSFE): void {
 		if ($params['cache_pages_row']['temp_content']) {
 			$times = 0;
 			while (++$times < 25 && $params['cache_pages_row']['temp_content']) {

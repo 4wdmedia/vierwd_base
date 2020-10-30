@@ -11,6 +11,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 trait GraphicalFunctionsTrait {
 
+	/**
+	 * @phpstan-return void
+	 */
 	public function init() {
 		$this->cmds['jpg'] .= ' -interlace Plane';
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
