@@ -5,7 +5,6 @@ namespace Vierwd\VierwdBase\Hooks;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * We work with many custom content elements. It is quite easy to forget to give editors access
@@ -110,7 +109,7 @@ class CheckBackendGroups {
 	}
 
 	/**
-	 * @return LanguageService
+	 * @return \TYPO3\CMS\Core\Localization\LanguageService
 	 */
 	protected function getLanguageService() {
 		return $GLOBALS['LANG'];

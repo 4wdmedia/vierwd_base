@@ -1,21 +1,21 @@
 <?php
 
-namespace Vierwd\VierwdBase\Hooks;
+namespace Vierwd\VierwdBase\XClass\IndexedSearch;
 
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\IndexedSearch\Indexer as ParentIndexer;
 
-class Indexer {
+class Indexer extends ParentIndexer {
 
-	public function hook_indexContent(&$pObj) {
-		$contentBefore = $pObj->content;
-
-		if ($pObj->config && $pObj->config['config']['spamProtectEmailAddresses_atSubst']) {
-			$pObj->content = str_replace($pObj->config['config']['spamProtectEmailAddresses_atSubst'], '@', $pObj->content);
+	public function indexTypo3PageContent() {
+		if ($GLOBALS['TSFE']->config && $GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst']) {
+			$this->conf['content'] = str_replace($GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst'], '@', $this->conf['content']);
 		}
 
 		$context = GeneralUtility::makeInstance(Context::class);
+		/** @var \TYPO3\CMS\Core\Context\LanguageAspect $languageAspect */
 		$languageAspect = $context->getAspect('language');
 
 		$oldLanguageAspect = $languageAspect;
@@ -27,10 +27,8 @@ class Indexer {
 			$context->setAspect('language', $indexLanguageAspect);
 		}
 
-		$_procObj = GeneralUtility::makeInstance(\TYPO3\CMS\IndexedSearch\Indexer::class);
-		$_procObj->hook_indexContent($pObj);
+		parent::indexTypo3PageContent();
 
-		$pObj->content = $contentBefore;
 		$context->setAspect('language', $oldLanguageAspect);
 	}
 }

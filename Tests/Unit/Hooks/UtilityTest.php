@@ -62,6 +62,7 @@ class UtilityTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testProcessHtml() {
+		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->setMethods(['getHyphenationWords'])
 			->getMock();
@@ -92,6 +93,7 @@ class UtilityTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testProcessHtmlWithLongScript() {
+		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->setMethods(['getHyphenationWords'])
 			->getMock();
@@ -114,6 +116,7 @@ class UtilityTest extends UnitTestCase {
 	}
 
 	protected function setupTsfeMock() {
+		/** @var TypoScriptFrontendController&\PHPUnit\Framework\MockObject\MockObject $tsfe */
 		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
 			->getMock();

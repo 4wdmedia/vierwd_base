@@ -47,13 +47,9 @@ $signalSlotDispatcher->connect(\TYPO3\CMS\Core\Resource\ResourceStorage::class, 
 // **************
 // Replace encoded mail addresses during indexing
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search')) {
-	if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
-		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = [];
-	}
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = array_filter($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'], function($class) {
-		return $class !== \TYPO3\CMS\IndexedSearch\Indexer::class;
-	});
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'][] = \Vierwd\VierwdBase\Hooks\Indexer::class;
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\IndexedSearch\Indexer::class] = [
+		'className' => \Vierwd\VierwdBase\XClass\IndexedSearch\Indexer::class,
+	];
 }
 
 // ****************

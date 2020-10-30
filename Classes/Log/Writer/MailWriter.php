@@ -5,7 +5,8 @@ namespace Vierwd\VierwdBase\Log\Writer;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
-use TYPO3\CMS\Core\Mail\Mailer;
+use TYPO3\CMS\Core\Mail\MailMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Mail writer, capture all LogRecords starting with an ErrorLevel, but only send an
@@ -77,6 +78,8 @@ class MailWriter extends AbstractWriter {
 		$timestamp = date('c', (int)$record->getCreated());
 		$data = $record->getData() ? json_encode($record->getData(), JSON_PRETTY_PRINT) : '';
 		$this->buffer[] = sprintf('%s [%s] %s %s', $timestamp, $levelName, $record->getMessage(), $data);
+
+		return $this;
 	}
 
 	public function sendMail(): void {
@@ -84,8 +87,7 @@ class MailWriter extends AbstractWriter {
 			return;
 		}
 
-		$mailer = new Mailer();
-		$message = $mailer->createMessage();
+		$message = GeneralUtility::makeInstance(MailMessage::class);
 
 		$subject = sprintf($this->subject, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 
@@ -94,6 +96,6 @@ class MailWriter extends AbstractWriter {
 		$message->setSubject($subject);
 		$message->setBody(implode("\n", $this->buffer));
 
-		$mailer->send($message);
+		$message->send();
 	}
 }

@@ -52,7 +52,7 @@ class ListWordsCommand extends Command {
 		});
 
 		$words = array_keys($words);
-		$words = array_combine($words, $words);
+		$words = (array)array_combine($words, $words);
 
 		// get current hypenation
 		$currentHypenationWords = $this->getHyphenationWords();

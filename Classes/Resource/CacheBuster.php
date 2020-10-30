@@ -6,14 +6,14 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource;
 use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
 use TYPO3\CMS\Core\Resource\ResourceInterface;
-use TYPO3\CMS\Core\Resource\ResourceStorageInterface;
+use TYPO3\CMS\Core\Resource\ResourceStorage;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
 class CacheBuster {
 
-	public function getPublicUrl(ResourceStorageInterface $storage, DriverInterface $driver, ResourceInterface $resource, $relativeToCurrentScript, $params) {
+	public function getPublicUrl(ResourceStorage $storage, DriverInterface $driver, ResourceInterface $resource, $relativeToCurrentScript, $params) {
 		if ($storage->isPublic() && $resource instanceof Resource\FileInterface) {
 			$publicUrl = $driver->getPublicUrl($resource->getIdentifier());
 			if ($resource instanceof Resource\ProcessedFile || $resource instanceof Resource\FileReference) {
