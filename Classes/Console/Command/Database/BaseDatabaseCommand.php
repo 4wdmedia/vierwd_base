@@ -33,6 +33,9 @@ abstract class BaseDatabaseCommand extends Command {
 	/** @var OutputInterface */
 	protected $output;
 
+	/** @var CommandDispatcher */
+	protected $commandDispatcher;
+
 	public function __construct(string $name = null, ConnectionConfiguration $connectionConfiguration = null) {
 		parent::__construct($name);
 		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
@@ -142,7 +145,7 @@ abstract class BaseDatabaseCommand extends Command {
 				// Explicitly just echo out for now (avoid symfony console formatting)
 				echo $output;
 			} else {
-				$this->output('<error>' . $output . '</error>');
+				$this->output->writeln('<error>' . $output . '</error>');
 			}
 		};
 	}

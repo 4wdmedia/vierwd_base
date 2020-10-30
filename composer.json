@@ -18,10 +18,10 @@
 	"require": {
 		"php": ">=7.2.0",
 		"helhum/typo3-console": "^6.0.0",
-		"typo3/cms-core": "^10.4",
 		"vierwd/svg-inliner": "^1.0",
 		"masterminds/html5": "^2.6",
-		"linkorb/jsmin-php": "^1.0"
+		"linkorb/jsmin-php": "^1.0",
+		"vierwd/typo3-smarty": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^6.0",
@@ -30,7 +30,14 @@
 		"vierwd/coding-standard": "^1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
 		"phpstan/extension-installer": "^1.0",
-		"saschaegerer/phpstan-typo3": "^0.13.1"
+		"saschaegerer/phpstan-typo3": "^0.13.1",
+		"typo3/cms-reports": "^10.4",
+		"typo3/cms-core": "^10.4",
+		"typo3/cms-fluid": "^10.4",
+		"typo3/cms-indexed-search": "^10.4",
+		"friendsoftypo3/extension-builder": "dev-v10-compatibility",
+		"typo3/cms-frontend": "^10.4",
+		"typo3/cms-impexp": "^10.4"
 	},
 	"autoload": {
 		"psr-4": {

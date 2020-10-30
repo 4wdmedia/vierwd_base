@@ -9,4 +9,8 @@ class GifBuilder extends \TYPO3\CMS\Frontend\Imaging\GifBuilder {
 
 	use GraphicalFunctionsTrait;
 
+	public function __construct() {
+		parent::__construct();
+		$this->init();
+	}
 }

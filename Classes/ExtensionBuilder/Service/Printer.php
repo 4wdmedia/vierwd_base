@@ -4,11 +4,16 @@ namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
 use EBT\ExtensionBuilder\Domain\Model\File;
 use EBT\ExtensionBuilder\Utility\Inflector;
-use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Stmt;
 
 class Printer extends \EBT\ExtensionBuilder\Service\Printer {
+
 	protected $indentToken = "\t";
+
+	public function __construct(array $options = []) {
+		parent::__construct($options);
+		$this->options['shortArraySyntax'] = true;
+	}
 
 	protected function trimTrailingWhitespace($code) {
 		return preg_replace('/ +$/m', '', $code);
@@ -97,37 +102,5 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 	public function pStmt_ClassMethod(Stmt\ClassMethod $node) {
 		$string = parent::pStmt_ClassMethod($node);
 		return preg_replace('/\n\s+\{/', ' {', $string);
-	}
-
-	public function pExpr_Array(Array_ $node) {
-		$multiLine = false;
-		$startLine = $node->getAttribute('startLine');
-		$endLine = $node->getAttribute('endLine');
-		if ($startLine != $endLine) {
-			$multiLine = true;
-		}
-		$printedNodes = '';
-		foreach ($node->items as $itemNode) {
-			$glueToken = ', ';
-			if ($itemNode->getAttribute('startLine') != $startLine) {
-				$glueToken = ',' . LF;
-				$startLine = $itemNode->getAttribute('startLine');
-			}
-			if (!empty($printedNodes)) {
-				$printedNodes .= $glueToken . $this->p($itemNode);
-			} else {
-				$printedNodes .= $this->p($itemNode);
-			}
-		}
-		if ($multiLine) {
-			$multiLinedItems = $this->indentToken . preg_replace(
-					'~\\n(?!$|' . $this->noIndentToken . ')~',
-					LF . $this->indentToken,
-					$printedNodes . ($printedNodes ? ',' : '')
-				);
-			return '[' . LF . $multiLinedItems . LF . ']';
-		} else {
-			return parent::pExpr_Array($node);
-		}
 	}
 }

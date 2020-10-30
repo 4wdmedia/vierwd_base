@@ -31,7 +31,6 @@ class ExportCommand extends BaseDatabaseCommand {
 
 		if ($this->isDbEmpty()) {
 			$output->writeln('<error>Database is empty</error>');
-			$this->quit(1);
 			return 1;
 		}
 

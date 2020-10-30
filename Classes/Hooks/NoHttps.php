@@ -2,8 +2,8 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
-use TYPO3\CMS\Frontend\Page\PageRepository;
-use TYPO3\CMS\Frontend\Page\PageRepositoryGetPageOverlayHookInterface;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Domain\Repository\PageRepositoryGetPageOverlayHookInterface;
 
 class NoHttps implements PageRepositoryGetPageOverlayHookInterface {
 

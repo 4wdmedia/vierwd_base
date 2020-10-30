@@ -27,6 +27,10 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  * Additional TypoScript config enabled: config.compressJs = 1 and config.concatenateJs = 1
  */
 class JavascriptOptimization {
+
+	/** @var ResourceCompressor */
+	protected $compressor = null;
+
 	/**
 	 * since TYPO3 6.0 minifyJs does not work.
 	 * Funny story: jsMinify has a non-free license because it includes
