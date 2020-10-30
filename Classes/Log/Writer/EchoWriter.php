@@ -43,15 +43,17 @@ class EchoWriter extends AbstractWriter {
 			return $this;
 		}
 
-		$levelName = LogLevel::getName($record->getLevel());
+		$levelName = strtoupper($record->getLevel());
 		$timestamp = date('c', (int)$record->getCreated());
 
 		$color = '<fg=blue;bg=default>';
 
-		if ($record->getLevel() < LogLevel::NOTICE) {
+		$normalizedLevel = LogLevel::normalizeLevel($record->getLevel());
+
+		if ($normalizedLevel < LogLevel::normalizeLevel(LogLevel::NOTICE)) {
 			$color = '<fg=yellow>';
 		}
-		if ($record->getLevel() < LogLevel::WARNING) {
+		if ($normalizedLevel < LogLevel::normalizeLevel(LogLevel::WARNING)) {
 			$color = '<fg=red>';
 		}
 

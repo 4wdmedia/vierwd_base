@@ -45,9 +45,12 @@ class MailWriter extends AbstractWriter {
 		parent::__construct($options);
 	}
 
-	public function setMinErrorLevel(int $minErrorLevel) {
+	/**
+	 * @param int|string $minErrorLevel
+	 */
+	public function setMinErrorLevel($minErrorLevel) {
 		$this->sendMail = false;
-		$this->minErrorLevel = $minErrorLevel;
+		$this->minErrorLevel = LogLevel::normalizeLevel($minErrorLevel);
 	}
 
 	public function setSender($sender) {
@@ -69,12 +72,12 @@ class MailWriter extends AbstractWriter {
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {
-		if (!$this->sendMail && $record->getLevel() <= $this->minErrorLevel) {
+		if (!$this->sendMail && LogLevel::normalizeLevel($record->getLevel()) <= $this->minErrorLevel) {
 			$this->sendMail = true;
 			register_shutdown_function([$this, 'sendMail']);
 		}
 
-		$levelName = LogLevel::getName($record->getLevel());
+		$levelName = strtoupper($record->getLevel());
 		$timestamp = date('c', (int)$record->getCreated());
 		$data = $record->getData() ? json_encode($record->getData(), JSON_PRETTY_PRINT) : '';
 		$this->buffer[] = sprintf('%s [%s] %s %s', $timestamp, $levelName, $record->getMessage(), $data);
@@ -91,10 +94,10 @@ class MailWriter extends AbstractWriter {
 
 		$subject = sprintf($this->subject, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 
-		$message->setFrom($this->sender);
-		$message->setTo($this->receiver);
-		$message->setSubject($subject);
-		$message->setBody(implode("\n", $this->buffer));
+		$message->from($this->sender);
+		$message->to($this->receiver);
+		$message->subject($subject);
+		$message->text(implode("\n", $this->buffer));
 
 		$message->send();
 	}

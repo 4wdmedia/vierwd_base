@@ -4,33 +4,6 @@ namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
 class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
-	protected function addLicenseHeader($classObject) {
-		$comments = $classObject->getComments();
-		$needsLicenseHeader = true;
-		foreach ($comments as $key => $comment) {
-			// we do not use GPL
-			if (strpos($comment, 'Copyright notice') !== false) {
-				$needsLicenseHeader = false;
-				if (substr($comment, -2) !== "\n") {
-					$comment = trim($comment) . "\n";
-					$comments[$key] = $comment;
-					$classObject->setComments($comments);
-				}
-				break;
-			}
-		}
-
-		$extensionSettings = $this->extension->getSettings();
-		if ($needsLicenseHeader && empty($extensionSettings['skipDocComment'])) {
-			$licenseHeader = $this->renderTemplate(
-				'Partials/Classes/licenseHeader.phpt',
-				['extension' => $this->extension]
-			);
-
-			$classObject->addComment($licenseHeader);
-		}
-	}
-
 	protected function generateTCAFiles() {
 		// Generate TCA
 		try {
