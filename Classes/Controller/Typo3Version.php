@@ -15,6 +15,9 @@ class Typo3Version {
 
 	public function main(RequestInterface $request, Message $response = null): ResponseInterface {
 		$stream = fopen('php://memory', 'r+');
+		if ($stream === false) {
+			return GeneralUtility::makeInstance(Response::class, '', 500);
+		}
 		fwrite($stream, (new VersionInformation())->getVersion());
 		rewind($stream);
 		$stream = new Stream($stream);

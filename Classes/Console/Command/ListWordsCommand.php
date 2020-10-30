@@ -35,7 +35,7 @@ class ListWordsCommand extends Command {
 		$words = [];
 		array_walk($headers, function($header) use (&$words) {
 			$header = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $header);
-			$headerWords = array_map('trim', preg_split('/\b/u', $header));
+			$headerWords = array_map('trim', (array)preg_split('/\b/u', $header));
 			foreach ($headerWords as $word) {
 				$words[$word] = mb_strlen((string)$word);
 			}
@@ -44,7 +44,7 @@ class ListWordsCommand extends Command {
 		array_walk($texts, function($text) use (&$words) {
 			$text = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $text);
 			$text = strip_tags($text);
-			$textWords = array_map('trim', preg_split('/\b/u', $text));
+			$textWords = array_map('trim', (array)preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
 				$words[$word] = mb_strlen((string)$word);
 			}

@@ -55,7 +55,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 					throw new \Exception('SVG not found ' . $src . "\nMaybe incorrect case of filename?", 1581686825);
 				}
 			}
-			$value = trim(file_get_contents($file));
+			$value = trim((string)file_get_contents($file));
 			$class .= ' svg-' . pathinfo($file, PATHINFO_FILENAME);
 		}
 

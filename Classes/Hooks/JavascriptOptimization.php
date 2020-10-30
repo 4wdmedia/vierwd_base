@@ -65,12 +65,14 @@ class JavascriptOptimization {
 	public function minifyJsFile($filename) {
 		// generate the unique name of the file
 		$filenameAbsolute = Environment::getPublicPath() . '/' . $filename;
+		$unique = $filenameAbsolute . '-min';
 		if (@file_exists($filenameAbsolute)) {
 			$fileStatus = stat($filenameAbsolute);
-			$unique = $filenameAbsolute . $fileStatus['mtime'] . $fileStatus['size'] . '-min';
-		} else {
-			$unique = $filenameAbsolute . '-min';
+			if ($fileStatus !== false) {
+				$unique = $filenameAbsolute . $fileStatus['mtime'] . $fileStatus['size'] . '-min';
+			}
 		}
+		/** @var array $pathinfo */
 		$pathinfo = PathUtility::pathinfo($filename);
 		$targetFile = 'typo3temp/assets/compressor/' . $pathinfo['filename'] . '-' . md5($unique) . '.js';
 		// only create it, if it doesn't exist, yet
@@ -120,7 +122,10 @@ class JavascriptOptimization {
 			// the file is smaller than 2000 byte. inline it for better performance (will use one less request)
 			unset($params['jsFiles'][$key]);
 
-			$content = substr($file, -5) == '.gzip' ? gzdecode(file_get_contents($file)) : file_get_contents($file);
+			$content = (string)file_get_contents($file);
+			if (substr($file, -5) === '.gzip') {
+				$content = (string)gzdecode($content);
+			}
 
 			if (preg_match('-\n//# sourceMappingURL=([^\n]*)$-s', $content, $matches)) {
 				// adjust sourceMappingURL, if present

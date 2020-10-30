@@ -129,7 +129,7 @@ class CheckBackendGroups {
 			return $languageService->sL($contentElement[0]);
 		}, $contentElements);
 
-		$contentElements = array_combine($elementKeys, $elementNames);
+		$contentElements = (array)array_combine($elementKeys, $elementNames);
 		return $contentElements;
 	}
 }

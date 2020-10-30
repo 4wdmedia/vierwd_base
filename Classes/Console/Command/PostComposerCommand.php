@@ -34,7 +34,7 @@ class PostComposerCommand extends Command {
 			$staticResources = Environment::getPublicPath() . '/static-resources';
 			if (!is_link($staticResources)) {
 				$composerFile = Environment::getProjectPath() . '/composer.json';
-				$composerInfo = json_decode(file_get_contents($composerFile), true);
+				$composerInfo = json_decode((string)file_get_contents($composerFile), true);
 				if ($composerInfo && isset($composerInfo['extra'], $composerInfo['extra']['extensionName'])) {
 					$target = 'typo3conf/ext/' . $composerInfo['extra']['extensionName'] . '/Resources/Public/static';
 					$target = escapeshellarg($target);

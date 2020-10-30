@@ -237,7 +237,11 @@ $passwordDefinition
 $userDefinition
 $passwordDefinition
 EOF;
-		self::$mysqlTempFile = tempnam(sys_get_temp_dir(), 'typo3_console_my_cnf_');
+		$mysqlTempFile = tempnam(sys_get_temp_dir(), 'typo3_console_my_cnf_');
+		if ($mysqlTempFile === false) {
+			throw new \Exception('Could not create temporary file for MySQL connection', 1604071267);
+		}
+		self::$mysqlTempFile = $mysqlTempFile;
 		file_put_contents(self::$mysqlTempFile, $confFileContent);
 		register_shutdown_function('unlink', self::$mysqlTempFile);
 
