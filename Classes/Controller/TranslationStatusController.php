@@ -68,7 +68,7 @@ class TranslationStatusController extends SmartyController {
 		return $translations;
 	}
 
-	protected function loadLanguageComparison(string $extensionName = '', string $fileName = '', bool $showAllLabels = false) {
+	protected function loadLanguageComparison(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
 		$localizationFactory = GeneralUtility::makeInstance(LocalizationFactory::class);
 
 		$fileReference = ExtensionManagementUtility::extPath($extensionName, 'Resources/Private/Language/' . $fileName);
@@ -124,7 +124,7 @@ class TranslationStatusController extends SmartyController {
 	 * @param string $fileName
 	 * @param bool $showAllLabels
 	 */
-	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false) {
+	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
 		$languageFiles = $this->getLanguageFiles();
 		$this->view->assign('languageFiles', $languageFiles);
 		$this->view->assign('currentShowAllLabels', $showAllLabels);

@@ -4,7 +4,7 @@ namespace Vierwd\VierwdBase\Hooks;
 
 class ImportExport {
 
-	public function before_setRelation(array &$params, \TYPO3\CMS\Impexp\ImportExport $parentObject) {
+	public function before_setRelation(array &$params, \TYPO3\CMS\Impexp\ImportExport $parentObject): void {
 		if (isset($params['data'], $params['data']['pages'])) {
 			foreach ($params['data']['pages'] as &$page) {
 				if (isset($page['perms_groupid'])) {
@@ -15,7 +15,7 @@ class ImportExport {
 		}
 	}
 
-	public function before_writeRecordsPages(array &$params, \TYPO3\CMS\Impexp\ImportExport $parentObject) {
+	public function before_writeRecordsPages(array &$params, \TYPO3\CMS\Impexp\ImportExport $parentObject): void {
 		if (isset($params['data'], $params['data']['pages'])) {
 			foreach ($params['data']['pages'] as &$page) {
 				if (isset($page['force_perms_groupid'])) {

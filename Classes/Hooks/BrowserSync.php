@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class BrowserSync {
-	public function enable($params, TypoScriptFrontendController $TSFE) {
+	public function enable(array $params, TypoScriptFrontendController $TSFE): void {
 		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['browserSync']) && !$TSFE->config['config.']['tx_vierwd.']['browserSync']) {
 			return;
 		}

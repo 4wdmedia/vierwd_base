@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 trait GraphicalFunctionsTrait {
 
-	public function init() {
+	public function init(): void {
 		$this->cmds['jpg'] .= ' -interlace Plane';
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
 		$this->cmds['webp'] = ' -quality 85';

@@ -20,7 +20,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 	 * page not found action.
 	 * will try to load "/404" and display it. If the failure is due to a access error, tries to load "/login".
 	 */
-	public function pageNotFound(array $param) {
+	public function pageNotFound(array $param): string {
 		$request = $GLOBALS['TYPO3_REQUEST'];
 		$response = $this->handlePageError($request, $param['reasonText'], $param['pageAccessFailureReasons']);
 		return (string)$response->getBody();
@@ -51,7 +51,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		return $response;
 	}
 
-	protected function load404Page(string $uri, string $reason = '') {
+	protected function load404Page(string $uri, string $reason = ''): string {
 		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
 			return '404 Loop';
 		}

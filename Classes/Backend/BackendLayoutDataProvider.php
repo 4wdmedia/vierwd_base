@@ -11,6 +11,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendLayoutDataProvider implements DataProviderInterface {
 
+	/**
+	 * @var array<array>
+	 */
 	protected $backendLayouts = [];
 
 	public function __construct() {
@@ -65,10 +68,10 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	/**
 	 * Creates a new backend layout using the given record data.
 	 *
-	 * @param array $data
+	 * @param array<string, mixed> $data
 	 * @return BackendLayout
 	 */
-	protected function createBackendLayout(array $data) {
+	protected function createBackendLayout(array $data): BackendLayout {
 		$backendLayout = BackendLayout::create($data['uid'], $data['title'], $data['config']);
 		$backendLayout->setIconPath($this->getIconPath($data['icon']));
 		$backendLayout->setData($data);
@@ -79,9 +82,8 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 * Gets and sanitizes the icon path.
 	 *
 	 * @param string $icon Name of the icon file
-	 * @return string
 	 */
-	protected function getIconPath($icon) {
+	protected function getIconPath(string $icon): string {
 		$iconPath = '';
 		if (!empty($icon)) {
 			$iconPath = $icon;

@@ -16,7 +16,7 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 	 *
 	 * @test
 	 */
-	public function testSvg() {
+	public function testSvg(): void {
 		$TSFE = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
 			->getMock();

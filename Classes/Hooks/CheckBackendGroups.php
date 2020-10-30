@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class CheckBackendGroups {
 
-	public function displayWarningMessages_postProcess(array &$warnings) {
+	public function displayWarningMessages_postProcess(array &$warnings): void {
 		if (!$GLOBALS['BE_USER'] || substr($GLOBALS['BE_USER']->user['email'], -12) !== '@4wdmedia.de') {
 			return;
 		}
@@ -26,7 +26,7 @@ class CheckBackendGroups {
 		$this->checkDatabaseTables($warnings, $backendGroups);
 	}
 
-	private function checkContentElements(array &$warnings, array $backendGroups) {
+	private function checkContentElements(array &$warnings, array $backendGroups): void {
 		if ($GLOBALS['TYPO3_CONF_VARS']['BE']['explicitADmode'] != 'explicitAllow') {
 			return;
 		}
@@ -63,7 +63,7 @@ class CheckBackendGroups {
 		}
 	}
 
-	private function checkDatabaseTables(array &$warnings, array $backendGroups) {
+	private function checkDatabaseTables(array &$warnings, array $backendGroups): void {
 		$allAllowedTables = [];
 		foreach ($backendGroups as $backendGroup) {
 			$tables = GeneralUtility::trimExplode(',', $backendGroup['tables_modify'], true);
@@ -99,10 +99,7 @@ class CheckBackendGroups {
 		}
 	}
 
-	/**
-	 * @return array
-	 */
-	protected function getBackendGroups() {
+	protected function getBackendGroups(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('be_groups');
 		$queryBuilder->select('*')->from('be_groups');
 		return $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
@@ -117,10 +114,8 @@ class CheckBackendGroups {
 
 	/**
 	 * Returns an array with all content element CTypes
-	 *
-	 * @return array
 	 */
-	protected function getContentElements() {
+	protected function getContentElements(): array {
 		$languageService = static::getLanguageService();
 		$contentElements = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'];
 		$contentElements = array_filter($contentElements, function($contentElement) {

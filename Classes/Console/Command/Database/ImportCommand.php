@@ -12,6 +12,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ImportCommand extends BaseDatabaseCommand {
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function configure() {
 		$this->setDescription('Import database from a file.');
 		$this->addOption('file', null, InputOption::VALUE_OPTIONAL, 'Filename for import', 'backup.sql.gz');

@@ -9,7 +9,10 @@ use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
  */
 class FilterFiles {
 
-	static public function filterFilesCallback($itemName, $itemIdentifier, $parentIdentifier, array $additionalInformation, DriverInterface $driverInstance) {
+	/**
+	 * @return bool|int -1 is the "false" value. call_user_func might also return false
+	 */
+	static public function filterFilesCallback(string $itemName, string $itemIdentifier, string $parentIdentifier, array $additionalInformation, DriverInterface $driverInstance) {
 		$ignoreFolders = ['_vti_cnf', '_vti_pvt', '.git', '.svn', 'CVS', 'Thumbs.db', '.DS_Store'];
 		if (in_array($itemName, $ignoreFolders)) {
 			return -1;

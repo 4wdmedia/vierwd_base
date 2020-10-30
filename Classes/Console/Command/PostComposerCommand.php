@@ -14,6 +14,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PostComposerCommand extends Command {
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function configure() {
 		$this->setDescription('Tasks to run after composer install/update');
 		$this->setHelp('Ensure some folders exist after composer installation');

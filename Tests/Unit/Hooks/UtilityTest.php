@@ -17,7 +17,7 @@ class UtilityTest extends UnitTestCase {
 	 *
 	 * @test
 	 */
-	public function testMetaTags() {
+	public function testMetaTags(): void {
 		// Initialize Application, because a valid Service Container is needed
 		$classLoader = include PHPUNIT_COMPOSER_INSTALL;
 		Bootstrap::init($classLoader, true);
@@ -61,7 +61,7 @@ class UtilityTest extends UnitTestCase {
 	 *
 	 * @test
 	 */
-	public function testProcessHtml() {
+	public function testProcessHtml(): void {
 		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->setMethods(['getHyphenationWords'])
@@ -92,7 +92,7 @@ class UtilityTest extends UnitTestCase {
 	 *
 	 * @test
 	 */
-	public function testProcessHtmlWithLongScript() {
+	public function testProcessHtmlWithLongScript(): void {
 		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->setMethods(['getHyphenationWords'])
@@ -115,6 +115,9 @@ class UtilityTest extends UnitTestCase {
 		$this->assertEquals($expectedContent, $actualContent);
 	}
 
+	/**
+	 * @return TypoScriptFrontendController&\PHPUnit\Framework\MockObject\MockObject
+	 */
 	protected function setupTsfeMock() {
 		/** @var TypoScriptFrontendController&\PHPUnit\Framework\MockObject\MockObject $tsfe */
 		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)

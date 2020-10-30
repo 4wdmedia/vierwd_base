@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Backend;
 use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -13,6 +14,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Only the label for the first button will be shown.
  */
 class GetButtonsHook {
+
+	/**
+	 * @param array<string, array> $params
+	 * @return array<string, array>
+	 */
 	public function adjustSaveAndClose(array $params) {
 		$buttonBars = $params['buttons'];
 
@@ -44,11 +50,11 @@ class GetButtonsHook {
 		return $buttonBars;
 	}
 
-	protected function getIconFactory() {
+	protected function getIconFactory(): IconFactory {
 		return GeneralUtility::makeInstance(IconFactory::class);
 	}
 
-	protected function getLanguageService() {
+	protected function getLanguageService(): LanguageService {
 		return $GLOBALS['LANG'];
 	}
 }

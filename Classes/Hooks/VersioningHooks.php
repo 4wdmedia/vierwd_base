@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class VersioningHooks {
 
-	public function removeExpiredPreviewCookie() {
+	public function removeExpiredPreviewCookie(): void {
 		if (isset($_COOKIE['ADMCMD_prev'])) {
 			// check if the cookie is valid. if not, delete it
 			$inputCode = $_COOKIE['ADMCMD_prev'];

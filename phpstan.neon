@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 6
 
     bootstrapFiles:
         - phpstan.bootstrap.php
@@ -7,3 +7,5 @@ parameters:
     paths:
         - Classes
         - Tests
+
+    checkMissingIterableValueType: false

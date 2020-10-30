@@ -4,6 +4,9 @@ namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
 class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function generateTCAFiles() {
 		// Generate TCA
 		try {
@@ -32,6 +35,9 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 		}
 	}
 
+	/**
+	 * @phpstan-return void
+	 */
 	protected function writeFile($targetFile, $fileContents) {
 		// replace spaces with tabs
 		$fileContents = preg_replace_callback('/^(    )+/m', function($matches)  {
@@ -46,6 +52,11 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 		parent::writeFile($targetFile, $fileContents);
 	}
 
+	/**
+	 * @param string $targetFile
+	 * @param string $fileContents
+	 * @return string
+	 */
 	protected function insertSplitToken($targetFile, $fileContents) {
 		$fileContents = parent::insertSplitToken($targetFile, $fileContents);
 
