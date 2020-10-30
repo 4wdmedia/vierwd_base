@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Vierwd\VierwdBase\Form\FormDataProvider;
 
 use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Core\Page\PageRenderer;
 
 /**
  * Add FORWARD MEDIA richtext settings.

@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Log\Writer;
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Core\Core\Environment;
 
 /**
  * Filter deprecations and use terminal notifier to show them

@@ -2,13 +2,13 @@
 
 namespace Vierwd\VierwdBase\Tests\Unit\View;
 
-use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Core\Page\PageRenderer;
+use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 
 class UtilityTest extends UnitTestCase {
 
