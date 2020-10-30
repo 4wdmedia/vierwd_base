@@ -476,7 +476,7 @@ class ContentElements implements SingletonInterface {
 	 * Normally TYPO3 would add those links with a link (<a id="cXX"></a>) or in the default wrapper,
 	 * but this would interfere with :first-child pseudo elements
 	 */
-	public function elementUid(?string $content, array $params): string {
+	public function elementUid(string $content, array $params): string {
 		if (!$content || $content[0] != '<' || $this->cObj === null || !$this->cObj->data['uid']) {
 			return $content;
 		}

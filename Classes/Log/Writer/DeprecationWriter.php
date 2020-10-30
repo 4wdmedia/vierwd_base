@@ -31,6 +31,9 @@ class DeprecationWriter extends AbstractWriter {
 
 		$message = $record->getMessage();
 		$location = $this->getVierwdClass();
+		if (!$location) {
+			return $this;
+		}
 		if ($location['class'] && $location['function']) {
 			$message .= "\n" . $location['class'] . ($location['type'] ?? '->') . $location['function'];
 		} else if ($location['file'] && isset($location['line'])) {
