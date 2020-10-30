@@ -7,11 +7,10 @@ php:
 env:
   - TYPO3_VERSION="^10.4.0"
 
-matrix:
+jobs:
   include:
     - php: 7.2
       env: SNIFF=1
-sudo: false
 
 addons:
   apt:
