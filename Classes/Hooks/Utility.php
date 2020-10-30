@@ -24,6 +24,9 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class Utility {
 
+	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
+	public $cObj;
+
 	/**
 	 * Utility function to output a file using TypoScript
 	 *

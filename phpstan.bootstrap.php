@@ -20,3 +20,5 @@ define('TYPO3_MODE', '');
 define('TYPO3_mainDir', 'typo3/');
 define('TYPO3_version', '');
 define('TYPO3_branch', '');
+
+define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/.Build/vendor/autoload.php');

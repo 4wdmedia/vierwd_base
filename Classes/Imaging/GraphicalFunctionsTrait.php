@@ -12,10 +12,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 trait GraphicalFunctionsTrait {
 
 	public function init() {
-		parent::init();
 		$this->cmds['jpg'] .= ' -interlace Plane';
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
-		$this->cmds['webp'] = ' -interlace Plane -quality 85';
+		$this->cmds['webp'] = ' -quality 85';
 	}
 
 	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {

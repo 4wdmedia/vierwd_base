@@ -19,6 +19,9 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 class ContentElements implements SingletonInterface {
 
+	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
+	public $cObj;
+
 	public static $oldProcFunc;
 
 	protected static $groups = ['vierwd' => []];
@@ -239,7 +242,7 @@ class ContentElements implements SingletonInterface {
 
 			$name = $config['name'];
 			if (!$name) {
-				self::generateException('Missing FCE name for ' . $config['filename']);
+				self::generateException('Missing FCE name for ' . $config['filename'], 1603988427);
 				return false;
 			}
 
