@@ -2,15 +2,6 @@
 
 namespace Vierwd\VierwdBase\Frontend\ContentObject;
 
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2015 Robert Vock <robert.vock@4wdmedia.de>, 4WD MEDIA
- *
- *  All rights reserved
- *
- ***************************************************************/
-
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\AbstractContentObject;
 

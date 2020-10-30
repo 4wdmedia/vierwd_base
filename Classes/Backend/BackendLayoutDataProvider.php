@@ -3,11 +3,11 @@
 namespace Vierwd\VierwdBase\Backend;
 
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
-use TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext;
 use TYPO3\CMS\Backend\View\BackendLayout\DataProviderInterface;
 use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendLayoutDataProvider implements DataProviderInterface {
 

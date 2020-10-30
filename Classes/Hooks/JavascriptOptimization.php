@@ -2,15 +2,6 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
-/***************************************************************
- *  Copyright notice
- *
- *  (c) 2015 Robert Vock <robert.vock@4wdmedia.de>, FORWARD MEDIA
- *
- *  All rights reserved
- *
- ***************************************************************/
-
 use JSMin;
 
 use TYPO3\CMS\Core\Core\Environment;
