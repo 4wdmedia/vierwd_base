@@ -77,6 +77,8 @@ class MailWriter extends AbstractWriter {
 		$timestamp = date('c', (int)$record->getCreated());
 		$data = $record->getData() ? json_encode($record->getData(), JSON_PRETTY_PRINT) : '';
 		$this->buffer[] = sprintf('%s [%s] %s %s', $timestamp, $levelName, $record->getMessage(), $data);
+
+		return $this;
 	}
 
 	public function sendMail(): void {

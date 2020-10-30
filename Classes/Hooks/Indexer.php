@@ -16,6 +16,7 @@ class Indexer {
 		}
 
 		$context = GeneralUtility::makeInstance(Context::class);
+		/** @var \TYPO3\CMS\Core\Context\LanguageAspect $languageAspect */
 		$languageAspect = $context->getAspect('language');
 
 		$oldLanguageAspect = $languageAspect;
