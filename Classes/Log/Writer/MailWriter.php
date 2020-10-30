@@ -91,10 +91,10 @@ class MailWriter extends AbstractWriter {
 
 		$subject = sprintf($this->subject, $GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']);
 
-		$message->setFrom($this->sender);
-		$message->setTo($this->receiver);
-		$message->setSubject($subject);
-		$message->setBody(implode("\n", $this->buffer));
+		$message->from($this->sender);
+		$message->to($this->receiver);
+		$message->subject($subject);
+		$message->text(implode("\n", $this->buffer));
 
 		$mailer->send($message);
 	}
