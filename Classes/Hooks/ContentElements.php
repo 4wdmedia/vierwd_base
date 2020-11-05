@@ -155,7 +155,7 @@ class ContentElements implements SingletonInterface {
 
 		// Process FCEs
 		foreach ($FCEs as &$config) {
-			/** @var array{'filename': string, 'adminOnly': bool, 'group': string|array, 'vendorName': string, 'pluginName': string, 'name': string, 'description': string, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': string} $config */
+			/** @var array{'filename': string, 'adminOnly': bool, 'group': string|array, 'pluginName': string, 'name': string, 'description': string, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': string} $config */
 			if (!empty($config['pluginName'])) {
 				// create a new plugin
 				$pluginSignature = strtolower(str_replace('_', '', $extensionKey) . '_' . $config['pluginName']);
@@ -279,7 +279,7 @@ class ContentElements implements SingletonInterface {
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
 			if ($config['generatePlugin'] && $isLocalConf) {
 				ExtensionUtility::configurePlugin(
-					$config['vendorName'] . '.' . $extensionKey,
+					$extensionKey,
 					$config['pluginName'],
 					$config['controllerActions'],
 					$config['nonCacheableActions'],
