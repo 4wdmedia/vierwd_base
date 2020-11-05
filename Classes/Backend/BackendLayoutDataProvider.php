@@ -83,7 +83,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 *
 	 * @param string $icon Name of the icon file
 	 */
-	protected function getIconPath(string $icon): string {
+	protected function getIconPath(?string $icon): string {
 		$iconPath = '';
 		if (!empty($icon)) {
 			$iconPath = $icon;
