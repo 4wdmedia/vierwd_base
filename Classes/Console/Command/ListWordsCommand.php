@@ -23,17 +23,24 @@ class ListWordsCommand extends Command {
 		$connection = $connectionPool->getConnectionByName('Default');
 
 		$queryBuilder = $connection->createQueryBuilder();
-		$result = $queryBuilder->selectLiteral('DISTINCT header')->from('tt_content')->where('header!=""')->execute();
-		$headers = $result->fetchAll();
+		$headers = $queryBuilder->selectLiteral('DISTINCT header')
+			->from('tt_content')
+			->where('header!=""')
+			->execute()
+			->fetchAll();
 		$headers = array_column($headers, 'header');
 
 		$queryBuilder = $connection->createQueryBuilder();
-		$result = $queryBuilder->selectLiteral('DISTINCT bodytext')->from('tt_content')->where('bodytext!=""')->execute();
-		$texts = $result->fetchAll();
+		$texts = $queryBuilder->selectLiteral('DISTINCT bodytext')
+			->from('tt_content')
+			->where('bodytext!=""')
+			->andWhere($queryBuilder->expr()->isNotNull('bodytext'))
+			->execute()
+			->fetchAll();
 		$texts = array_column($texts, 'bodytext');
 
 		$words = [];
-		array_walk($headers, function($header) use (&$words) {
+		array_walk($headers, function(string $header) use (&$words) {
 			$header = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $header);
 			$headerWords = array_map('trim', (array)preg_split('/\b/u', $header));
 			foreach ($headerWords as $word) {
@@ -41,8 +48,12 @@ class ListWordsCommand extends Command {
 			}
 		});
 
-		array_walk($texts, function($text) use (&$words) {
+		array_walk($texts, function(string $text) use (&$words) {
 			$text = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $text);
+			// strip_tags removes all tags and might "join" words together:
+			// "Line<br>Line 2" would become "LineLine 2".
+			// We prepend a space before tags, to prevent those joined words
+			$text = str_replace('<', ' <', $text);
 			$text = strip_tags($text);
 			$textWords = array_map('trim', (array)preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
