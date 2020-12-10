@@ -14,6 +14,8 @@ trait GraphicalFunctionsTrait {
 		parent::init();
 		$this->cmds['jpg'] .= ' -interlace Plane';
 		$this->cmds['jpeg'] = $this->cmds['jpg'];
+
+		$this->scalecmd = '-auto-orient -geometry';
 	}
 
 	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {
@@ -64,7 +66,7 @@ trait GraphicalFunctionsTrait {
 			$params = str_replace('%OUTPUT%', $outputFile, $params);
 			$outputFile = '';
 		}
-		$cmd = CommandUtility::imageMagickCommand('convert', $params . ' ' . $inputFile  . ' ' . $outputFile);
+		$cmd = CommandUtility::imageMagickCommand('convert', $params . ' ' . $inputFile . ' ' . $outputFile);
 		$this->IM_commands[] = [$output, $cmd];
 		$ret = CommandUtility::exec($cmd);
 		// Change the permissions of the file
