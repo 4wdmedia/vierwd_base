@@ -21,7 +21,7 @@
 		"masterminds/html5": "^2.6",
 		"php": ">=7.2.0",
 		"vierwd/svg-inliner": "^1.0",
-		"vierwd/typo3-smarty": "dev-master"
+		"vierwd/typo3-smarty": "^10.0.0"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
