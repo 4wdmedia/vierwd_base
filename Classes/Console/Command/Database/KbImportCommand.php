@@ -18,6 +18,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 	protected function configure() {
 		$this->setDescription('Import database from the current ServiceArea or Live-Server.');
 		$this->addOption('no-backup', null, InputOption::VALUE_NONE, 'Do not create a backup before import');
+		$this->addOption('no-data', null, InputOption::VALUE_NONE, 'Only create tables. Do not import data');
 		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');
 	}
 
@@ -32,6 +33,8 @@ class KbImportCommand extends BaseDatabaseCommand {
 			// Create backup first
 			$this->createBackup();
 		}
+
+		$noData = $input->getOption('no-data');
 
 		$commandLine = array_merge(['mysql'], $this->buildConnectionArguments(), ['--default-character-set=utf8mb4']);
 		$localMysqlProcess = new Process($commandLine);
@@ -54,7 +57,11 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$output->writeln('<info>Import complete</info>');
 
 		// Clear cache
-		$this->commandDispatcher->executeCommand('cache:flush');
+		if ($noData) {
+			$this->commandDispatcher->executeCommand('cache:flush', ['--files-only']);
+		} else {
+			$this->commandDispatcher->executeCommand('cache:flush');
+		}
 
 		return 0;
 	}

@@ -96,15 +96,17 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * get the command line to export all tables where we only need the structure
 	 */
-	protected function getExportStructureTablesCommand(string $type = self::CONNECTION_LOCAL): string {
+	protected function getExportStructureTablesCommand(string $type = self::CONNECTION_LOCAL, bool $allTables = false): string {
 		$additionalArguments = [
 			'--default-character-set=utf8mb4',
 			'--set-charset',
 			'--no-data',
 		];
 
-		foreach ($this->getIgnoredTables() as $table) {
-			$additionalArguments[] = $table;
+		if (!$allTables) {
+			foreach ($this->getIgnoredTables() as $table) {
+				$additionalArguments[] = $table;
+			}
 		}
 
 		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
@@ -132,6 +134,7 @@ abstract class BaseDatabaseCommand extends Command {
 			'sys_log',
 			'sys_file_processedfile',
 			'tx_extensionmanager_domain_model_extension',
+			'tx_crawler_queue',
 		];
 		$ignoreTables = array_intersect($ignoreTables, $tables);
 		$prefixes = ['cf_', 'zzz_deleted_', 'cache_', 'index_', 'tx_realurl_'];
