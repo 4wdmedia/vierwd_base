@@ -70,6 +70,7 @@ abstract class BaseDatabaseCommand extends Command {
 	 */
 	protected function getExportDataTablesCommand(string $type = self::CONNECTION_LOCAL): string {
 		$additionalArguments = [
+			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
 			'--set-charset',
 			'--net_buffer_length=16000',
@@ -98,6 +99,7 @@ abstract class BaseDatabaseCommand extends Command {
 	 */
 	protected function getExportStructureTablesCommand(string $type = self::CONNECTION_LOCAL, bool $allTables = false): string {
 		$additionalArguments = [
+			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
 			'--set-charset',
 			'--no-data',
