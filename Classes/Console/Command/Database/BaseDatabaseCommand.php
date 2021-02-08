@@ -76,8 +76,15 @@ abstract class BaseDatabaseCommand extends Command {
 			'--extended-insert',
 		];
 
+		if ($type === self::CONNECTION_LOCAL) {
+			$dbConfig = $this->dbConfig;
+		} else {
+			$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+			$dbConfig = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+		}
+
 		foreach ($this->getIgnoredTables() as $table) {
-			$additionalArguments[] = sprintf('--ignore-table=%s.%s', $this->dbConfig['dbname'], $table);
+			$additionalArguments[] = sprintf('--ignore-table=%s.%s', $dbConfig['dbname'], $table);
 		}
 
 		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
