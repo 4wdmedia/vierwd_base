@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Error\PageErrorHandler\PageErrorHandlerInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -77,9 +78,13 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			$headers['Cookie'] = $cookieName . '=' . $_COOKIE[$cookieName];
 		}
 
-		// $report = [];
-		$report = null;
-		$result = GeneralUtility::getUrl($uri, 0, $headers, $report);
+		$requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
+		$response = $requestFactory->request($uri, 'GET', [
+			'headers' => $headers,
+			'http_errors' => false,
+		]);
+		$result = (string)$response->getBody();
+
 		if ($GLOBALS['BE_USER']) {
 			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($reason), $result);
 		} else {
