@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -127,6 +128,8 @@ abstract class BaseDatabaseCommand extends Command {
 	}
 
 	protected function getIgnoredTables(): array {
+		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
 		$schemaManager = $connection->getSchemaManager();
@@ -138,6 +141,10 @@ abstract class BaseDatabaseCommand extends Command {
 			'tx_extensionmanager_domain_model_extension',
 			'tx_crawler_queue',
 		];
+		if (isset($config['additionalIgnoredTables']) && is_array($config['additionalIgnoredTables'])) {
+			// set additional ignored tables in ext_localconf with `$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['vierwd_base']['additionalIgnoredTables']`
+			$ignoreTables = array_merge($ignoreTables, $config['additionalIgnoredTables']);
+		}
 		$ignoreTables = array_intersect($ignoreTables, $tables);
 		$prefixes = ['cf_', 'zzz_deleted_', 'cache_', 'index_', 'tx_realurl_'];
 		foreach ($tables as $table) {
