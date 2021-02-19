@@ -50,6 +50,20 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search
 	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\IndexedSearch\Indexer::class] = [
 		'className' => \Vierwd\VierwdBase\XClass\IndexedSearch\Indexer::class,
 	];
+
+	// ***************
+	// Indexing Hook in TSFE is too early. It happens before Meta-Tags are replaced and title is generated
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] as $hookClass) {
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][$hookClass] = function($params, $tsfe) use ($hookClass) {
+				$_procObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($hookClass);
+				$_procObj->hook_indexContent($tsfe);
+			};
+		}
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] = [];
+		unset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['isOutputting']['tx_crawler']);
+	}
+
 }
 
 // ****************
