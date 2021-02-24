@@ -47,10 +47,16 @@ class RsyncCommand extends Command {
 		}
 		$folders = $this->transformFolders($folders, $config['ssh']);
 
+		$excludeFrom = '';
+		if (file_exists(Environment::getProjectPath() . '/rsync-excludes.txt')) {
+			$excludeFrom = '--exclude-from=rsync-excludes.txt';
+		}
+
 		$command = array_filter(array_merge([
 			'rsync',
 			($dryRun ? '--dry-run' : ''),
 			'--exclude', '_processed_',
+			$excludeFrom,
 			'--times',
 			'--links',
 			'--compress',
