@@ -161,7 +161,7 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * stream output of a process to our output
 	 */
-	protected function buildStreamOutput(): \closure {
+	protected function buildStreamOutput(): \Closure {
 		return function ($type, $output) {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)
