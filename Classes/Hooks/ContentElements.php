@@ -98,8 +98,10 @@ class ContentElements implements SingletonInterface {
 			return;
 		}
 
+		$extensionPath = ExtensionManagementUtility::extPath($extensionKey);
+
 		$baseFceDir = ExtensionManagementUtility::extPath('vierwd_base') . 'Configuration/FCE/';
-		$fceDir = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/';
+		$fceDir = $extensionPath . 'Configuration/FCE/';
 
 		$pageTS = '';
 		$typoScript = '';
@@ -109,7 +111,7 @@ class ContentElements implements SingletonInterface {
 		ArrayUtility::mergeRecursiveWithOverrule($defaults, $additionalDefaults);
 
 		// Load all groups
-		$groupsFile = ExtensionManagementUtility::extPath($extensionKey) . 'Configuration/FCE/_groups.php';
+		$groupsFile = $extensionPath . 'Configuration/FCE/_groups.php';
 		if (file_exists($groupsFile)) {
 			$groups = include $groupsFile;
 
@@ -149,9 +151,8 @@ class ContentElements implements SingletonInterface {
 			$FCEs[] = $config;
 		}
 
-		usort($FCEs, function(array $FCE1, array $FCE2): int {
-			return strcasecmp($FCE1['name'], $FCE2['name']);
-		});
+		$names = array_column($FCEs, 'name');
+		array_multisort($names, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $FCEs);
 
 		// Process FCEs
 		foreach ($FCEs as &$config) {
@@ -175,7 +176,7 @@ class ContentElements implements SingletonInterface {
 			if ($config['template']) {
 				$template = $config['template'];
 
-				$templateDir = ExtensionManagementUtility::extPath($extensionKey) . 'Resources/Private/Templates/';
+				$templateDir = $extensionPath . 'Resources/Private/Templates/';
 				if (substr($template, 0, 4) !== 'EXT:' && file_exists($templateDir . $template)) {
 					$template = 'EXT:' . $extensionKey . '/Resources/Private/Templates/' . $template;
 				}
