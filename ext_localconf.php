@@ -101,11 +101,9 @@ if ($extConf['cachedPostprocessing']) {
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
 }
 
-if (version_compare(TYPO3_version, '10.0.0', '<')) {
-	// *****************
-	// Add TCA from FCEs
-	$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', \Vierwd\VierwdBase\Hooks\ContentElements::class, 'addTCA');
-}
+// *****************
+// Add TCA from FCEs
+$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::class, 'tcaIsBeingBuilt', \Vierwd\VierwdBase\Hooks\ContentElements::class, 'addTCA');
 
 // *****************
 // Warn when no editor has access to edit some content elements

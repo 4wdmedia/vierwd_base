@@ -41,37 +41,19 @@ foreach (new \GlobIterator($path . '*.svg') as $icon) {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:vierwd_base/Configuration/PageTSconfig/page.ts">');
 
 if (TYPO3_MODE === 'BE') {
-	if (version_compare(TYPO3_version, '10.0.0', '>=')) {
-		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-			'VierwdBase',
-			'tools', // Make module a submodule of 'tools'
-			'translationstate', // Submodule key
-			'', // Position
-			[
-				\Vierwd\VierwdBase\Controller\TranslationStatusController::class => 'index',
-			],
-			[
-				'access' => 'admin',
-				'icon'   => 'EXT:vierwd_base/Resources/Public/Icons/translation-status.svg',
-				'labels' => 'LLL:EXT:vierwd_base/Resources/Private/Language/locallang_mod.xlf',
-				'name'   => 'tools_TranslationStatus',
-			]
-		);
-	} else {
-		\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-			'Vierwd.VierwdBase',
-			'tools', // Make module a submodule of 'tools'
-			'translationstate', // Submodule key
-			'', // Position
-			[
-				'TranslationStatus' => 'index',
-			],
-			[
-				'access' => 'admin',
-				'icon'   => 'EXT:vierwd_base/Resources/Public/Icons/translation-status.svg',
-				'labels' => 'LLL:EXT:vierwd_base/Resources/Private/Language/locallang_mod.xlf',
-				'name'   => 'tools_TranslationStatus',
-			]
-		);
-	}
+	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+		'Vierwd.VierwdBase',
+		'tools', // Make module a submodule of 'tools'
+		'translationstate', // Submodule key
+		'', // Position
+		[
+			'TranslationStatus' => 'index',
+		],
+		[
+			'access' => 'admin',
+			'icon'   => 'EXT:vierwd_base/Resources/Public/Icons/translation-status.svg',
+			'labels' => 'LLL:EXT:vierwd_base/Resources/Private/Language/locallang_mod.xlf',
+			'name'   => 'tools_TranslationStatus',
+		]
+	);
 }
