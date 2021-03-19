@@ -182,10 +182,6 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 	// disable https on dev-machines
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPageOverlay'][] = \Vierwd\VierwdBase\Hooks\NoHttps::class;
 
-	// ****************
-	// Enable Browser Sync as Post-Processing (better performance than USER_INT)
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output']['vierwd_base-browserSync'] = \Vierwd\VierwdBase\Hooks\BrowserSync::class . '->enable';
-
 	// **************
 	// Allow Shift-Reload even without admin login in local context
 	if (!empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
