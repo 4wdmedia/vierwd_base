@@ -30,7 +30,7 @@ class BrowserSync implements MiddlewareInterface {
 		// check if the port 3000 is open
 		// https://apple.stackexchange.com/questions/81140/why-is-lsof-on-os-x-so-ridiculously-slow
 		// lsof -i tcp:3000 -P -O -l -n | grep "^node.*3000"
-		if (!trim(`netstat -vanp tcp | grep 3000`)) {
+		if (!trim(shell_exec('netstat -vanp tcp | grep 3000') ?? '')) {
 			return $response;
 		}
 
