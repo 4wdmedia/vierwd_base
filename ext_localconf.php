@@ -1,6 +1,8 @@
 <?php
 defined('TYPO3_MODE') || die('Access denied.');
 
+$extConf = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class)->get('vierwd_base');
+
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = ['paths' => []];
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\FileGenerator::class] = [
@@ -103,7 +105,11 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['proc
 
 // **************
 // Hyphenate words in generated html
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
+if ($extConf['cachedPostprocessing']) {
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
+} else {
+	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
+}
 
 // *****************
 // Warn when no editor has access to edit some content elements
@@ -124,7 +130,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRe
 // Add custom content Elements. Configure in Configuration/FCE/*.php
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base', true);
 
-$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['vierwd_base']);
 if (!empty($extConf['forceMyISAM'])) {
 	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Database\Schema\SqlReader::class] = [
 		'className' => \Vierwd\VierwdBase\Database\ForceMyISAM::class,
@@ -209,3 +214,5 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['AutomaticSlugPatternMapper'] = \Vierwd\VierwdBase\Routing\Aspect\AutomaticSlugPatternMapper::class;
+
+unset($extConf);
