@@ -133,7 +133,7 @@ class RsyncCommand extends Command {
 	/**
 	 * stream output of a process to our output
 	 */
-	protected function buildStreamOutput(OutputInterface $symfonyOutput): \closure {
+	protected function buildStreamOutput(OutputInterface $symfonyOutput): \Closure {
 		return function ($type, $output) use ($symfonyOutput) {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)

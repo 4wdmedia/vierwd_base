@@ -8,6 +8,15 @@ parameters:
         - Classes
         - Tests
 
+    checkMissingIterableValueType: false
+
+    polluteCatchScopeWithTryAssignments: false
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    reportStaticMethodSignatures: true
+    checkUninitializedProperties: true
+
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         -
             message: '#Cannot call method fetchAll\(\) on Doctrine\\DBAL\\Driver\\Statement\|int\.#'
@@ -21,6 +30,3 @@ parameters:
             message: '#Argument of an invalid type Doctrine\\DBAL\\Driver\\Statement\|int supplied for foreach, only iterables are supported\.#'
             paths:
                 - Classes
-
-
-    checkMissingIterableValueType: false
