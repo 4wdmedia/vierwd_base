@@ -76,7 +76,7 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 	protected function sluggify(string $value): string {
 		static $transliterator = null;
 		if ($transliterator === null && class_exists('Transliterator')) {
-			$transliterator = \Transliterator::create('Any-Latin; Latin-ASCII; Lower()');
+			$transliterator = \Transliterator::create('Any-Latin; Latin-ASCII; Lower(); [\u0100-\u7fff] remove');
 		}
 
 		if ($transliterator) {
