@@ -74,6 +74,15 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 	}
 
 	protected function sluggify(string $value): string {
+		static $transliterator = null;
+		if ($transliterator === null && class_exists('Transliterator')) {
+			$transliterator = \Transliterator::create('Any-Latin; Latin-ASCII; Lower()');
+		}
+
+		if ($transliterator) {
+			$value = $transliterator->transliterate($value);
+		}
+
 		$charsetConverter = GeneralUtility::makeInstance(CharsetConverter::class);
 		$value = mb_strtolower($value);
 		// replace accented chars
