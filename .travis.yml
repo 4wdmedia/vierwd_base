@@ -29,7 +29,7 @@ cache:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - composer self-update
+  - composer self-update --1
   - composer --version
 
 install:
