@@ -53,9 +53,19 @@ trait GraphicalFunctionsTrait {
 		if ($this->NO_IMAGE_MAGICK) {
 			return '';
 		}
-		// If addFrameSelection is set in the Install Tool, a frame number is added to
-		// select a specific page of the image (by default this will be the first page)
-		$frame  = $this->addFrameSelection ? '[' . (int)$frame . ']' : '';
+		if (TYPO3_version < '8.0.0') {
+			// Unless noFramePrepended is set in the Install Tool, a frame number is added to
+			// select a specific page of the image (by default this will be the first page)
+			if (!$this->noFramePrepended) {
+				$frame = '[' . (int)$frame . ']';
+			} else {
+				$frame = '';
+			}
+		} else {
+			// If addFrameSelection is set in the Install Tool, a frame number is added to
+			// select a specific page of the image (by default this will be the first page)
+			$frame  = $this->addFrameSelection ? '[' . (int)$frame . ']' : '';
+		}
 		$inputFile = CommandUtility::escapeShellArgument($input . $frame);
 		$outputFile = CommandUtility::escapeShellArgument($output);
 		if (strpos($params, '%INPUT%') !== false) {
