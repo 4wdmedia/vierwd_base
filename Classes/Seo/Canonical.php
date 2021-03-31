@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 
 class Canonical implements SingletonInterface {
 
@@ -22,6 +23,14 @@ class Canonical implements SingletonInterface {
 	}
 
 	static public function getUrl(): string {
+		static $url = null;
+		if ($url === null) {
+			$url = self::calculateUrl();
+		}
+		return $url;
+	}
+
+	static public function calculateUrl(): string {
 		if (!empty($GLOBALS['TSFE']->no_cache)) {
 			return '';
 		}
@@ -35,20 +44,25 @@ class Canonical implements SingletonInterface {
 		}
 		$queryParams = array_diff_key($queryParams, ['L' => 0, 'id' => 0]);
 
+		$cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
 		if (!$pageArguments['cHash'] && $queryParams) {
-			// some dynamic parameters without a cHash.
-			return '';
+			if ($cacheHashCalculator->getRelevantParameters(GeneralUtility::implodeArrayForUrl('', $queryParams))) {
+				return '';
+			}
 		}
 
 		$query = GeneralUtility::_GET();
 		if ($query) {
+			$query['id'] = $GLOBALS['TSFE']->id;
+			$query = $cacheHashCalculator->getRelevantParameters(GeneralUtility::implodeArrayForUrl('', $query));
+			unset($query['encryptionKey']);
+			unset($query['cHash']);
+
 			$removeParameters = (array)$GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'];
 			$removeParameters = array_filter($removeParameters);
-			$queryChanged = false;
 			foreach ($removeParameters as $parameter) {
 				if (ArrayUtility::isValidPath($query, $parameter, '|')) {
 					$query = ArrayUtility::removeByPath($query, $parameter, '|');
-					$queryChanged = true;
 				}
 			}
 
@@ -57,43 +71,33 @@ class Canonical implements SingletonInterface {
 				if (is_array($value) && !$value) {
 					// empty array -> remove
 					unset($query[$parameter]);
-					$queryChanged = true;
 				}
 			}
 
-			if ($queryChanged) {
-				unset($query['cHash']);
-			}
+			// regenerate URL
 
-			if ($queryChanged) {
-				// regenerate URL
-
-				// First: remove L and id parameter
-				$query = array_diff_key($query, ['L' => 0, 'id' => 0]);
-				if (!$query) {
-					// there are more parameters beside L and id. Regenerate including cHash
-					$url = $GLOBALS['TSFE']->id;
-				} else {
-					// only L and id left. generate without cHash
-					$url = $GLOBALS['TSFE']->cObj->typolink_url([
-						'parameter' => $GLOBALS['TSFE']->id,
-						'useCacheHash' => true,
-						'additionalParams' => GeneralUtility::implodeArrayForUrl('', $query),
-					]);
-				}
+			// First: remove L and id parameter
+			$query = array_diff_key($query, ['L' => 0, 'id' => 0]);
+			if (!$query) {
+				// there are more parameters beside L and id. Regenerate including cHash
+				$url = $GLOBALS['TSFE']->cObj->typolink_url([
+					'forceAbsoluteUrl' => true,
+					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
+				]);
 			} else {
-				$url = substr(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'), strlen(GeneralUtility::getIndpEnv('TYPO3_SITE_URL')));
+				// only L and id left. generate without cHash
+				$url = $GLOBALS['TSFE']->cObj->typolink_url([
+					'forceAbsoluteUrl' => true,
+					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
+					'useCacheHash' => true,
+					'additionalParams' => GeneralUtility::implodeArrayForUrl('', $query),
+				]);
 			}
 		} else {
-			$url = $GLOBALS['TSFE']->id;
-		}
-
-		if ($url) {
-			$conf = [
-				'parameter' => $url,
+			$url = $GLOBALS['TSFE']->cObj->typolink_url([
 				'forceAbsoluteUrl' => true,
-			];
-			$url = $GLOBALS['TSFE']->cObj->typolink_url($conf);
+				'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
+			]);
 		}
 
 		return $url;
