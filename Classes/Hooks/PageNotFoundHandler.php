@@ -46,15 +46,30 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			$statusCode = 404;
 		}
 
-		$page = $this->load404Page($uri, $message);
+		try {
+			$response = $this->load404Page($uri);
 
-		$response = new HtmlResponse($page, $statusCode);
+			$pageContent = (string)$response->getBody();
+			if ($GLOBALS['BE_USER']) {
+				$pageContent = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($message), $pageContent);
+			} else {
+				$pageContent = str_replace('%REASON%', '', $pageContent);
+			}
+
+			$cookieHeaders = $response->getHeader('set-cookie');
+			$headers = $cookieHeaders ? ['Set-Cookie' => $cookieHeaders] : [];
+
+			$response = new HtmlResponse($pageContent, $statusCode, $headers);
+		} catch (\Throwable $e) {
+			$response = new HtmlResponse($e->getMessage(), $statusCode);
+		}
+
 		return $response;
 	}
 
-	protected function load404Page(string $uri, string $reason = ''): string {
+	protected function load404Page(string $uri): ResponseInterface {
 		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
-			return '404 Loop';
+			throw new \Exception('404 Loop', 1618222390);
 		}
 
 		$headers = [
@@ -79,17 +94,9 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		$requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
-		$response = $requestFactory->request($uri, 'GET', [
+		return $requestFactory->request($uri, 'GET', [
 			'headers' => $headers,
 			'http_errors' => false,
 		]);
-		$result = (string)$response->getBody();
-
-		if ($GLOBALS['BE_USER']) {
-			$result = str_replace('%REASON%', '<strong>Reason</strong>: ' . htmlspecialchars($reason), $result);
-		} else {
-			$result = str_replace('%REASON%', '', $result);
-		}
-		return $result;
 	}
 }
