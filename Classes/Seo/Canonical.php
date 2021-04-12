@@ -46,6 +46,7 @@ class Canonical implements SingletonInterface {
 
 		$cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
 		if (!$pageArguments['cHash'] && $queryParams) {
+			$queryParams['id'] = $GLOBALS['TSFE']->id;
 			if ($cacheHashCalculator->getRelevantParameters(GeneralUtility::implodeArrayForUrl('', $queryParams))) {
 				return '';
 			}
