@@ -1,6 +1,6 @@
 <?php
 
-$middlewares = [
+$vierwdMiddlewares = [
 	'frontend' => [
 		'vierwd/base/404-before-site-redirect' => [
 			'target' => \Vierwd\VierwdBase\Frontend\Middleware\PageNotFoundBeforeSiteRedirect::class,
@@ -22,7 +22,7 @@ $middlewares = [
 ];
 
 if (!empty($_SERVER['VIERWD_CONFIG'])) {
-	$middlewares['frontend']['vierwd/base/browser-sync'] = [
+	$vierwdMiddlewares['frontend']['vierwd/base/browser-sync'] = [
 		'target' => \Vierwd\VierwdBase\Frontend\Middleware\BrowserSync::class,
 		'after' => [
 			'typo3/cms-frontend/content-length-headers',
@@ -33,4 +33,4 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 	];
 }
 
-return $middlewares;
+return $vierwdMiddlewares;
