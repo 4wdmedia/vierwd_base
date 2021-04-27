@@ -17,7 +17,7 @@ class BrowserSync implements MiddlewareInterface {
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
 		$response = $handler->handle($request);
 
-		if (($response instanceof NullResponse) || !($GLOBALS['TSFE'] instanceof TypoScriptFrontendController) || !$GLOBALS['TSFE']->isOutputting()) {
+		if (($response instanceof NullResponse) || !($GLOBALS['TSFE'] instanceof TypoScriptFrontendController)) {
 			return $response;
 		}
 
