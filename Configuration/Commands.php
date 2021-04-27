@@ -15,7 +15,7 @@ return [
 	'vierwd:database:import' => [
 		'vendor' => 'vierwd',
 		'class' => Vierwd\VierwdBase\Console\Command\Database\ImportCommand::class,
-		'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL,
+		'runLevel' => \Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE,
 	],
 	'vierwd:database:kb-import' => [
 		'vendor' => 'vierwd',
