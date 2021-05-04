@@ -4,11 +4,7 @@ namespace Vierwd\VierwdBase\ExtensionBuilder\Service;
 
 class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function generateTCAFiles() {
-		// Generate TCA
+	protected function generateTCAFiles(): void {
 		try {
 			parent::generateTCAFiles();
 
