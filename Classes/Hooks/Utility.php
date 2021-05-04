@@ -130,18 +130,6 @@ class Utility {
 		$this->addNoopener($document);
 
 		$TSFE->content = $html5->saveHTML($document);
-
-		// Update Content-Length Header, if it is set
-		// Condition taken from TypoScriptFrontendController::processOutput
-		if (
-			(!isset($TSFE->config['config']['enableContentLengthHeader']) || $TSFE->config['config']['enableContentLengthHeader'])
-			&& !$TSFE->isBackendUserLoggedIn()
-			&& !$GLOBALS['TYPO3_CONF_VARS']['FE']['debug']
-			&& !$TSFE->config['config']['debug'] && !$TSFE->doWorkspacePreview()
-			&& !headers_sent()
-		) {
-			header('Content-Length: ' . strlen($TSFE->content));
-		}
 	}
 
 	/**
