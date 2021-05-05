@@ -79,7 +79,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 			}
 		}
 
-		$attributes = array_diff_key($conf, array_merge(['src' => 'remove'], $options));
+		$attributes = array_diff_key($conf, array_merge(['src' => 'remove', 'value' => 'remove'], $options));
 		$attributes = array_filter($attributes, function($key) {
 			return substr($key, -1) !== '.';
 		}, ARRAY_FILTER_USE_KEY);
