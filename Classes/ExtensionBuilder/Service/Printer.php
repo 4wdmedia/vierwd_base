@@ -8,6 +8,7 @@ use PhpParser\Node\Stmt;
 
 class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 
+	/** @var string */
 	protected $indentToken = "\t";
 
 	public function __construct(array $options = []) {
@@ -19,10 +20,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return (string)preg_replace('/ +$/m', '', $code);
 	}
 
-	/**
-	 * @param bool $addDeclareStrictTypes
-	 */
-	public function renderFileObject(File $fileObject, $addDeclareStrictTypes = true) {
+	public function renderFileObject(File $fileObject, bool $addDeclareStrictTypes = true): string {
 		// remove comments which say nothing (set title for a setTitle method, or "title" for a $title property)
 		foreach ($fileObject->getNamespaces() as $namespace) {
 			foreach ($namespace->getClasses() as $class) {
@@ -79,7 +77,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return parent::renderFileObject($fileObject, $addDeclareStrictTypes);
 	}
 
-	public function render($stmts) {
+	public function render($stmts): string {
 		$code = parent::render($stmts);
 		$code = $this->trimTrailingWhitespace($code);
 

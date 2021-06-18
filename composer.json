@@ -26,7 +26,7 @@
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"friendsofphp/php-cs-fixer": "^2.12.0",
-		"friendsoftypo3/extension-builder": "dev-v10-compatibility",
+		"friendsoftypo3/extension-builder": "dev-master",
 		"nimut/testing-framework": "^5.0.0",
 		"phpstan/extension-installer": "^1.0",
 		"phpunit/phpunit": "^6.0",

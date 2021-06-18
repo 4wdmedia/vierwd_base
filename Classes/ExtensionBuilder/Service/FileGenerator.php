@@ -34,7 +34,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 	/**
 	 * @phpstan-return void
 	 */
-	protected function writeFile($targetFile, $fileContents) {
+	protected function writeFile($targetFile, $fileContents): void {
 		// replace spaces with tabs
 		$fileContents = (string)preg_replace_callback('/^(    )+/m', function($matches)  {
 			return str_replace('    ', "\t", $matches[0]);
