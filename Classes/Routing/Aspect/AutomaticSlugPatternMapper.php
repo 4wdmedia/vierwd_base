@@ -31,10 +31,19 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *           tableName: tx_vierwdexample_domain_model_project
  *           routeFieldPattern: '^(?P<title>.+)-(?P<uid>\d+)$'
  *           routeFieldResult: '{title}-{uid}'
+ *           matchFields: ['uid']
  */
 class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 
 	use SiteLanguageAwareTrait;
+
+	public function __construct(array $settings) {
+		parent::__construct($settings);
+
+		if (!isset($this->settings['matchFields']) || !is_array($this->settings['matchFields'])) {
+			$this->settings['matchFields'] = ['uid'];
+		}
+	}
 
 	protected function createRouteResult(?array $result): ?string {
 		if ($result === null) {
@@ -63,12 +72,16 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 	 * @return array
 	 */
 	protected function createRouteFieldConstraints(QueryBuilder $queryBuilder, array $values, bool $resolveExpansion = false): array {
-		if (!isset($values['uid'])) {
+		// check if all match-fields are set
+		if (count($this->settings['matchFields']) !== count(array_intersect($this->settings['matchFields'], array_keys($values)))) {
+			// not all fields are set
 			return parent::createFieldConstraints($queryBuilder, $values, $resolveExpansion);
 		}
 
 		$constraints = [];
-		$constraints[] = $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($values['uid'], \PDO::PARAM_STR));
+		foreach ($this->settings['matchFields'] as $fieldName) {
+			$constraints[] = $queryBuilder->expr()->eq($fieldName, $queryBuilder->createNamedParameter($values[$fieldName], \PDO::PARAM_STR));
+		}
 
 		return $constraints;
 	}
