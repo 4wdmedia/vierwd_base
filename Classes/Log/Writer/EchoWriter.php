@@ -4,6 +4,7 @@ namespace Vierwd\VierwdBase\Log\Writer;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
@@ -20,7 +21,7 @@ class EchoWriter extends AbstractWriter {
 	public function __construct(array $options = []) {
 		parent::__construct($options);
 
-		if (!defined('TYPO3_REQUESTTYPE') || !(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI)) {
+		if (!Environment::isCli()) {
 			// only output messages in CLI context
 			return;
 		}
