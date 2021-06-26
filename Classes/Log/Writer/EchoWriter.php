@@ -26,10 +26,6 @@ class EchoWriter extends AbstractWriter {
 			return;
 		}
 
-		while (ob_get_level()) {
-			ob_end_flush();
-		}
-
 		$this->output = GeneralUtility::makeInstance(StreamOutput::class, fopen('php://stdout', 'a', false));
 	}
 
