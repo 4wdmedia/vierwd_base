@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Vierwd\VierwdBase\Backend\:
+    resource: '../Classes/Backend/*'
+
+  Vierwd\VierwdBase\Backend\GetButtonsHook:
+    public: true
