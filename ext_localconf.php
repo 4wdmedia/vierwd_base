@@ -28,10 +28,6 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'] = $_SERVER['SERVER_ADDR'] && $_SERVE
 // BackendLayoutDataProvider
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['vierwd_base'] = \Vierwd\VierwdBase\Backend\BackendLayoutDataProvider::class;
 
-// ***************
-// eID for TYPO3 Version
-$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['vierwd_typo3version'] = \Vierwd\VierwdBase\Controller\Typo3Version::class . '::main';
-
 // disable html_errors, if this is an ajax request
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 	ini_set('html_errors', 'off');

@@ -18,6 +18,12 @@ $vierwdMiddlewares = [
 				'typo3/cms-frontend/page-resolver',
 			],
 		],
+		'vierwd/base/typo3-version' => [
+			'target' => \Vierwd\VierwdBase\Frontend\Middleware\Typo3Version::class,
+			'before' => [
+				'typo3/cms-frontend/eid',
+			],
+		],
 	],
 ];
 
