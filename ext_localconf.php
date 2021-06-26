@@ -192,6 +192,12 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 		};
 	}
 
+	// **************
+	// Force case-sensitive file systems
+	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\StorageRepository::class] = [
+		'className' => \Vierwd\VierwdBase\XClass\Core\Resource\StorageRepository::class,
+	];
+
 	// Log Deprecations
 	\TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TYPO3_CONF_VARS'], [
 		'LOG' => [
