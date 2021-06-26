@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Backend;
 
@@ -11,9 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendLayoutDataProvider implements DataProviderInterface {
 
-	/**
-	 * @var array<array>
-	 */
+	/** @var array<array> */
 	protected $backendLayouts = [];
 
 	public function __construct() {
@@ -26,13 +25,15 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 			$parser = GeneralUtility::makeInstance(TypoScriptParser::class);
 
 			foreach (new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS) as $file) {
-				if (is_dir($file) || !$file instanceof \SplFileInfo) {
+				if (is_dir($file->getPathname()) || !$file instanceof \SplFileInfo) {
 					continue;
 				}
 				$content = (string)file_get_contents($file->getPathname());
 				$parser->parse($content);
-				$key = $file->getBasename('.' . $file->getExtension());
-				$this->backendLayouts[$key] = $parser->setup;
+				if (!$parser->errors) {
+					$key = $file->getBasename('.' . $file->getExtension());
+					$this->backendLayouts[$key] = $parser->setup;
+				}
 			}
 		}
 	}
@@ -55,7 +56,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 *
 	 * @param string $identifier
 	 * @param int $pageId
-	 * @return NULL|BackendLayout
+	 * @return ?BackendLayout
 	 */
 	public function getBackendLayout($identifier, $pageId) {
 		$backendLayout = null;
@@ -73,22 +74,11 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 */
 	protected function createBackendLayout(array $data): BackendLayout {
 		$backendLayout = BackendLayout::create($data['uid'], $data['title'], $data['config']);
-		$backendLayout->setIconPath($this->getIconPath($data['icon']));
+		if (!empty($data['icon'])) {
+			$backendLayout->setIconPath($data['icon']);
+		}
 		$backendLayout->setData($data);
 		return $backendLayout;
-	}
-
-	/**
-	 * Gets and sanitizes the icon path.
-	 *
-	 * @param string $icon Name of the icon file
-	 */
-	protected function getIconPath(?string $icon): string {
-		$iconPath = '';
-		if (!empty($icon)) {
-			$iconPath = $icon;
-		}
-		return $iconPath;
 	}
 
 }
