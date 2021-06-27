@@ -3,7 +3,9 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Log\Writer;
 
+use Smarty_Internal_Template;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -13,15 +15,25 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class DeprecationWriter extends AbstractWriter {
 
+	/** @var ?ApplicationType */
+	private $applicationType;
+
 	/** @var array */
 	protected $messages = [];
+
+	public function __construct(array $options = []) {
+		parent::__construct($options);
+		if (!empty($GLOBALS['TYPO3_REQUEST'])) {
+			$this->applicationType = ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST']);
+		}
+	}
 
 	/**
 	 * @param LogRecord $record Log record
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {
-		if (TYPO3_MODE !== 'FE' || !$this->checkTrace()) {
+		if (!$this->applicationType || !$this->applicationType->isFrontend() || !$this->checkTrace()) {
 			return $this;
 		}
 
@@ -48,14 +60,16 @@ class DeprecationWriter extends AbstractWriter {
 		return $this;
 	}
 
+	protected function getTrace(int $options = 0, int $limit = 20): array {
+		return debug_backtrace($options, $limit);
+	}
+
 	/**
 	 * check within the current backtrace if one of our classes is involved in this
 	 * deprecation warning.
 	 */
 	protected function checkTrace(): bool {
-		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		// only look at the first 20 classes
-		$trace = array_slice($trace, 0, 20);
+		$trace = $this->getTrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
 		$classes = array_filter($trace, function(array $traceEntry): bool {
 			return !empty($traceEntry['class']) && StringUtility::beginsWith($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
@@ -68,9 +82,7 @@ class DeprecationWriter extends AbstractWriter {
 	}
 
 	protected function getVierwdClass(): ?array {
-		$trace = debug_backtrace();
-		// only look at the first 20 classes
-		$trace = array_slice($trace, 0, 20);
+		$trace = $this->getTrace();
 
 		$classes = array_filter($trace, function(array $traceEntry): bool {
 			$class = !empty($traceEntry['class']) && StringUtility::beginsWith($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
@@ -83,7 +95,7 @@ class DeprecationWriter extends AbstractWriter {
 
 		$traceEntry = current($classes);
 		if (!empty($traceEntry['file']) && StringUtility::endsWith($traceEntry['file'], 'smarty_template_resource_base.php')) {
-			if ($traceEntry['args'][0] instanceof \Smarty_Internal_Template) {
+			if ($traceEntry['args'][0] instanceof Smarty_Internal_Template) {
 				return [
 					'file' => $traceEntry['args'][0]->template_resource,
 					'line' => 0,
@@ -94,12 +106,18 @@ class DeprecationWriter extends AbstractWriter {
 		return $traceEntry;
 	}
 
+	/**
+	 * @codeCoverageIgnore
+	 */
 	protected function registerShutdownFunction(): void {
 		if (PHP_SAPI !== 'cli') {
 			register_shutdown_function([$this, 'send']);
 		}
 	}
 
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function send(): void {
 		// limit the messages to max 20
 		$messages = array_slice($this->messages, 0, 20);
