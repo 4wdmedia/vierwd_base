@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Log\Writer;
 
@@ -72,6 +73,13 @@ class MailWriter extends AbstractWriter {
 	}
 
 	/**
+	 * @codeCoverageIgnore
+	 */
+	protected function registerShutdownFunction(): void {
+		register_shutdown_function([$this, 'sendMail']);
+	}
+
+	/**
 	 * Writes the log record
 	 *
 	 * @param LogRecord $record Log record
@@ -80,7 +88,7 @@ class MailWriter extends AbstractWriter {
 	public function writeLog(LogRecord $record) {
 		if (!$this->sendMail && LogLevel::normalizeLevel($record->getLevel()) <= $this->minErrorLevel) {
 			$this->sendMail = true;
-			register_shutdown_function([$this, 'sendMail']);
+			$this->registerShutdownFunction();
 		}
 
 		$levelName = strtoupper($record->getLevel());
