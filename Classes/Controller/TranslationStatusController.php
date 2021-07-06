@@ -121,11 +121,6 @@ class TranslationStatusController extends SmartyController {
 		$this->view->assign('translations', $translations);
 	}
 
-	/**
-	 * @param string $extensionName
-	 * @param string $fileName
-	 * @param bool $showAllLabels
-	 */
 	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
 		$languageFiles = $this->getLanguageFiles();
 		$this->view->assign('languageFiles', $languageFiles);
