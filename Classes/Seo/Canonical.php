@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Seo;
 
@@ -6,6 +7,7 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 
 class Canonical implements SingletonInterface {
@@ -17,7 +19,8 @@ class Canonical implements SingletonInterface {
 
 		$url = self::getUrl();
 
-		$url = $GLOBALS['TSFE']->cObj->stdWrap($url, $params);
+		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+		$url = $cObj->stdWrap($url, $params);
 
 		return $url;
 	}
@@ -52,6 +55,7 @@ class Canonical implements SingletonInterface {
 			}
 		}
 
+		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$query = GeneralUtility::_GET();
 		if ($query) {
 			$query['id'] = $GLOBALS['TSFE']->id;
@@ -81,13 +85,13 @@ class Canonical implements SingletonInterface {
 			$query = array_diff_key($query, ['L' => 0, 'id' => 0]);
 			if (!$query) {
 				// there are more parameters beside L and id. Regenerate including cHash
-				$url = $GLOBALS['TSFE']->cObj->typolink_url([
+				$url = $cObj->typolink_url([
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 				]);
 			} else {
 				// only L and id left. generate without cHash
-				$url = $GLOBALS['TSFE']->cObj->typolink_url([
+				$url = $cObj->typolink_url([
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 					'useCacheHash' => true,
@@ -95,7 +99,7 @@ class Canonical implements SingletonInterface {
 				]);
 			}
 		} else {
-			$url = $GLOBALS['TSFE']->cObj->typolink_url([
+			$url = $cObj->typolink_url([
 				'forceAbsoluteUrl' => true,
 				'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 			]);
