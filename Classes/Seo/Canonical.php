@@ -85,13 +85,13 @@ class Canonical implements SingletonInterface {
 			$query = array_diff_key($query, ['L' => 0, 'id' => 0]);
 			if (!$query) {
 				// there are more parameters beside L and id. Regenerate including cHash
-				$url = $cObj->typolink_url([
+				$url = $cObj->typoLink_URL([
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 				]);
 			} else {
 				// only L and id left. generate without cHash
-				$url = $cObj->typolink_url([
+				$url = $cObj->typoLink_URL([
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 					'useCacheHash' => true,
@@ -99,7 +99,7 @@ class Canonical implements SingletonInterface {
 				]);
 			}
 		} else {
-			$url = $cObj->typolink_url([
+			$url = $cObj->typoLink_URL([
 				'forceAbsoluteUrl' => true,
 				'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 			]);
