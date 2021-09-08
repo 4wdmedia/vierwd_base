@@ -75,7 +75,7 @@
 	},
 	"scripts": {
 		"phplint": "find . -name \\*.php ! -path \"./.Build/*\" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \\;",
-		"phpcs": "phpcs --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/ Tests/",
+		"phpcs": "phpcs -n --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/ Tests/",
 		"phpstan": "phpstan analyze",
 		"unit-test": "phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
 		"test-all": [
