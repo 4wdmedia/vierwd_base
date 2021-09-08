@@ -43,21 +43,28 @@ script:
     composer run-script phplint
 
   - >
-    echo;
+    if [[ "$SNIFF" != "1" ]];
+    then echo;
     echo "Running phpstan";
-    composer run-script phpstan
+    composer run-script phpstan;
+    fi;
 
   - >
+    if [[ "$SNIFF" != "1" ]];
     echo;
     echo "Running unit tests";
-    composer run-script unit-test
+    composer run-script unit-test;
+    fi;
 
   # - >
   #   echo;
   #   echo "Running functional tests";
   #   composer run-script test
 
-  - if [[ "$SNIFF" == "1" ]]; then composer run-script phpcs; fi
+  - >
+    if [[ "$SNIFF" == "1" ]];
+    then composer run-script phpcs;
+    fi;
 
 notifications:
   slack:
