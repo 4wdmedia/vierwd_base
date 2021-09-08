@@ -1,3 +1,6 @@
 .Build/*
 composer.lock
 /var/
+
+# code-coverage for test-cases
+/html
