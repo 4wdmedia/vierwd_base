@@ -35,9 +35,11 @@ class EchoWriterTest extends UnitTestCase {
 	public function testWriteLogWithoutCLIMode(): void {
 		$this->setUpEnvironment(false);
 
+		/** @var EchoWriter&\Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface $subject */
 		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 		$subject->writeLog($simpleRecord);
+		// @phpstan-ignore-next-line $output is a private property, but it's accessible
 		$this->assertEquals(null, $subject->output, 'No output is created when environment is not CLI');
 	}
 
@@ -49,6 +51,7 @@ class EchoWriterTest extends UnitTestCase {
 
 		GeneralUtility::addInstance(StreamOutput::class, $outputMock->reveal());
 
+		/** @var EchoWriter&\Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface $subject */
 		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 		$subject->writeLog($simpleRecord);
@@ -62,6 +65,7 @@ class EchoWriterTest extends UnitTestCase {
 
 		GeneralUtility::addInstance(StreamOutput::class, $outputMock->reveal());
 
+		/** @var EchoWriter&\Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface $subject */
 		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::NOTICE, 'test record');
 		$subject->writeLog($simpleRecord);
@@ -75,6 +79,7 @@ class EchoWriterTest extends UnitTestCase {
 
 		GeneralUtility::addInstance(StreamOutput::class, $outputMock->reveal());
 
+		/** @var EchoWriter&\Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface $subject */
 		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::ERROR, 'test record');
 		$subject->writeLog($simpleRecord);

@@ -25,7 +25,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 			$parser = GeneralUtility::makeInstance(TypoScriptParser::class);
 
 			foreach (new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS) as $file) {
-				if (is_dir($file->getPathname()) || !$file instanceof \SplFileInfo) {
+				if (!$file instanceof \SplFileInfo || is_dir($file->getPathname())) {
 					continue;
 				}
 				$content = (string)file_get_contents($file->getPathname());

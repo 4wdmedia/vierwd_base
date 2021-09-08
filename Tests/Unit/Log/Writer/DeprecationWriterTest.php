@@ -6,7 +6,9 @@ namespace Vierwd\VierwdBase\Tests\Unit\Log\Writer;
 use Exception;
 use ReflectionProperty;
 
+use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Log\LogLevel;
@@ -104,6 +106,7 @@ class DeprecationWriterTest extends UnitTestCase {
 	}
 
 	public function testGetCheckTraceWithoutVierwdClasses(): void {
+		/** @var DeprecationWriter&AccessibleMockObjectInterface&MockObject $subject */
 		$subject = $this->getAccessibleMock(DeprecationWriter::class, ['getTrace'], [], '', false);
 		$subject->method('getTrace')->willReturn([[
 			'class' => GeneralUtility::class,
@@ -113,6 +116,7 @@ class DeprecationWriterTest extends UnitTestCase {
 	}
 
 	public function testGetCheckTraceWithVierwdClasses(): void {
+		/** @var DeprecationWriter&AccessibleMockObjectInterface&MockObject $subject */
 		$subject = $this->getAccessibleMock(DeprecationWriter::class, ['getTrace'], [], '', false);
 		$subject->method('getTrace')->willReturn([[
 			'class' => self::class,
@@ -128,6 +132,7 @@ class DeprecationWriterTest extends UnitTestCase {
 			'line' => 1,
 		];
 
+		/** @var DeprecationWriter&AccessibleMockObjectInterface&MockObject $subject */
 		$subject = $this->getAccessibleMock(DeprecationWriter::class, ['getTrace'], [], '', false);
 		$subject->method('getTrace')->willReturn([$traceEntry]);
 		$this->assertEquals($traceEntry, $subject->_call('getVierwdClass'));
@@ -140,6 +145,7 @@ class DeprecationWriterTest extends UnitTestCase {
 			'line' => 1,
 		];
 
+		/** @var DeprecationWriter&AccessibleMockObjectInterface&MockObject $subject */
 		$subject = $this->getAccessibleMock(DeprecationWriter::class, ['getTrace'], [], '', false);
 		$subject->method('getTrace')->willReturn([$traceEntry]);
 		$this->assertEquals(null, $subject->_call('getVierwdClass'));
