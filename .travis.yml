@@ -51,7 +51,7 @@ script:
 
   - >
     if [[ "$SNIFF" != "1" ]];
-    echo;
+    then echo;
     echo "Running unit tests";
     composer run-script unit-test;
     fi;
