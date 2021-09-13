@@ -75,7 +75,7 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 		// check if all match-fields are set
 		if (count($this->settings['matchFields']) !== count(array_intersect($this->settings['matchFields'], array_keys($values)))) {
 			// not all fields are set
-			return parent::createFieldConstraints($queryBuilder, $values, $resolveExpansion);
+			return parent::createRouteFieldConstraints($queryBuilder, $values, $resolveExpansion);
 		}
 
 		$constraints = [];
