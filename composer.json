@@ -16,29 +16,28 @@
 		"role": "Developer"
 	}],
 	"require": {
-		"helhum/typo3-console": "^6.0.0",
+		"helhum/typo3-console": "^7.0.0",
 		"linkorb/jsmin-php": "^1.0",
 		"masterminds/html5": "^2.6",
-		"php": ">=7.2.0",
+		"php": ">=7.4.0",
 		"vierwd/svg-inliner": "^1.0",
-		"vierwd/typo3-smarty": "^10.0.0"
+		"vierwd/typo3-smarty": "^11.x-dev"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"friendsofphp/php-cs-fixer": "^2.12.0",
-		"friendsoftypo3/extension-builder": "dev-master",
 		"jangregor/phpstan-prophecy": "^0.8.1",
 		"nimut/testing-framework": "^5.0.0",
 		"phpstan/extension-installer": "^1.0",
 		"phpstan/phpstan-phpunit": "^0.12.22",
 		"phpunit/phpunit": "^7.0",
 		"saschaegerer/phpstan-typo3": "^0.13.1",
-		"typo3/cms-core": "^10.4",
-		"typo3/cms-fluid": "^10.4",
-		"typo3/cms-frontend": "^10.4",
-		"typo3/cms-impexp": "^10.4",
-		"typo3/cms-indexed-search": "^10.4",
-		"typo3/cms-reports": "^10.4",
+		"typo3/cms-core": "^11.4",
+		"typo3/cms-fluid": "^11.4",
+		"typo3/cms-frontend": "^11.4",
+		"typo3/cms-impexp": "^11.4",
+		"typo3/cms-indexed-search": "^11.4",
+		"typo3/cms-reports": "^11.4",
 		"vierwd/coding-standard": "dev-master"
 	},
 	"autoload": {
@@ -62,7 +61,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "10.0.x-dev"
+			"dev-master": "11.0.x-dev"
 		},
 		"typo3/cms": {
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",

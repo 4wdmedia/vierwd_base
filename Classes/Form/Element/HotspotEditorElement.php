@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use Vierwd\VierwdSmarty\View\StandaloneSmartyView;
 
@@ -87,7 +88,7 @@ class HotspotEditorElement extends AbstractNode {
 		}
 
 		$imageData = $sysFileReferenceData['uid_local'][0];
-		$imageFile = ResourceFactory::getInstance()->getFileObject($imageData['uid'], $imageData['row']);
+		$imageFile = GeneralUtility::makeInstance(ResourceFactory::class)->getFileObject($imageData['uid'], $imageData['row']);
 
 		return $imageFile;
 	}

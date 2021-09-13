@@ -19,6 +19,9 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  */
 class JavascriptOptimization {
 
+	// Copied from PageRenderer, because it was changed to protected
+	protected const PART_FOOTER = 2;
+
 	/** @var ResourceCompressor */
 	protected $compressor = null;
 
@@ -139,7 +142,7 @@ class JavascriptOptimization {
 				$content = (string)preg_replace('-\n//# sourceMappingURL=([^\n]*)$-s', $replace, $content);
 			}
 
-			if ($properties['section'] == $pageRenderer::PART_FOOTER) {
+			if ($properties['section'] == self::PART_FOOTER) {
 				$pageRenderer->addJsFooterInlineCode($file, $content, false);
 			} else {
 				$pageRenderer->addJsInlineCode($file, $content, false);
