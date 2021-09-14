@@ -39,8 +39,10 @@ class EchoWriterTest extends UnitTestCase {
 		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 		$subject->writeLog($simpleRecord);
-		// @phpstan-ignore-next-line $output is a private property, but it's accessible
-		$this->assertEquals(null, $subject->output, 'No output is created when environment is not CLI');
+		$property = new \ReflectionProperty(EchoWriter::class, 'output');
+		$property->setAccessible(true);
+		$output = $property->getValue($subject);
+		$this->assertEquals(null, $output, 'No output is created when environment is not CLI');
 	}
 
 	public function testWriteLogInfoWithCLIMode(): void {
