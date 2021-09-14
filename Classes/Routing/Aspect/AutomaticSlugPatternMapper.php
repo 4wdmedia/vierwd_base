@@ -68,14 +68,13 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 	/**
 	 * @param QueryBuilder $queryBuilder
 	 * @param array $values
-	 * @param bool $resolveExpansion
 	 * @return array
 	 */
-	protected function createRouteFieldConstraints(QueryBuilder $queryBuilder, array $values, bool $resolveExpansion = false): array {
+	protected function createRouteFieldConstraints(QueryBuilder $queryBuilder, array $values): array {
 		// check if all match-fields are set
 		if (count($this->settings['matchFields']) !== count(array_intersect($this->settings['matchFields'], array_keys($values)))) {
 			// not all fields are set
-			return parent::createRouteFieldConstraints($queryBuilder, $values, $resolveExpansion);
+			return parent::createRouteFieldConstraints($queryBuilder, $values);
 		}
 
 		$constraints = [];
