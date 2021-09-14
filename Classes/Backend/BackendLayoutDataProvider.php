@@ -32,6 +32,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 				$parser->parse($content);
 				if (!$parser->errors) {
 					$key = $file->getBasename('.' . $file->getExtension());
+					$parser->setup['identifier'] = $key;
 					$this->backendLayouts[$key] = $parser->setup;
 				}
 			}
@@ -45,7 +46,6 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 */
 	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection) {
 		foreach ($this->backendLayouts as $key => $data) {
-			$data['uid'] = $key;
 			$backendLayout = $this->createBackendLayout($data);
 			$backendLayoutCollection->add($backendLayout);
 		}
@@ -73,7 +73,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 * @return BackendLayout
 	 */
 	protected function createBackendLayout(array $data): BackendLayout {
-		$backendLayout = BackendLayout::create($data['uid'], $data['title'], $data['config']);
+		$backendLayout = BackendLayout::create($data['identifier'], $data['title'], $data['config']);
 		if (!empty($data['icon'])) {
 			$backendLayout->setIconPath($data['icon']);
 		}
