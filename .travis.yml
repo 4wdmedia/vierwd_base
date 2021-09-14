@@ -9,6 +9,11 @@ jobs:
     - php: 7.4
       env: SNIFF=1
 
+addons:
+  apt:
+    packages:
+      - parallel
+
 cache:
   directories:
     - $HOME/.composer/cache
