@@ -2,14 +2,17 @@
 
 namespace Vierwd\VierwdBase\Tests\Functional\Frontend\ContentObject;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject;
 
 class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
+
+	protected $resetSingletonInstances = true;
 
 	/**
 	 * inlining an svg
@@ -22,6 +25,10 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 			->getMock();
 
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class, $TSFE);
+		$requestMock = $this->getMockBuilder(ServerRequestInterface::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$cObj->setRequest($requestMock);
 		$cObj->registerContentObjectClass(ScalableVectorGraphicsContentObject::class, 'SVG');
 
 		$svg = $cObj->cObjGetSingle('SVG', [

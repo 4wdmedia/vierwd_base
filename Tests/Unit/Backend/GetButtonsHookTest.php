@@ -3,16 +3,19 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\Backend\Unit\Backend;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Backend\GetButtonsHook;
 
 class GetButtonsHookTest extends UnitTestCase {
+
+	use ProphecyTrait;
 
 	/** @var GetButtonsHook */
 	private $subject;
@@ -21,6 +24,8 @@ class GetButtonsHookTest extends UnitTestCase {
 	private $iconMock;
 
 	public function setUp(): void {
+		parent::setUp();
+
 		$iconMock = $this->prophesize(Icon::class);
 
 		$iconFactoryMock = $this->prophesize(IconFactory::class);

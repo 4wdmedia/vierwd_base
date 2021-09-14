@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\XClass\Core;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\XClass\Core\Resource\StorageRepository;
 

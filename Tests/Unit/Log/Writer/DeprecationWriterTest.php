@@ -7,23 +7,27 @@ use Exception;
 use ReflectionProperty;
 
 use Nimut\TestingFramework\MockObject\AccessibleMockObjectInterface;
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Log\Writer\DeprecationWriter;
 
 class DeprecationWriterTest extends UnitTestCase {
 
+	use ProphecyTrait;
+
 	/** @var LogRecord */
 	private $logRecord;
 
 	public function setUp(): void {
+		parent::setUp();
 		$this->logRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.deprecationWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 	}
 

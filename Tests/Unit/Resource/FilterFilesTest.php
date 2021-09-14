@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\Backend;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Resource\FilterFiles;
 

@@ -27,10 +27,10 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"friendsofphp/php-cs-fixer": "^2.12.0",
 		"jangregor/phpstan-prophecy": "^0.8.1",
-		"nimut/testing-framework": "^5.0.0",
+		"phpspec/prophecy-phpunit": "^2.0",
 		"phpstan/extension-installer": "^1.0",
 		"phpstan/phpstan-phpunit": "^0.12.22",
-		"phpunit/phpunit": "^7.0",
+		"phpunit/phpunit": "^9.0",
 		"saschaegerer/phpstan-typo3": "^0.13.1",
 		"typo3/cms-core": "^11.4",
 		"typo3/cms-fluid": "^11.4",
@@ -38,6 +38,7 @@
 		"typo3/cms-impexp": "^11.4",
 		"typo3/cms-indexed-search": "^11.4",
 		"typo3/cms-reports": "^11.4",
+		"typo3/testing-framework": "^6.11",
 		"vierwd/coding-standard": "dev-master"
 	},
 	"autoload": {
@@ -78,7 +79,7 @@
 		"phplint": "find . -name \\*.php ! -path \"./.Build/*\" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \\;",
 		"phpcs": "phpcs -n --runtime-set ignore_warnings_on_exit 1 --standard=.Build/vendor/vierwd/coding-standard/ForwardMedia Classes/ Tests/",
 		"phpstan": "phpstan analyze",
-		"unit-test": "phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
+		"unit-test": "phpunit -c .Build/vendor/typo3/testing-framework/Resources/Core/Build/UnitTests.xml Tests/Unit/",
 		"test-all": [
 			"@phplint",
 			"@phpcs",

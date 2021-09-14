@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\Backend;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
@@ -11,10 +10,13 @@ use TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection;
 use TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Backend\BackendLayoutDataProvider;
 
 class BackendLayoutDataProviderTest extends UnitTestCase {
+
+	protected $resetSingletonInstances = true;
 
 	/** @var vfsStreamDirectory */
 	private $root;
@@ -79,9 +81,10 @@ EOT;
 	}
 
 	public function tearDown(): void {
+		GeneralUtility::purgeInstances();
+
 		parent::tearDown();
 
-		GeneralUtility::purgeInstances();
 		unset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths']);
 	}
 

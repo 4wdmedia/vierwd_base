@@ -2,15 +2,17 @@
 
 namespace Vierwd\VierwdBase\Tests\Unit\View;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 
 class UtilityTest extends UnitTestCase {
+
+	protected $resetSingletonInstances = true;
 
 	/**
 	 * test adding meta tags to page

@@ -3,18 +3,21 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\Log\Writer;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Console\Output\StreamOutput;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Log\Writer\EchoWriter;
 
 class EchoWriterTest extends UnitTestCase {
+
+	use ProphecyTrait;
 
 	private function setUpEnvironment(bool $cli): void {
 		$environment = new Environment();
