@@ -46,9 +46,9 @@ class DeprecationWriter extends AbstractWriter {
 		if (!$location) {
 			return $this;
 		}
-		if ($location['class'] && $location['function']) {
+		if (!empty($location['class']) && !empty($location['function'])) {
 			$message .= "\n" . $location['class'] . ($location['type'] ?? '->') . $location['function'];
-		} else if ($location['file'] && isset($location['line'])) {
+		} else if (!empty($location['file']) && isset($location['line'])) {
 			$message .= "\n" . $location['file'] . ':' . $location['line'];
 		}
 		$message = str_replace(Environment::getPublicPath(), '', $message);
