@@ -32,9 +32,15 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
 		}
 
-		if ($conf['output']) {
+		if (!empty($conf['output'])) {
 			return self::$svgInliner->renderFullSVG();
 		}
+
+		$conf['width'] = $conf['width'] ?? null;
+		$conf['height'] = $conf['height'] ?? null;
+		$conf['src'] = $conf['src'] ?? null;
+		$conf['value'] = $conf['value'] ?? null;
+		$conf['class'] = $conf['class'] ?? null;
 
 		$width = isset($conf['width.']) ? $this->cObj->stdWrap($conf['width'], $conf['width.']) : $conf['width'];
 		$height = isset($conf['height.']) ? $this->cObj->stdWrap($conf['height'], $conf['height.']) : $conf['height'];
