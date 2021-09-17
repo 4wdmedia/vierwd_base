@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 
 class CacheBuster {
 
-	public function __invoke(GeneratePublicUrlForResourceEvent $event) {
+	public function __invoke(GeneratePublicUrlForResourceEvent $event): void {
 		$storage = $event->getStorage();
 		$resource = $event->getResource();
 		$driver = $event->getDriver();
