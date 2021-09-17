@@ -166,6 +166,8 @@ class ContentElements implements SingletonInterface {
 
 				$config['generatePlugin'] = true;
 				$config['pluginSignature'] = $pluginSignature;
+			} else {
+				$config['generatePlugin'] = false;
 			}
 
 			if (empty($config['CType'])) {
@@ -220,7 +222,7 @@ class ContentElements implements SingletonInterface {
 	static protected function validateFCEs(string $extensionKey, array $FCEs): array {
 		$extensionName = str_replace(' ', '', ucwords(str_replace('_', ' ', $extensionKey)));
 
-		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'];
+		$currentPlugins = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['extbase']['extensions'][$extensionName]['plugins'] ?? [];
 		$FCEs = array_filter($FCEs, function(array $config) use ($extensionKey, &$currentPlugins): bool {
 			if ($config['generatePlugin']) {
 				if (isset($currentPlugins[$config['pluginName']])) {
