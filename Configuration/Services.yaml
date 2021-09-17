@@ -9,3 +9,14 @@ services:
 
   Vierwd\VierwdBase\Backend\GetButtonsHook:
     public: true
+
+  Vierwd\VierwdBase\Resource\CacheBuster:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdResourceCacheBuster'
+        event: TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent
+  Vierwd\VierwdBase\Resource\DuplicateFiles:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdResourceDuplicateFiles'
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent
