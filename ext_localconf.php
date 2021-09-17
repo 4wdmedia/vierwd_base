@@ -22,7 +22,7 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = \Vierwd\VierwdBase\Hook
 // 404-PageNotFoundHandling
 $GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:' . \Vierwd\VierwdBase\Hooks\PageNotFoundHandler::class . '->pageNotFound';
 // Disable lockIP, if the server is requesting the 404-page
-$GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'] = $_SERVER['SERVER_ADDR'] && $_SERVER['SERVER_ADDR'] == \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR') ? false : $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'];
+$GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'] = !empty($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] == \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR') ? false : $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'];
 
 // ***************
 // BackendLayoutDataProvider
@@ -32,15 +32,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['vierwd_b
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 	ini_set('html_errors', 'off');
 }
-
-// **************
-// Add cache-buster to all publicURLs
-$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
-$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Resource\ResourceStorage::class, \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PreGeneratePublicUrl, \Vierwd\VierwdBase\Resource\CacheBuster::class, 'getPublicUrl');
-
-// **************
-// Check for duplicte files after upload
-$signalSlotDispatcher->connect(\TYPO3\CMS\Core\Resource\ResourceStorage::class, \TYPO3\CMS\Core\Resource\ResourceStorageInterface::SIGNAL_PostFileAdd, \Vierwd\VierwdBase\Resource\DuplicateFiles::class, 'checkForDuplicateFiles');
 
 // **************
 // Replace encoded mail addresses during indexing
