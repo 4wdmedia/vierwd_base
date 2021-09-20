@@ -38,8 +38,6 @@ foreach (new \GlobIterator($path . '*.svg') as $icon) {
 
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base');
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:vierwd_base/Configuration/PageTSconfig/page.ts">');
-
 if (TYPO3_MODE === 'BE') {
 	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
 		'VierwdBase',
