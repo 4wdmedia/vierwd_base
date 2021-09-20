@@ -3,12 +3,9 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Resource;
 
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource;
 
 use TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 
 class CacheBuster {
 
@@ -16,7 +13,6 @@ class CacheBuster {
 		$storage = $event->getStorage();
 		$resource = $event->getResource();
 		$driver = $event->getDriver();
-		$relativeToCurrentScript = $event->isRelativeToCurrentScript();
 		$publicUrl = $event->getPublicUrl();
 
 		if ($storage->isPublic() && $resource instanceof Resource\FileInterface) {
@@ -33,14 +29,6 @@ class CacheBuster {
 			$extension = strtolower(substr($fileName, -4));
 			if ($extension === '.exe' || $extension === '.dll' || $extension === '.zip') {
 				$publicUrl .= '&fileName=' . $fileName;
-			}
-
-			// copied from typo3/sysext/core/Classes/Resource/ResourceStorage.php
-			if ($publicUrl !== null && $relativeToCurrentScript && !GeneralUtility::isValidUrl($publicUrl)) {
-				$absolutePathToContainingFolder = PathUtility::dirname(Environment::getPublicPath() . '/' . $publicUrl);
-				$pathPart = PathUtility::getRelativePathTo($absolutePathToContainingFolder);
-				$filePart = substr(Environment::getPublicPath() . '/' . $publicUrl, strlen($absolutePathToContainingFolder) + 1);
-				$publicUrl = $pathPart . $filePart;
 			}
 		}
 
