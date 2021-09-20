@@ -1,7 +1,7 @@
 {extends file='Layouts/ContentWrap.tpl'}
 
 {block name=content}
-	{$resourceFactory = call_user_func(['TYPO3\\CMS\\Core\\Resource\\ResourceFactory', 'getInstance'])}
+	{$resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class)}
 	{$file = 'EXT:vierwd_base/Resources/Public/Images/forward-media-logo.png'}
 	{if $data.layout && in_array('imprint-dark', $data.layout)}
 		{$file = 'EXT:vierwd_base/Resources/Public/Images/forward-media-logo--black.png'}
