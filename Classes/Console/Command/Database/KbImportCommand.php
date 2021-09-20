@@ -61,11 +61,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$output->writeln('<info>Import complete</info>');
 
 		// Clear cache
-		if ($noData) {
-			$this->commandDispatcher->executeCommand('cache:flush', ['--files-only']);
-		} else {
-			$this->commandDispatcher->executeCommand('cache:flush');
-		}
+		$this->commandDispatcher->executeCommand('cache:flush');
 
 		return 0;
 	}

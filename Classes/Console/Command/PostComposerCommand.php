@@ -58,8 +58,10 @@ class PostComposerCommand extends Command {
 		// check if database is fully available
 		if ($this->hasValidDatabaseConnection()) {
 			$commandDispatcher->executeCommand('cache:flush');
+		} else {
+			$commandDispatcher->executeCommand('cache:flush', ['--group', 'system']);
+			$commandDispatcher->executeCommand('cache:flush', ['--group', 'di']);
 		}
-		$commandDispatcher->executeCommand('cache:flush', ['--files-only']);
 
 		return 0;
 	}
