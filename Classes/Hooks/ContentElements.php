@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Hooks;
 
@@ -7,11 +8,12 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class ContentElements implements SingletonInterface {
 
 	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
-	public $cObj = null;
+	protected $cObj = null;
 
 	/** @var string */
 	public static $oldProcFunc;
@@ -26,6 +28,10 @@ class ContentElements implements SingletonInterface {
 
 	/** @var array */
 	protected static $usedUids = [];
+
+	public function setContentObjectRenderer(ContentObjectRenderer $cObj): void {
+		$this->cObj = $cObj;
+	}
 
 	/**
 	 * process the CType and sort custom FCEs into a special group

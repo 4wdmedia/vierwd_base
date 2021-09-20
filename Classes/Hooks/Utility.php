@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Hooks;
 
@@ -11,12 +12,17 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class Utility {
 
 	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
-	public $cObj;
+	protected $cObj;
+
+	public function setContentObjectRenderer(ContentObjectRenderer $cObj): void {
+		$this->cObj = $cObj;
+	}
 
 	/**
 	 * Utility function to output a file using TypoScript
