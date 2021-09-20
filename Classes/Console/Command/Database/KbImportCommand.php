@@ -39,7 +39,11 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$commandLine = array_merge(['mysql'], $this->buildConnectionArguments(), ['--default-character-set=utf8mb4']);
 		$localMysqlProcess = new Process($commandLine);
 
-		$commandLine = $this->getExportDataTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null';
+		if ($noData) {
+			$commandLine = $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE, true) . ' 2>/dev/null';
+		} else {
+			$commandLine = $this->getExportDataTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null';
+		}
 		$remoteMysqlProcess = Process::fromShellCommandline($commandLine);
 
 		$command = [
