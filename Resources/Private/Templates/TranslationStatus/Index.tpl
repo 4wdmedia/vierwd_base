@@ -27,7 +27,7 @@
 		<p>
 			Bitte wählen Sie eine Datei aus, die überprüft werden soll.
 		</p>
-	{else if $translationKeys}
+	{else if isset($translationKeys)}
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
