@@ -76,11 +76,11 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			'X-PageNotFound' => '1',
 			'User-Agent' => GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
 		];
-		if ($_SERVER['Authorization']) {
+		if (!empty($_SERVER['Authorization'])) {
 			$headers['Authorization'] = $_SERVER['Authorization'];
-		} else if ($_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
+		} else if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
 			$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
-		} else if ($_SERVER['AUTH_TYPE'] == 'Basic') {
+		} else if (($_SERVER['AUTH_TYPE'] ?? null) == 'Basic') {
 			// Kundenbereich
 			$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 			if (isset($extConf['serviceUsername'], $extConf['servicePassword'])) {

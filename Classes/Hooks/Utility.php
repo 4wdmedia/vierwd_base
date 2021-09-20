@@ -51,8 +51,8 @@ class Utility {
 			return $content;
 		}
 
-		$metaTags = is_array($params['meta.']) ? $params['meta.'] : [];
-		$linkTags = is_array($params['link.']) ? $params['link.'] : [];
+		$metaTags = is_array($params['meta.'] ?? null) ? $params['meta.'] : [];
+		$linkTags = is_array($params['link.'] ?? null) ? $params['link.'] : [];
 
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
