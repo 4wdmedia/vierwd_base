@@ -86,10 +86,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\Driver\Lo
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook'][] = \Vierwd\VierwdBase\Backend\GetButtonsHook::class . '->adjustSaveAndClose';
 
 // **************
-// Improve handling of parallel requests
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageLoadedFromCache'][] = \Vierwd\VierwdBase\Frontend\PageLoadedFromCache::class . '->stallTempPage';
-
-// **************
 // Fix incorrect umlauts during editing of data
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = \Vierwd\VierwdBase\Hooks\DataHandler::class;
 
