@@ -20,6 +20,11 @@ services:
       - name: event.listener
         identifier: 'vierwdResourceDuplicateFiles'
         event: TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent
+  Vierwd\VierwdBase\Hooks\ContentElements:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdCustomContentElements'
+        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
   Vierwd\VierwdBase\Console\Command\PostComposerCommand:
     tags:

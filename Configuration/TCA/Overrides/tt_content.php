@@ -50,9 +50,3 @@ if (empty($GLOBALS['TCA']['tt_content']['columns']['section_frame'])) {
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('gridelements')) {
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_content', '--div--;LLL:EXT:gridelements/Resources/Private/Language/locallang_db.xlf:gridElements, tx_gridelements_container, tx_gridelements_columns');
 }
-
-
-// Add TCA from FCEs
-// we cannot use the signal "tcaIsBeingBuilt" in TYPO3 v10, because it throws an exception.
-// Adding TCA here might be a bit too early, if there are extensions which are installed after the base extension which additionally modify the TCA
-\Vierwd\VierwdBase\Hooks\ContentElements::addTCA($GLOBALS['TCA']);
