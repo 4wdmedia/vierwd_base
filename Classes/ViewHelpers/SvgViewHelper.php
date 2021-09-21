@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\ViewHelpers;
 
@@ -22,9 +23,7 @@ class SvgViewHelper extends AbstractViewHelper {
 
 	use CompileWithRenderStatic;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $escapeOutput = false;
 
 	public function initializeArguments() {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Frontend\ContentObject;
 
@@ -12,9 +13,7 @@ use Vierwd\SvgInliner\SvgInliner;
  */
 class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 
-	/**
-	 * @var \Vierwd\SvgInliner\SvgInliner;
-	 */
+	/** @var \Vierwd\SvgInliner\SvgInliner */
 	protected static $svgInliner = null;
 
 	/**
