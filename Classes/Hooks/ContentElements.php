@@ -2,6 +2,7 @@
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -26,6 +27,15 @@ class ContentElements implements SingletonInterface {
 
 	/** @var array */
 	protected static $usedUids = [];
+
+	/**
+	 * Add TCA from FCEs
+	 */
+	public function __invoke(AfterTcaCompilationEvent $event): void {
+		$GLOBALS['TCA'] = $event->getTca();
+		self::addTCA($GLOBALS['TCA']);
+		$event->setTca($GLOBALS['TCA']);
+	}
 
 	/**
 	 * process the CType and sort custom FCEs into a special group
@@ -78,7 +88,7 @@ class ContentElements implements SingletonInterface {
 			$groupName = self::$groupNames[$groupKey] ?? $defaultGroups[$groupKey];
 			$items[] = [$groupName, '--div--'];
 
-			if (self::$groupNames[$groupKey]) {
+			if (isset(self::$groupNames[$groupKey])) {
 				// Custom group -> sort
 				usort($elements, function(array $plugin1, array $plugin2): int {
 					return strnatcasecmp($plugin1[0], $plugin2[0]);
@@ -274,11 +284,18 @@ class ContentElements implements SingletonInterface {
 	static public function addFCEs(string $extensionKey, bool $isLocalConf = false): void {
 		self::initializeFCEs($extensionKey);
 
+		if (!$isLocalConf) {
+			// calling this method in ext_tables.php is not needed anymore.
+			// All other methods are called with an event
+			return;
+		}
+
 		$typoScript = self::$fceConfiguration[$extensionKey]['typoScript'];
 		$pageTS = self::$fceConfiguration[$extensionKey]['pageTS'];
 
 		foreach (self::$fceConfiguration[$extensionKey]['FCEs'] as $config) {
-			if ($config['generatePlugin'] && $isLocalConf) {
+			if ($config['generatePlugin']) {
+				// FOR USE IN ext_localconf.php FILES
 				ExtensionUtility::configurePlugin(
 					$extensionKey,
 					$config['pluginName'],
@@ -307,41 +324,12 @@ class ContentElements implements SingletonInterface {
 				}
 			}
 
-			if (!$isLocalConf) {
-				// ext_tables
+			$name = $config['name'];
 
-				$name = $config['name'];
-
-				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
-				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
-				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
-					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
-					$last['adminOnly'] = true;
-					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
-				}
-
-				if ($config['flexform']) {
-					if (substr($config['flexform'], 0, 5) !== 'FILE:') {
-						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
-					}
-					ExtensionManagementUtility::addPiFlexFormValue('*', $config['flexform'], $config['CType']);
-				}
-
-				if (is_array($config['group'])) {
-					foreach ($config['group'] as $group) {
-						$pageTS .=
-						'mod.wizards.newContentElement.wizardItems.' . $group . '.elements.' . $config['CType'] . ' {' . "\n" .
-						'	iconIdentifier = ' . $config['iconIdentifier'] . "\n" .
-						'	title = ' . $name . "\n" .
-						'	description = ' . $config['description'] . "\n" .
-						'	tt_content_defValues {' . "\n" .
-						'		CType = ' . $config['CType'] . "\n" .
-						'	}' . "\n" .
-						'}' . "\n";
-					}
-				} else {
+			if (is_array($config['group'])) {
+				foreach ($config['group'] as $group) {
 					$pageTS .=
-					'mod.wizards.newContentElement.wizardItems.' . $config['group'] . '.elements.' . $config['CType'] . ' {' . "\n" .
+					'mod.wizards.newContentElement.wizardItems.' . $group . '.elements.' . $config['CType'] . ' {' . "\n" .
 					'	iconIdentifier = ' . $config['iconIdentifier'] . "\n" .
 					'	title = ' . $name . "\n" .
 					'	description = ' . $config['description'] . "\n" .
@@ -350,14 +338,26 @@ class ContentElements implements SingletonInterface {
 					'	}' . "\n" .
 					'}' . "\n";
 				}
+			} else {
+				$pageTS .=
+				'mod.wizards.newContentElement.wizardItems.' . $config['group'] . '.elements.' . $config['CType'] . ' {' . "\n" .
+				'	iconIdentifier = ' . $config['iconIdentifier'] . "\n" .
+				'	title = ' . $name . "\n" .
+				'	description = ' . $config['description'] . "\n" .
+				'	tt_content_defValues {' . "\n" .
+				'		CType = ' . $config['CType'] . "\n" .
+				'	}' . "\n" .
+				'}' . "\n";
 			}
 		}
 
-		if ($typoScript && $isLocalConf) {
+		if ($typoScript) {
+			// FOR USE IN ext_localconf.php FILES
 			ExtensionManagementUtility::addTypoScript($extensionKey, 'setup', $typoScript, 'defaultContentRendering');
 		}
 
-		if ($pageTS && !$isLocalConf) {
+		if ($pageTS) {
+			// FOR USE IN ext_localconf.php FILES
 			ExtensionManagementUtility::addPageTSConfig($pageTS);
 		}
 	}
@@ -387,8 +387,28 @@ class ContentElements implements SingletonInterface {
 				foreach ($config['tcaAdditions'] as $tcaAddition) {
 					$method = array_shift($tcaAddition);
 					if ($method == 'addToAllTCAtypes') {
+						// FOR USE IN files in Configuration/TCA/Overrides/*.php
 						ExtensionManagementUtility::addToAllTCAtypes('tt_content', $tcaAddition[0], $tcaAddition[1], $tcaAddition[2]);
 					}
+				}
+
+				$name = $config['name'];
+
+				// FOR USE IN files in Configuration/TCA/Overrides/*.php
+				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
+				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
+				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
+					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
+					$last['adminOnly'] = true;
+					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
+				}
+
+				if ($config['flexform']) {
+					if (substr($config['flexform'], 0, 5) !== 'FILE:') {
+						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
+					}
+					// FOR USE IN files in Configuration/TCA/Overrides/*.php
+					ExtensionManagementUtility::addPiFlexFormValue('*', $config['flexform'], $config['CType']);
 				}
 
 				self::validateTCA($tca);
@@ -482,7 +502,7 @@ class ContentElements implements SingletonInterface {
 			return $content;
 		}
 
-		if ($GLOBALS['TSFE']->config['config']['tx_vierwd.']['disableElementId']) {
+		if (!empty($GLOBALS['TSFE']->config['config']['tx_vierwd.']['disableElementId'])) {
 			return $content;
 		}
 
