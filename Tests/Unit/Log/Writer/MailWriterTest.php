@@ -43,7 +43,7 @@ class MailWriterTest extends UnitTestCase {
 				'subject' => 'subject',
 				'minErrorLevel' => LogLevel::INFO,
 			]])
-			->setMethods(['registerShutdownFunction'])
+			->onlyMethods(['registerShutdownFunction'])
 			->getMock();
 		$subject->writeLog($this->logRecord);
 		$subject->sendMail();

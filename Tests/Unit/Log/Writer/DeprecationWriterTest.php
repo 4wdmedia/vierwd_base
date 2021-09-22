@@ -39,7 +39,7 @@ class DeprecationWriterTest extends UnitTestCase {
 
 	public function testNoLogWrittenWithoutApplicationType(): void {
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
-			->setMethods(['registerShutdownFunction', 'getVierwdClass'])
+			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
 		$subject->method('registerShutdownFunction')->will($this->throwException(new Exception('Method should not be called')));
 		$subject->method('getVierwdClass')->will($this->throwException(new Exception('Method should not be called')));
@@ -53,7 +53,7 @@ class DeprecationWriterTest extends UnitTestCase {
 		$GLOBALS['TYPO3_REQUEST'] = $requestMock->reveal();
 
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
-			->setMethods(['registerShutdownFunction', 'getVierwdClass'])
+			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
 		$subject->method('registerShutdownFunction')->will($this->throwException(new Exception('Method should not be called')));
 		$subject->method('getVierwdClass')->will($this->throwException(new Exception('Method should not be called')));
@@ -67,7 +67,7 @@ class DeprecationWriterTest extends UnitTestCase {
 		$GLOBALS['TYPO3_REQUEST'] = $requestMock->reveal();
 
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
-			->setMethods(['registerShutdownFunction', 'getVierwdClass'])
+			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
 		$subject->method('getVierwdClass')->willReturn(null);
 
@@ -81,7 +81,7 @@ class DeprecationWriterTest extends UnitTestCase {
 		$GLOBALS['TYPO3_REQUEST'] = $requestMock->reveal();
 
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
-			->setMethods(['registerShutdownFunction', 'getVierwdClass'])
+			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
 		$subject->method('getVierwdClass')->willReturn([
 			'class' => 'DummyClass',
@@ -98,7 +98,7 @@ class DeprecationWriterTest extends UnitTestCase {
 		$GLOBALS['TYPO3_REQUEST'] = $requestMock->reveal();
 
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
-			->setMethods(['registerShutdownFunction', 'getVierwdClass'])
+			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
 		$subject->method('getVierwdClass')->willReturn([
 			'file' => 'dummy-file.php',

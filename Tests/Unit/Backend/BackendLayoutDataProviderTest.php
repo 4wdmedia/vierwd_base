@@ -96,7 +96,7 @@ EOT;
 			->getMock();
 
 		$backendLayoutCollectionMock = $this->getMockBuilder(BackendLayoutCollection::class)
-			->setMethods(['add'])
+			->onlyMethods(['add'])
 			->disableOriginalConstructor()
 			->getMock();
 		$backendLayoutCollectionMock->expects(self::once())->method('add');
@@ -106,7 +106,7 @@ EOT;
 			->getMock();
 
 		$testSubject = $this->getMockBuilder(BackendLayoutDataProvider::class)
-			->setMethods(['createBackendLayout'])
+			->onlyMethods(['createBackendLayout'])
 			->getMock();
 		$testSubject->expects(self::once())->method('createBackendLayout')->willReturn($backendLayoutMock);
 
@@ -121,7 +121,7 @@ EOT;
 			->getMock();
 
 		$backendLayoutCollectionMock = $this->getMockBuilder(BackendLayoutCollection::class)
-			->setMethods(['add'])
+			->onlyMethods(['add'])
 			->disableOriginalConstructor()
 			->getMock();
 		$backendLayoutCollectionMock->expects(self::exactly(2))->method('add');
@@ -131,7 +131,7 @@ EOT;
 			->getMock();
 
 		$testSubject = $this->getMockBuilder(BackendLayoutDataProvider::class)
-			->setMethods(['createBackendLayout'])
+			->onlyMethods(['createBackendLayout'])
 			->getMock();
 		$testSubject->expects(self::exactly(2))->method('createBackendLayout')->willReturn($backendLayoutMock);
 
@@ -147,7 +147,7 @@ EOT;
 			->getMock();
 
 		$testSubject = $this->getMockBuilder(BackendLayoutDataProvider::class)
-			->setMethods(['createBackendLayout'])
+			->onlyMethods(['createBackendLayout'])
 			->getMock();
 		$testSubject->expects(self::once())->method('createBackendLayout')->willReturn($backendLayoutMock);
 

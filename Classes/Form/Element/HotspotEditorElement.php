@@ -64,7 +64,7 @@ class HotspotEditorElement extends AbstractNode {
 			$scaledImages[$variantName] = $scaledImage;
 		}
 
-		$view = new StandaloneSmartyView();
+		$view = GeneralUtility::makeInstance(StandaloneSmartyView::class);
 		$view->setTemplateRootPaths(['EXT:vierwd_base/Resources/Private/Templates/']);
 
 		$view->assignMultiple([

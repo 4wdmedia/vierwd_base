@@ -20,14 +20,9 @@ parameters:
     reportStaticMethodSignatures: true
     checkUninitializedProperties: true
 
-    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         -
-            message: '#Cannot call method fetchAll\(\) on Doctrine\\DBAL\\Driver\\ResultStatement\|int\.#'
-            paths:
-                - Classes
-        -
-            message: '#Cannot call method rowCount\(\) on Doctrine\\DBAL\\Driver\\ResultStatement\|int\.#'
+            message: '#Cannot call method fetchAllAssociative\(\) on Doctrine\\DBAL\\Driver\\ResultStatement\|int\.#'
             paths:
                 - Classes
         -

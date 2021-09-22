@@ -66,7 +66,7 @@ class UtilityTest extends UnitTestCase {
 	public function testProcessHtml(): void {
 		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
-			->setMethods(['getHyphenationWords'])
+			->onlyMethods(['getHyphenationWords'])
 			->getMock();
 		$utility->method('getHyphenationWords')->will($this->returnCallback(function() {
 			return ['con•sec•tetur', 'adi#pi#sicing'];
@@ -97,7 +97,7 @@ class UtilityTest extends UnitTestCase {
 	public function testProcessHtmlWithLongScript(): void {
 		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
-			->setMethods(['getHyphenationWords'])
+			->onlyMethods(['getHyphenationWords'])
 			->getMock();
 		$utility->method('getHyphenationWords')->will($this->returnCallback(function() {
 			return [];

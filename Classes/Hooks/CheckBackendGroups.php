@@ -104,7 +104,7 @@ class CheckBackendGroups {
 	protected function getBackendGroups(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('be_groups');
 		$queryBuilder->select('*')->from('be_groups');
-		return $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+		return $queryBuilder->execute()->fetchAllAssociative();
 	}
 
 	/**

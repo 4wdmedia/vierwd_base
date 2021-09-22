@@ -37,9 +37,9 @@ class LastChangeCommand extends Command {
 			} else {
 				continue;
 			}
-			$result = $connection->query('SELECT ' . $select . ' FROM `' . $table->getName() . '`');
+			$result = $connection->executeQuery('SELECT ' . $select . ' FROM `' . $table->getName() . '`');
 
-			$time = $result->fetchColumn();
+			$time = $result->fetchOne();
 			if (!$time) {
 				// probably no rows in the table
 				continue;
