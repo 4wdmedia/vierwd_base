@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject;
 
 /**
