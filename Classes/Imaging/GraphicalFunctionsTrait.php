@@ -66,7 +66,7 @@ trait GraphicalFunctionsTrait {
 		// If addFrameSelection is set in the Install Tool, a frame number is added to
 		// select a specific page of the image (by default this will be the first page)
 		$frame = $this->addFrameSelection ? (int)$frame : null;
-		$inputFile = ImageMagickFile::fromFilePath($input, $frame);
+		$inputFile = (string)ImageMagickFile::fromFilePath($input, $frame);
 		$outputFile = CommandUtility::escapeShellArgument($output);
 		if (strpos($params, '%INPUT%') !== false) {
 			$params = str_replace('%INPUT%', $inputFile, $params);
