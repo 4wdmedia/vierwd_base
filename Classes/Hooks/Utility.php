@@ -92,7 +92,7 @@ class Utility {
 				}
 
 				$nodeValue = isset($data['_typoScriptNodeValue']) ? $data['_typoScriptNodeValue'] : '';
-				$value = trim($this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.']));
+				$value = trim((string)$this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.']));
 			} else {
 				$value = (string)$data;
 			}
