@@ -19,7 +19,7 @@ class FilterFilesTest extends UnitTestCase {
 		$driverInstance = $this->getMockBuilder(DriverInterface::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$this->assertEquals($expected, FilterFiles::filterFilesCallback($itemName, $itemIdentifier, dirname($itemIdentifier), [], $driverInstance));
+		self::assertEquals($expected, FilterFiles::filterFilesCallback($itemName, $itemIdentifier, dirname($itemIdentifier), [], $driverInstance));
 	}
 
 	public function getSanitizeFileNameTestData(): array {

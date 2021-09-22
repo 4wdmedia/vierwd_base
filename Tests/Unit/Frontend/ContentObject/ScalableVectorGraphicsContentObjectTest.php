@@ -38,6 +38,6 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 			],
 		]);
 
-		$this->assertEquals('a<svg class="svg" role="img" aria-hidden="true"></svg>b', $svg);
+		self::assertEquals('a<svg class="svg" role="img" aria-hidden="true"></svg>b', $svg);
 	}
 }

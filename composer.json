@@ -30,6 +30,7 @@
 		"phpspec/prophecy-phpunit": "^2.0",
 		"phpstan/extension-installer": "^1.0",
 		"phpstan/phpstan-deprecation-rules": "^0.12.6",
+		"phpstan/phpstan-doctrine": "^0.12.44",
 		"phpstan/phpstan-phpunit": "^0.12.22",
 		"phpunit/phpunit": "^9.0",
 		"saschaegerer/phpstan-typo3": "^0.13.1",

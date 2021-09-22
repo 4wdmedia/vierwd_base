@@ -151,35 +151,35 @@ EOT;
 			->getMock();
 		$testSubject->expects(self::once())->method('createBackendLayout')->willReturn($backendLayoutMock);
 
-		$this->assertEquals($backendLayoutMock, $testSubject->getBackendLayout('standard', 1));
+		self::assertEquals($backendLayoutMock, $testSubject->getBackendLayout('standard', 1));
 	}
 
 	public function testGetInvalidBackendLayout(): void {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'] = [vfsStream::url('root/multipleBackendLayouts')];
 
 		$testSubject = new BackendLayoutDataProvider();
-		$this->assertEquals(null, $testSubject->getBackendLayout('backendLayoutDoesNotExist', 1));
+		self::assertEquals(null, $testSubject->getBackendLayout('backendLayoutDoesNotExist', 1));
 	}
 
 	public function testIgnoreSubfolders(): void {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'] = [vfsStream::url('root/backendLayoutAndSubdirectory')];
 
 		$testSubject = new BackendLayoutDataProvider();
-		$this->assertEquals(null, $testSubject->getBackendLayout('ignored', 1));
+		self::assertEquals(null, $testSubject->getBackendLayout('ignored', 1));
 	}
 
 	public function testConstructorWithoutPaths(): void {
 		unset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']);
 
 		$testSubject = new BackendLayoutDataProvider();
-		$this->assertEquals(null, $testSubject->getBackendLayout('backendLayoutDoesNotExist', 1));
+		self::assertEquals(null, $testSubject->getBackendLayout('backendLayoutDoesNotExist', 1));
 	}
 
 	public function testBackendLayoutWithParseError(): void {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'] = [vfsStream::url('root/invalidFiles')];
 
 		$testSubject = new BackendLayoutDataProvider();
-		$this->assertEquals(null, $testSubject->getBackendLayout('fileWithparseError', 1));
+		self::assertEquals(null, $testSubject->getBackendLayout('fileWithparseError', 1));
 	}
 
 	public function testCreateBackendLayout(): void {
@@ -191,6 +191,6 @@ EOT;
 		GeneralUtility::addInstance(BackendLayout::class, $backendLayoutMock);
 
 		$testSubject = new BackendLayoutDataProvider();
-		$this->assertEquals($backendLayoutMock, $testSubject->getBackendLayout('standard', 1));
+		self::assertEquals($backendLayoutMock, $testSubject->getBackendLayout('standard', 1));
 	}
 }

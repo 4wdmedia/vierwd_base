@@ -14,7 +14,7 @@ class LocalDriverTest extends UnitTestCase {
 	 */
 	public function testSanitizeFileName(string $expected, string $fileName): void {
 		$subject = new LocalDriver();
-		$this->assertEquals($expected, $subject->sanitizeFileName($fileName));
+		self::assertEquals($expected, $subject->sanitizeFileName($fileName));
 	}
 
 	public function getSanitizeFileNameTestData(): array {

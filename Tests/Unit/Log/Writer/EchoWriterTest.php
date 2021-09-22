@@ -45,7 +45,7 @@ class EchoWriterTest extends UnitTestCase {
 		$property = new \ReflectionProperty(EchoWriter::class, 'output');
 		$property->setAccessible(true);
 		$output = $property->getValue($subject);
-		$this->assertEquals(null, $output, 'No output is created when environment is not CLI');
+		self::assertEquals(null, $output, 'No output is created when environment is not CLI');
 	}
 
 	public function testWriteLogInfoWithCLIMode(): void {

@@ -41,10 +41,10 @@ class DeprecationWriterTest extends UnitTestCase {
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
 			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
-		$subject->method('registerShutdownFunction')->will($this->throwException(new Exception('Method should not be called')));
-		$subject->method('getVierwdClass')->will($this->throwException(new Exception('Method should not be called')));
-		$this->assertEquals($subject, $subject->writeLog($this->logRecord));
-		$this->assertEquals([], $this->getMessages($subject));
+		$subject->method('registerShutdownFunction')->will(self::throwException(new Exception('Method should not be called')));
+		$subject->method('getVierwdClass')->will(self::throwException(new Exception('Method should not be called')));
+		self::assertEquals($subject, $subject->writeLog($this->logRecord));
+		self::assertEquals([], $this->getMessages($subject));
 	}
 
 	public function testNoLogWrittenInBackendContext(): void {
@@ -55,10 +55,10 @@ class DeprecationWriterTest extends UnitTestCase {
 		$subject = $this->getMockBuilder(DeprecationWriter::class)
 			->onlyMethods(['registerShutdownFunction', 'getVierwdClass'])
 			->getMock();
-		$subject->method('registerShutdownFunction')->will($this->throwException(new Exception('Method should not be called')));
-		$subject->method('getVierwdClass')->will($this->throwException(new Exception('Method should not be called')));
-		$this->assertEquals($subject, $subject->writeLog($this->logRecord));
-		$this->assertEquals([], $this->getMessages($subject));
+		$subject->method('registerShutdownFunction')->will(self::throwException(new Exception('Method should not be called')));
+		$subject->method('getVierwdClass')->will(self::throwException(new Exception('Method should not be called')));
+		self::assertEquals($subject, $subject->writeLog($this->logRecord));
+		self::assertEquals([], $this->getMessages($subject));
 	}
 
 	public function testLogNotWrittenWithoutVierwdClasses(): void {
@@ -71,8 +71,8 @@ class DeprecationWriterTest extends UnitTestCase {
 			->getMock();
 		$subject->method('getVierwdClass')->willReturn(null);
 
-		$this->assertEquals($subject, $subject->writeLog($this->logRecord));
-		$this->assertEquals([], $this->getMessages($subject));
+		self::assertEquals($subject, $subject->writeLog($this->logRecord));
+		self::assertEquals([], $this->getMessages($subject));
 	}
 
 	public function testLogWrittenWithVierwdClasses(): void {
@@ -88,8 +88,8 @@ class DeprecationWriterTest extends UnitTestCase {
 			'function' => 'dummyFunction',
 		]);
 
-		$this->assertEquals($subject, $subject->writeLog($this->logRecord));
-		$this->assertEquals(1, count($this->getMessages($subject)));
+		self::assertEquals($subject, $subject->writeLog($this->logRecord));
+		self::assertEquals(1, count($this->getMessages($subject)));
 	}
 
 	public function testLogWrittenWithVierwdFile(): void {
@@ -105,8 +105,8 @@ class DeprecationWriterTest extends UnitTestCase {
 			'line' => 1,
 		]);
 
-		$this->assertEquals($subject, $subject->writeLog($this->logRecord));
-		$this->assertEquals(1, count($this->getMessages($subject)));
+		self::assertEquals($subject, $subject->writeLog($this->logRecord));
+		self::assertEquals(1, count($this->getMessages($subject)));
 	}
 
 	public function testGetCheckTraceWithoutVierwdClasses(): void {
@@ -116,7 +116,7 @@ class DeprecationWriterTest extends UnitTestCase {
 			'class' => GeneralUtility::class,
 			'line' => 1,
 		]]);
-		$this->assertEquals(false, $subject->_call('checkTrace'));
+		self::assertEquals(false, $subject->_call('checkTrace'));
 	}
 
 	public function testGetCheckTraceWithVierwdClasses(): void {
@@ -126,7 +126,7 @@ class DeprecationWriterTest extends UnitTestCase {
 			'class' => self::class,
 			'line' => 1,
 		]]);
-		$this->assertEquals(true, $subject->_call('checkTrace'));
+		self::assertEquals(true, $subject->_call('checkTrace'));
 	}
 
 	public function testGetVierwdClass(): void {
@@ -139,7 +139,7 @@ class DeprecationWriterTest extends UnitTestCase {
 		/** @var DeprecationWriter&AccessibleObjectInterface&MockObject $subject */
 		$subject = $this->getAccessibleMock(DeprecationWriter::class, ['getTrace'], [], '', false);
 		$subject->method('getTrace')->willReturn([$traceEntry]);
-		$this->assertEquals($traceEntry, $subject->_call('getVierwdClass'));
+		self::assertEquals($traceEntry, $subject->_call('getVierwdClass'));
 	}
 
 	public function testGetVierwdClassWithoutVierwdClass(): void {
@@ -152,6 +152,6 @@ class DeprecationWriterTest extends UnitTestCase {
 		/** @var DeprecationWriter&AccessibleObjectInterface&MockObject $subject */
 		$subject = $this->getAccessibleMock(DeprecationWriter::class, ['getTrace'], [], '', false);
 		$subject->method('getTrace')->willReturn([$traceEntry]);
-		$this->assertEquals(null, $subject->_call('getVierwdClass'));
+		self::assertEquals(null, $subject->_call('getVierwdClass'));
 	}
 }

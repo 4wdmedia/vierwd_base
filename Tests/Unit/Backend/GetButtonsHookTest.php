@@ -40,7 +40,7 @@ class GetButtonsHookTest extends UnitTestCase {
 
 	public function testAdjustSaveAndCloseWithoutLeftButtons(): void {
 		$arrayWithoutLeftButtons = ['right' => 'ignore'];
-		$this->assertEquals($arrayWithoutLeftButtons, $this->subject->adjustSaveAndClose(['buttons' => $arrayWithoutLeftButtons]));
+		self::assertEquals($arrayWithoutLeftButtons, $this->subject->adjustSaveAndClose(['buttons' => $arrayWithoutLeftButtons]));
 	}
 
 	public function testAdjustSaveAndCloseWithoutSavedOkButton(): void {
@@ -51,7 +51,7 @@ class GetButtonsHookTest extends UnitTestCase {
 				'group' => [$saveButtonMock->reveal()],
 			],
 		];
-		$this->assertEquals($buttons, $this->subject->adjustSaveAndClose(['buttons' => $buttons]));
+		self::assertEquals($buttons, $this->subject->adjustSaveAndClose(['buttons' => $buttons]));
 	}
 
 	public function testAdjustSaveAndCloseWithSavedOkButton(): void {
@@ -66,10 +66,10 @@ class GetButtonsHookTest extends UnitTestCase {
 		];
 		$result = $this->subject->adjustSaveAndClose(['buttons' => $buttons]);
 		$lastButton = array_pop($result['left']['group']);
-		$this->assertEquals('_saveandclosedok', $lastButton->getName());
-		$this->assertEquals('1', $lastButton->getValue());
-		$this->assertEquals(false, $lastButton->getShowLabelText());
-		$this->assertEquals('title', $lastButton->getTitle());
-		$this->assertEquals($this->iconMock, $lastButton->getIcon());
+		self::assertEquals('_saveandclosedok', $lastButton->getName());
+		self::assertEquals('1', $lastButton->getValue());
+		self::assertEquals(false, $lastButton->getShowLabelText());
+		self::assertEquals('title', $lastButton->getTitle());
+		self::assertEquals($this->iconMock, $lastButton->getIcon());
 	}
 }

@@ -49,7 +49,7 @@ class UtilityTest extends UnitTestCase {
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
 		$pageRenderer->setTemplateFile(getcwd() . '/Tests/Unit/Fixtures/Utility/PageRendererTemplate.html');
 
-		$this->assertEquals('<meta name="generator" content="TYPO3 CMS" />
+		self::assertEquals('<meta name="generator" content="TYPO3 CMS" />
 <meta name="google" content="notranslate" />
 <meta name="meta.og:image:width" content="400" />
 <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">', $pageRenderer->render());
@@ -68,7 +68,7 @@ class UtilityTest extends UnitTestCase {
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
-		$utility->method('getHyphenationWords')->will($this->returnCallback(function() {
+		$utility->method('getHyphenationWords')->will(self::returnCallback(function(): array {
 			return ['con•sec•tetur', 'adi#pi#sicing'];
 		}));
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
@@ -86,7 +86,7 @@ class UtilityTest extends UnitTestCase {
 
 		$actualContent = str_replace("\n", '', $TSFE->content);
 
-		$this->assertEquals($expectedContent, $actualContent);
+		self::assertEquals($expectedContent, $actualContent);
 	}
 
 	/**
@@ -99,7 +99,7 @@ class UtilityTest extends UnitTestCase {
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
-		$utility->method('getHyphenationWords')->will($this->returnCallback(function() {
+		$utility->method('getHyphenationWords')->will(self::returnCallback(function(): array {
 			return [];
 		}));
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
@@ -114,7 +114,7 @@ class UtilityTest extends UnitTestCase {
 		$expectedContent = str_replace("\n", '', trim($baseContent));
 		$actualContent = str_replace("\n", '', trim($TSFE->content));
 
-		$this->assertEquals($expectedContent, $actualContent);
+		self::assertEquals($expectedContent, $actualContent);
 	}
 
 	/**
