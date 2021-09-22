@@ -27,7 +27,7 @@ class UtilityTest extends UnitTestCase {
 		$utility = GeneralUtility::makeInstance(BaseUtility::class);
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$cObj->start([], '_NO_TABLE');
-		$utility->cObj = $cObj;
+		$utility->setContentObjectRenderer($cObj);
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
 		$params = [
@@ -73,7 +73,7 @@ class UtilityTest extends UnitTestCase {
 		}));
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$cObj->start([], '_NO_TABLE');
-		$utility->cObj = $cObj;
+		$utility->setContentObjectRenderer($cObj);
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
 		$TSFE = $this->setupTsfeMock();
@@ -104,7 +104,7 @@ class UtilityTest extends UnitTestCase {
 		}));
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$cObj->start([], '_NO_TABLE');
-		$utility->cObj = $cObj;
+		$utility->setContentObjectRenderer($cObj);
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
 		$TSFE = $this->setupTsfeMock();
