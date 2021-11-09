@@ -38,6 +38,17 @@ class Canonical implements SingletonInterface {
 			return '';
 		}
 
+		if (!empty($GLOBALS['TSFE']->page['canonical_link'])) {
+			$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+			$url = $cObj->typoLink_URL([
+				'forceAbsoluteUrl' => true,
+				'parameter' => $GLOBALS['TSFE']->page['canonical_link'],
+			]);
+			if ($url) {
+				return $url;
+			}
+		}
+
 		$request = $GLOBALS['TYPO3_REQUEST'];
 		$pageArguments = $request->getAttribute('routing', null);
 		if ($pageArguments instanceof PageArguments) {
