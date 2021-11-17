@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Controller;
 
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -122,6 +123,9 @@ class TranslationStatusController extends SmartyController {
 	}
 
 	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
+		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+		$pageRenderer->addCssFile('EXT:vierwd_base/Resources/Public/Css/translation-status.css');
+
 		$languageFiles = $this->getLanguageFiles();
 		$this->view->assign('languageFiles', $languageFiles);
 		$this->view->assign('currentShowAllLabels', $showAllLabels);

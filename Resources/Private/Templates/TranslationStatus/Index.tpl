@@ -28,7 +28,7 @@
 			Bitte wählen Sie eine Datei aus, die überprüft werden soll.
 		</p>
 	{else if isset($translationKeys)}
-		<table class="table table-striped table-hover">
+		<table class="table table-striped table-hover translation-status">
 			<thead>
 				<tr>
 					<th>Key</th>
