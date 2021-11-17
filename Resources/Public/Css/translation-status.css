@@ -1,0 +1,27 @@
+.translation-status thead {
+	position: sticky;
+	top: -25px;
+	z-index: 2;
+}
+
+.translation-status th:first-child {
+	position: sticky;
+	left: -25px;
+	background: #fafafa;
+}
+.translation-status thead th:first-child,
+.translation-status > tbody > tr:nth-of-type(odd) th,
+.translation-status > tbody > tr:hover th {
+	background: inherit;
+}
+
+.translation-status__checkbox {
+	margin-right: 10px;
+	margin-bottom: 15px;
+	display: inline-flex;
+	align-items: center;
+}
+
+.translation-status__checkbox input {
+	margin: 0 5px 0 0;
+}
