@@ -28,6 +28,14 @@
 			Bitte wählen Sie eine Datei aus, die überprüft werden soll.
 		</p>
 	{else if isset($translationKeys)}
+		<div class="translation-status__languages">
+			{foreach array_keys($translations) as $languageKey}
+				<label class="translation-status__checkbox">
+					<input type="checkbox" value="{$languageKey@index + 2}" checked> {$languageKey}
+				</label>
+			{/foreach}
+		</div>
+
 		<table class="table table-striped table-hover translation-status">
 			<thead>
 				<tr>

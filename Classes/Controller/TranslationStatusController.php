@@ -124,6 +124,7 @@ class TranslationStatusController extends SmartyController {
 
 	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+		$pageRenderer->loadRequireJsModule('TYPO3/CMS/VierwdBase/TranslationStatus');
 		$pageRenderer->addCssFile('EXT:vierwd_base/Resources/Public/Css/translation-status.css');
 
 		$languageFiles = $this->getLanguageFiles();
