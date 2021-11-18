@@ -25,3 +25,7 @@
 .translation-status__checkbox input {
 	margin: 0 5px 0 0;
 }
+
+.translation-status__filter {
+	margin-bottom: 15px;
+}
