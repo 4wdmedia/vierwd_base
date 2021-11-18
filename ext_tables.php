@@ -47,7 +47,7 @@ if (TYPO3_MODE === 'BE') {
 		'translationstate', // Submodule key
 		'', // Position
 		[
-			'TranslationStatus' => 'index',
+			'TranslationStatus' => 'index,export',
 		],
 		[
 			'access' => 'admin',
