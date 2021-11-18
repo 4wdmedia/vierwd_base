@@ -2,7 +2,7 @@
 
 {block name=header}
 <div class="module-docheader-bar t3js-module-docheader-bar">
-	<div class="form-inline">
+	<div class="module-docheader-bar module-docheader-bar-navigation form-inline">
 		<div class="form-group form-group-sm">
 			<select class="form-control" name="_fileSelector" onchange="if(this.options[this.selectedIndex].value){ window.location.href=(this.options[this.selectedIndex].value);}">
 				{if !$currentFileName}
@@ -18,10 +18,28 @@
 			</select>
 		</div>
 	</div>
+	{if $currentFileName}
+		<div class="module-docheader-bar module-docheader-bar-buttons">
+			<div class="module-docheader-bar-column-left">
+				<div class="btn-toolbar">
+					{$iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)}
+					<button class="btn btn-default btn-sm" form="exportForm">
+						{$iconFactory->getIcon('actions-document-export-csv', \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL) nofilter}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>
 {/block}
 
 {block name=content}
+{fluid}
+<f:form action="export" id="exportForm">
+	<f:form.hidden name="showAllLabels" value="{$currentShowAllLabels}" />
+	<f:form.hidden name="extensionName" value="{$currentExtensionName}" />
+	<f:form.hidden name="fileName" value="{$currentFileName}" />
+
 	<h1>Übersetzungsstatus</h1>
 	{if !$currentFileName}
 		<p>
@@ -31,13 +49,13 @@
 		<div class="translation-status__languages">
 			{foreach array_keys($translations) as $languageKey}
 				<label class="translation-status__checkbox">
-					<input type="checkbox" value="{$languageKey@index + 2}" checked> {$languageKey}
+					<f:form.checkbox name="languages[]" value="{$languageKey}" checked="true" additionalAttributes="{ data-index: {$languageKey@index + 2}}" /> {$languageKey}
 				</label>
 			{/foreach}
 		</div>
 
 		<div class="translation-status__filter">
-			<input type="search" class="form-control" placeholder="Search…">
+			<f:form.textfield name="search" type="search" class="form-control" placeholder="Search…" />
 		</div>
 
 		<table class="table table-striped table-hover translation-status">
@@ -77,4 +95,6 @@
 			</label>
 		</div>
 	</div>
+</f:form>
+{/fluid}
 {/block}
