@@ -36,6 +36,10 @@
 			{/foreach}
 		</div>
 
+		<div class="translation-status__filter">
+			<input type="search" class="form-control" placeholder="Search…">
+		</div>
+
 		<table class="table table-striped table-hover translation-status">
 			<thead>
 				<tr>
