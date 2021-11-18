@@ -159,7 +159,7 @@ class TranslationStatusController extends SmartyController {
 
 		$translations = array_intersect_key($labels['translations'], array_flip($languages));
 
-		$table = [['Key', ...$languages]];
+		$table = [array_merge(['Key'], $languages)];
 		foreach ($translationKeys as $translationKey) {
 			$row = [$translationKey];
 			foreach ($translations as $languageKey => $languageTranslations) {
