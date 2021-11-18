@@ -185,6 +185,9 @@ class TranslationStatusController extends SmartyController {
 		header('Content-Disposition: attachment;filename=' . $exportFileName);
 
 		$out = fopen('php://output', 'w');
+		if ($out === false) {
+			$this->redirect('index');
+		}
 		foreach ($table as $row) {
 			fputcsv($out, $row);
 		}
