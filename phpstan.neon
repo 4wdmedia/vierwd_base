@@ -29,3 +29,9 @@ parameters:
             message: '#Argument of an invalid type Doctrine\\DBAL\\Driver\\ResultStatement\|int supplied for foreach, only iterables are supported\.#'
             paths:
                 - Classes
+        -
+            # We cannot use native PHP methods str_starts_with() and str_ends_with(), because they are only available in PHP 8
+            # and this extension supports PHP 7.4
+            message: '#Call to deprecated method (endsWith|beginsWith)\(\) of class TYPO3\\CMS\\Core\\Utility\\StringUtility.*#'
+            paths:
+                - Classes

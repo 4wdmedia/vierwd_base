@@ -82,7 +82,7 @@ class JavascriptOptimization {
 		// only create it, if it doesn't exist, yet
 		if (!file_exists(Environment::getPublicPath() . '/' . $targetFile)) {
 			$contents = GeneralUtility::getUrl($filenameAbsolute);
-			$contents = GeneralUtility::minifyJavaScript($contents);
+			$contents = GeneralUtility::makeInstance(ResourceCompressor::class)->compressJavaScriptSource($contents);
 			// make sure the folder exists
 			if (!is_dir(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/')) {
 				GeneralUtility::mkdir_deep(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/');
@@ -100,7 +100,7 @@ class JavascriptOptimization {
 		if (count($params['jsInline'])) {
 			foreach ($params['jsInline'] as $name => $properties) {
 				if ($properties['compress']) {
-					$params['jsInline'][$name]['code'] = GeneralUtility::minifyJavaScript($properties['code']);
+					$params['jsInline'][$name]['code'] = GeneralUtility::makeInstance(ResourceCompressor::class)->compressJavaScriptSource($properties['code']);
 				}
 			}
 		}
