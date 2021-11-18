@@ -69,3 +69,8 @@ services:
       - name: 'console.command'
         command: 'vierwd:rsync:down'
         schedulable: false
+  Vierwd\VierwdBase\Console\Command\PublishCommand:
+    tags:
+      - name: 'console.command'
+        command: 'vierwd:publish'
+        schedulable: false

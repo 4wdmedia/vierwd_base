@@ -3,7 +3,7 @@ defined('TYPO3_MODE') || die('Access denied.');
 
 $extConf = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class)->get('vierwd_base');
 
-$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = ['paths' => []];
+$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = ['paths' => [], 'servers' => []];
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\FileGenerator::class] = [
 	'className' => \Vierwd\VierwdBase\ExtensionBuilder\Service\FileGenerator::class,
