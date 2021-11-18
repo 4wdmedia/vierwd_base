@@ -45,7 +45,7 @@ if (TYPO3_MODE === 'BE') {
 		'translationstate', // Submodule key
 		'', // Position
 		[
-			\Vierwd\VierwdBase\Controller\TranslationStatusController::class => 'index',
+			\Vierwd\VierwdBase\Controller\TranslationStatusController::class => 'index,export',
 		],
 		[
 			'access' => 'admin',

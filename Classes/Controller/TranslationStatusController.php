@@ -69,7 +69,7 @@ class TranslationStatusController extends SmartyController {
 		return $translations;
 	}
 
-	protected function loadLanguageComparison(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
+	protected function loadLanguageComparison(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): array {
 		$localizationFactory = GeneralUtility::makeInstance(LocalizationFactory::class);
 
 		$fileReference = ExtensionManagementUtility::extPath($extensionName, 'Resources/Private/Language/' . $fileName);
@@ -101,7 +101,7 @@ class TranslationStatusController extends SmartyController {
 		}
 
 		if (count($translations) < 2 && !$showAllLabels) {
-			return;
+			return [];
 		}
 
 		$allKeys = array_unique(array_merge(...array_values(array_map(function(array $data) {
@@ -120,6 +120,11 @@ class TranslationStatusController extends SmartyController {
 
 		$this->view->assign('translationKeys', $diffKeys);
 		$this->view->assign('translations', $translations);
+
+		return [
+			'translationKeys' => $diffKeys,
+			'translations' => $translations,
+		];
 	}
 
 	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
@@ -142,5 +147,48 @@ class TranslationStatusController extends SmartyController {
 		if ($extensionName && $fileName) {
 			$this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
 		}
+	}
+
+	public function exportAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false, string $search = '', array $languages = []): void {
+		$labels = $this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
+		if (!$labels) {
+			$this->redirect('index');
+		}
+
+		$translationKeys = $labels['translationKeys'];
+
+		$translations = array_intersect_key($labels['translations'], array_flip($languages));
+
+		$table = [['Key', ...$languages]];
+		foreach ($translationKeys as $translationKey) {
+			$row = [$translationKey];
+			foreach ($translations as $languageKey => $languageTranslations) {
+				$row[] = $languageTranslations[$translationKey] ?? '';
+			}
+
+			if ($search) {
+				$searchValue = mb_strtolower(implode('', $row));
+				if (mb_strpos($searchValue, $search) === false) {
+					continue;
+				}
+			}
+
+			$table[] = $row;
+		}
+
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
+
+		$exportFileName = 'TranslationExport-' . $extensionName . '-' . $fileName . '.csv';
+		header('Content-Type: text/csv;charset=utf-8');
+		header('Content-Disposition: attachment;filename=' . $exportFileName);
+
+		$out = fopen('php://output', 'w');
+		foreach ($table as $row) {
+			fputcsv($out, $row);
+		}
+		fclose($out);
+		exit;
 	}
 }

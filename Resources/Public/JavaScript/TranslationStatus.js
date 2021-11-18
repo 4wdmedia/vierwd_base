@@ -7,9 +7,9 @@ define(['jquery'], function($) {
 
 	$(document.body).on('input', '.translation-status__checkbox input', function(event) {
 		if (this.checked) {
-			$table.find('tr > *:nth-child(' + this.value + ')').removeAttr('hidden');
+			$table.find('tr > *:nth-child(' + this.dataset.index + ')').removeAttr('hidden');
 		} else {
-			$table.find('tr > *:nth-child(' + this.value + ')').attr('hidden', 'hidden');
+			$table.find('tr > *:nth-child(' + this.dataset.index + ')').attr('hidden', 'hidden');
 		}
 	});
 
