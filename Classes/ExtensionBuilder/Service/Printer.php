@@ -104,10 +104,7 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return $string;
 	}
 
-	/**
-	 * @phpstan-return string
-	 */
-	public function pStmt_ClassMethod(Stmt\ClassMethod $node) {
+	protected function pStmt_ClassMethod(Stmt\ClassMethod $node): string {
 		$string = (string)parent::pStmt_ClassMethod($node);
 		return (string)preg_replace('/\n\s+\{/', ' {', $string);
 	}

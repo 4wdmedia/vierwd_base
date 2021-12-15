@@ -49,12 +49,7 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 		parent::writeFile($targetFile, $fileContents);
 	}
 
-	/**
-	 * @param string $targetFile
-	 * @param string $fileContents
-	 * @return string
-	 */
-	protected function insertSplitToken($targetFile, $fileContents) {
+	protected function insertSplitToken(string $targetFile, string $fileContents): string {
 		$fileContents = parent::insertSplitToken($targetFile, $fileContents);
 
 		if ($fileContents && $fileContents[strlen($fileContents) - 1] != "\n") {
