@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Filter deprecations and use terminal notifier to show them
@@ -72,7 +71,7 @@ class DeprecationWriter extends AbstractWriter {
 		$trace = $this->getTrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
 		$classes = array_filter($trace, function(array $traceEntry): bool {
-			return !empty($traceEntry['class']) && StringUtility::beginsWith($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
+			return !empty($traceEntry['class']) && str_starts_with($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
 		});
 		if (!$classes) {
 			return false;
@@ -85,8 +84,8 @@ class DeprecationWriter extends AbstractWriter {
 		$trace = $this->getTrace();
 
 		$classes = array_filter($trace, function(array $traceEntry): bool {
-			$class = !empty($traceEntry['class']) && StringUtility::beginsWith($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
-			$template = !empty($traceEntry['file']) && StringUtility::endsWith($traceEntry['file'], 'smarty_template_resource_base.php');
+			$class = !empty($traceEntry['class']) && str_starts_with($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
+			$template = !empty($traceEntry['file']) && str_ends_with($traceEntry['file'], 'smarty_template_resource_base.php');
 			return $class || $template;
 		});
 		if (!$classes) {
@@ -94,7 +93,7 @@ class DeprecationWriter extends AbstractWriter {
 		}
 
 		$traceEntry = current($classes);
-		if (!empty($traceEntry['file']) && StringUtility::endsWith($traceEntry['file'], 'smarty_template_resource_base.php')) {
+		if (!empty($traceEntry['file']) && str_ends_with($traceEntry['file'], 'smarty_template_resource_base.php')) {
 			if ($traceEntry['args'][0] instanceof Smarty_Internal_Template) {
 				return [
 					'file' => $traceEntry['args'][0]->template_resource,

@@ -16,10 +16,11 @@
 		"role": "Developer"
 	}],
 	"require": {
+		"php": ">=7.4.0",
 		"helhum/typo3-console": "^7.0.0",
 		"linkorb/jsmin-php": "^1.0",
 		"masterminds/html5": "^2.6",
-		"php": ">=7.4.0",
+		"symfony/polyfill-php80": "^1.23",
 		"vierwd/svg-inliner": "^1.0",
 		"vierwd/typo3-smarty": "^11.x-dev"
 	},

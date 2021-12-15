@@ -7,7 +7,6 @@ use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 use Vierwd\VierwdSmarty\Controller\SmartyController;
 
 class TranslationStatusController extends SmartyController {
@@ -19,7 +18,7 @@ class TranslationStatusController extends SmartyController {
 	protected function getLanguageFiles(): array {
 		$extensions = ExtensionManagementUtility::getLoadedExtensionListArray();
 		$extensions = array_filter($extensions, function(string $extensionName) {
-			return StringUtility::beginsWith($extensionName, 'vierwd_');
+			return str_starts_with($extensionName, 'vierwd_');
 		});
 		sort($extensions);
 

@@ -6,7 +6,6 @@ namespace Vierwd\VierwdBase\Hooks;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * We work with many custom content elements. It is quite easy to forget to give editors access
@@ -18,7 +17,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 class CheckBackendGroups {
 
 	public function displayWarningMessages_postProcess(array &$warnings): void {
-		if (!$GLOBALS['BE_USER'] || (!StringUtility::endsWith($GLOBALS['BE_USER']->user['email'], '@4wdmedia.de') && !StringUtility::endsWith($GLOBALS['BE_USER']->user['email'], '@nou-digital.de'))) {
+		if (!$GLOBALS['BE_USER'] || (!str_ends_with($GLOBALS['BE_USER']->user['email'], '@4wdmedia.de') && !str_ends_with($GLOBALS['BE_USER']->user['email'], '@nou-digital.de'))) {
 			return;
 		}
 
