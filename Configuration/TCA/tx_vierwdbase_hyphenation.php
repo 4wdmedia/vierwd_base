@@ -11,9 +11,6 @@ return [
 		'searchFields' => 'hyphenation',
 		'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg',
 	],
-	'interface' => [
-		'showRecordFieldList' => 'hyphenation',
-	],
 	'types' => [
 		'1' => ['showitem' => 'hyphenation'],
 	],
