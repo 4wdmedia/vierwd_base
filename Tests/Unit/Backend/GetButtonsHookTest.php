@@ -9,6 +9,7 @@ use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use Vierwd\VierwdBase\Backend\GetButtonsHook;
@@ -35,7 +36,10 @@ class GetButtonsHookTest extends UnitTestCase {
 		$languageServiceMock = $this->prophesize(LanguageService::class);
 		$languageServiceMock->sL(Argument::any())->willReturn('title');
 
-		$this->subject = new GetButtonsHook($iconFactoryMock->reveal(), $languageServiceMock->reveal());
+		$languageServiceFactoryMock = $this->prophesize(LanguageServiceFactory::class);
+		$languageServiceFactoryMock->createFromUserPreferences(Argument::any())->willReturn($languageServiceMock->reveal());
+
+		$this->subject = new GetButtonsHook($iconFactoryMock->reveal(), $languageServiceFactoryMock->reveal());
 	}
 
 	public function testAdjustSaveAndCloseWithoutLeftButtons(): void {

@@ -7,6 +7,7 @@ use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 
 /**
  * TYPO3 7 moved all save-actions into a drop-down. Only the default save action can be reached with one click.
@@ -21,9 +22,9 @@ class GetButtonsHook {
 	/** @var LanguageService */
 	private $languageService;
 
-	public function __construct(IconFactory $iconFactory, LanguageService $languageService) {
+	public function __construct(IconFactory $iconFactory, LanguageServiceFactory $languageServiceFactory) {
 		$this->iconFactory = $iconFactory;
-		$this->languageService = $languageService;
+		$this->languageService = $languageServiceFactory->createFromUserPreferences($GLOBALS['BE_USER'] ?? null);
 	}
 
 	/**
