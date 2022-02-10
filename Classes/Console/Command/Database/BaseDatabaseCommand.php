@@ -19,33 +19,24 @@ abstract class BaseDatabaseCommand extends Command {
 	protected const CONNECTION_LOCAL = 'local';
 	protected const CONNECTION_REMOTE = 'remote';
 
-	/** @var string */
-	private static $mysqlTempFile;
+	private static ?string $mysqlTempFile;
 
-	/** @var ConnectionConfiguration */
-	private $connectionConfiguration;
+	private ConnectionConfiguration $connectionConfiguration;
 
-	/** @var array */
-	private $dbConfig;
+	private array $dbConfig = [];
 
-	/** @var InputInterface */
-	protected $input;
+	protected InputInterface $input;
 
-	/** @var OutputInterface */
-	protected $output;
+	protected OutputInterface $output;
 
-	/** @var CommandDispatcher */
-	protected $commandDispatcher;
+	protected CommandDispatcher $commandDispatcher;
 
 	public function __construct(string $name = null, ConnectionConfiguration $connectionConfiguration = null) {
 		parent::__construct($name);
 		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
 	}
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function initialize(InputInterface $input, OutputInterface $output) {
+	protected function initialize(InputInterface $input, OutputInterface $output): void {
 		parent::initialize($input, $output);
 
 		$this->input = $input;
@@ -162,7 +153,7 @@ abstract class BaseDatabaseCommand extends Command {
 	 * stream output of a process to our output
 	 */
 	protected function buildStreamOutput(): \Closure {
-		return function ($type, $output) {
+		return function ($type, $output): void {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)
 				echo $output;

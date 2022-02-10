@@ -16,10 +16,8 @@ class DataHandler {
 	 * @param int $id The uid of the page we are currently working on
 	 * @param array $fieldArray The array of fields and values that have been saved to the datamap
 	 * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parentObj The parent object that triggered this hook
-	 *
-	 * @return void
 	 */
-	public function processDatamap_postProcessFieldArray($status, $table, $id, array &$fieldArray, \TYPO3\CMS\Core\DataHandling\DataHandler $parentObj) {
+	public function processDatamap_postProcessFieldArray($status, $table, $id, array &$fieldArray, \TYPO3\CMS\Core\DataHandling\DataHandler $parentObj): void {
 
 		// replace weird unicode chars
 		// example: COMBINING DIAERESIS: dots above the previous char.

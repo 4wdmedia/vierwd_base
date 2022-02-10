@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Functional\Frontend\ContentObject;
 
@@ -12,6 +13,7 @@ use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject
 
 class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 
+	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
 	protected $resetSingletonInstances = true;
 
 	/**

@@ -13,7 +13,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class BackendLayoutDataProvider implements DataProviderInterface {
 
 	/** @var array<array> */
-	protected $backendLayouts = [];
+	protected array $backendLayouts = [];
 
 	public function __construct() {
 		if (!isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'], $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'])) {
@@ -39,12 +39,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 		}
 	}
 
-	/**
-	 * @param DataProviderContext $dataProviderContext
-	 * @param BackendLayoutCollection $backendLayoutCollection
-	 * @return void
-	 */
-	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection) {
+	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection): void {
 		foreach ($this->backendLayouts as $key => $data) {
 			$backendLayout = $this->createBackendLayout($data);
 			$backendLayoutCollection->add($backendLayout);
@@ -52,11 +47,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	}
 
 	/**
-	 * Gets a backend layout by (regular) identifier.
-	 *
-	 * @param string $identifier
-	 * @param int $pageId
-	 * @return ?BackendLayout
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
 	 */
 	public function getBackendLayout($identifier, $pageId) {
 		$backendLayout = null;
@@ -70,7 +61,6 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 * Creates a new backend layout using the given record data.
 	 *
 	 * @param array<string, mixed> $data
-	 * @return BackendLayout
 	 */
 	protected function createBackendLayout(array $data): BackendLayout {
 		$backendLayout = BackendLayout::create($data['identifier'], $data['title'], $data['config']);

@@ -15,6 +15,10 @@ use Vierwd\VierwdSmarty\View\StandaloneSmartyView;
 
 class HotspotEditorElement extends AbstractNode {
 
+	/**
+	 * @return array As defined in initializeResultArray() of AbstractNode
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+	 */
 	public function render() {
 		$html = $this->getHtml();
 

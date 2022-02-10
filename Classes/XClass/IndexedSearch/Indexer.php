@@ -10,10 +10,7 @@ use TYPO3\CMS\IndexedSearch\Indexer as ParentIndexer;
 
 class Indexer extends ParentIndexer {
 
-	/**
-	 * @phpstan-return void
-	 */
-	public function indexTypo3PageContent() {
+	public function indexTypo3PageContent(): void {
 		if ($GLOBALS['TSFE']->config && $GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst']) {
 			$this->conf['content'] = str_replace($GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst'], '@', $this->conf['content']);
 		}

@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Hooks;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -106,10 +107,7 @@ class CheckBackendGroups {
 		return $queryBuilder->execute()->fetchAllAssociative();
 	}
 
-	/**
-	 * @return \TYPO3\CMS\Core\Localization\LanguageService
-	 */
-	protected function getLanguageService() {
+	protected function getLanguageService(): LanguageService {
 		return $GLOBALS['LANG'];
 	}
 

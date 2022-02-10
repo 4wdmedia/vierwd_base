@@ -17,6 +17,7 @@ class GridelementsMergeTsConfig implements FormDataProviderInterface {
 	 *
 	 * @param array $result
 	 * @return array
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 */
 	public function addData(array $result) {
 		if (!ExtensionManagementUtility::isLoaded('gridelements')) {

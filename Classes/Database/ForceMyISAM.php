@@ -17,8 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ForceMyISAM extends SqlReader {
 
-	/** @var array */
-	private static $MyISAMTables = [
+	private static array $MyISAMTables = [
 		'sys_file',
 		'sys_file_metadata',
 		'sys_file_processedfile',
@@ -30,8 +29,7 @@ class ForceMyISAM extends SqlReader {
 		'tx_extensionmanager_domain_model_extension',
 	];
 
-	/** @var array */
-	private static $tablePrefixes = ['cf_', 'cache_', 'index_'];
+	private static array $tablePrefixes = ['cf_', 'cache_', 'index_'];
 
 	public function getCreateTableStatementArray(string $dumpContent): array {
 		$statements = parent::getCreateTableStatementArray($dumpContent);

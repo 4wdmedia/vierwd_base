@@ -16,11 +16,9 @@ use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
  */
 class GetButtonsHook {
 
-	/** @var IconFactory */
-	private $iconFactory;
+	private IconFactory $iconFactory;
 
-	/** @var LanguageService */
-	private $languageService;
+	private LanguageService $languageService;
 
 	public function __construct(IconFactory $iconFactory, LanguageServiceFactory $languageServiceFactory) {
 		$this->iconFactory = $iconFactory;
@@ -31,7 +29,7 @@ class GetButtonsHook {
 	 * @param array<string, array> $params
 	 * @return array<string, array>
 	 */
-	public function adjustSaveAndClose(array $params) {
+	public function adjustSaveAndClose(array $params): array {
 		$buttonBars = $params['buttons'];
 
 		if (empty($buttonBars) || empty($buttonBars['left'])) {

@@ -11,6 +11,9 @@ namespace Vierwd\VierwdBase\XClass\Core\Resource;
  */
 class StorageRepository extends \TYPO3\CMS\Core\Resource\StorageRepository {
 
+	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 */
 	protected function testCaseSensitivity($absolutePath) {
 		return true;
 	}

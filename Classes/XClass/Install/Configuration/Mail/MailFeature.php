@@ -8,7 +8,10 @@ use TYPO3\CMS\Install\Configuration\Mail\MailFeature as ParentMailFeature;
 
 class MailFeature extends ParentMailFeature {
 
-	// no detection
+	/**
+	 * disable detection
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 */
 	protected $presetRegistry = [
 		CustomPreset::class,
 	];

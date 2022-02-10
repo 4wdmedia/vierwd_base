@@ -17,8 +17,7 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class Utility {
 
-	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
-	protected $cObj;
+	protected ?ContentObjectRenderer $cObj;
 
 	public function setContentObjectRenderer(ContentObjectRenderer $cObj): void {
 		$this->cObj = $cObj;

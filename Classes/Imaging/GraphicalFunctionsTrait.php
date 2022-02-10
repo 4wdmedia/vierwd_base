@@ -18,6 +18,9 @@ trait GraphicalFunctionsTrait {
 		$this->cmds['webp'] = ' -quality 85';
 	}
 
+	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 */
 	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {
 		// Note: mustCreate has another default value
 
@@ -60,6 +63,9 @@ trait GraphicalFunctionsTrait {
 		return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
 	}
 
+	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 */
 	public function imageMagickExec($input, $output, $params, $frame = 0) {
 		if (!$this->processorEnabled) {
 			return '';

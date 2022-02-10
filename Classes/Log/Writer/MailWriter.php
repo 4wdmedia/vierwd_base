@@ -25,23 +25,17 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class MailWriter extends AbstractWriter {
 
-	/** @var array */
-	protected $buffer = [];
+	protected array $buffer = [];
 
-	/** @var bool */
-	protected $sendMail = true;
+	protected bool $sendMail = true;
 
-	/** @var int */
-	protected $minErrorLevel;
+	protected int $minErrorLevel;
 
-	/** @var string */
-	protected $sender;
+	protected string $sender;
 
-	/** @var string */
-	protected $receiver;
+	protected string $receiver;
 
-	/** @var string */
-	protected $subject = 'TYPO3 Errors on site %s';
+	protected string $subject = 'TYPO3 Errors on site %s';
 
 	public function __construct(array $options) {
 		if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress']) {
@@ -80,9 +74,7 @@ class MailWriter extends AbstractWriter {
 	}
 
 	/**
-	 * Writes the log record
-	 *
-	 * @param LogRecord $record Log record
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {

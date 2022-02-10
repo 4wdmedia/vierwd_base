@@ -12,6 +12,9 @@ use TYPO3\CMS\Reports\Report\Status\SecurityStatus as ParentSecurityStatus;
  */
 class SecurityStatus extends ParentSecurityStatus {
 
+	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 */
 	public function getStatus(ServerRequestInterface $request = null) {
 		$statuses = parent::getStatus($request);
 

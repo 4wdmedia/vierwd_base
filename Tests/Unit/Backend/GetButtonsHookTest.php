@@ -18,11 +18,9 @@ class GetButtonsHookTest extends UnitTestCase {
 
 	use ProphecyTrait;
 
-	/** @var GetButtonsHook */
-	private $subject;
+	private GetButtonsHook $subject;
 
-	/** @var Icon */
-	private $iconMock;
+	private Icon $iconMock;
 
 	public function setUp(): void {
 		parent::setUp();

@@ -9,9 +9,6 @@ use PhpParser\Node\Stmt;
 
 class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 
-	/** @var string */
-	protected $indentToken = "\t";
-
 	public function __construct(array $options = []) {
 		parent::__construct($options);
 		$this->options['shortArraySyntax'] = true;

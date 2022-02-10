@@ -8,7 +8,10 @@ use TYPO3\CMS\Install\Configuration\Context\CustomPreset;
 
 class ContextFeature extends ParentContextFeature {
 
-	// no detection
+	/**
+	 * disable detection
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 */
 	protected $presetRegistry = [
 		CustomPreset::class,
 	];

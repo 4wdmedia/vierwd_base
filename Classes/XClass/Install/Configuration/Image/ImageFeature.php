@@ -8,7 +8,10 @@ use TYPO3\CMS\Install\Configuration\Image\ImageFeature as ParentImageFeature;
 
 class ImageFeature extends ParentImageFeature {
 
-	// no detection
+	/**
+	 * disable detection
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 */
 	protected $presetRegistry = [
 		CustomPreset::class,
 	];

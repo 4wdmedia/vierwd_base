@@ -16,13 +16,12 @@ use Vierwd\VierwdBase\Backend\BackendLayoutDataProvider;
 
 class BackendLayoutDataProviderTest extends UnitTestCase {
 
+	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
 	protected $resetSingletonInstances = true;
 
-	/** @var vfsStreamDirectory */
-	private $root;
+	private vfsStreamDirectory $root;
 
-	/** @var TimeTracker */
-	private $mockTimeTracker;
+	private TimeTracker $mockTimeTracker;
 
 	public function setUp(): void {
 		parent::setUp();

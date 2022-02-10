@@ -17,10 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PublishCommand extends Command {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setDescription('Upload JavaScript and CSS to server with no need to commit it to git.');
 		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
 		$this->addArgument('server', InputArgument::REQUIRED, 'To which server do you want to publish? live or other configured servers');
@@ -142,7 +139,7 @@ class PublishCommand extends Command {
 	 * stream output of a process to our output
 	 */
 	protected function buildStreamOutput(OutputInterface $symfonyOutput): \Closure {
-		return function ($type, $output) use ($symfonyOutput) {
+		return function ($type, $output) use ($symfonyOutput): void {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)
 				echo $output;

@@ -23,10 +23,13 @@ class SvgViewHelper extends AbstractViewHelper {
 
 	use CompileWithRenderStatic;
 
-	/** @var bool */
+	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+	 * @var bool
+	 */
 	protected $escapeOutput = false;
 
-	public function initializeArguments() {
+	public function initializeArguments(): void {
 		parent::initializeArguments();
 		$this->registerArgument('width', 'integer', 'width');
 		$this->registerArgument('height', 'integer', 'height');
@@ -42,6 +45,7 @@ class SvgViewHelper extends AbstractViewHelper {
 	 * @param \Closure $renderChildrenClosure
 	 * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 */
 	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);

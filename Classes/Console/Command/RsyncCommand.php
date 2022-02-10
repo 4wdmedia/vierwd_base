@@ -16,10 +16,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RsyncCommand extends Command {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setDescription('Import database from the current ServiceArea or Live-Server');
 		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');
 		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
@@ -134,7 +131,7 @@ class RsyncCommand extends Command {
 	 * stream output of a process to our output
 	 */
 	protected function buildStreamOutput(OutputInterface $symfonyOutput): \Closure {
-		return function ($type, $output) use ($symfonyOutput) {
+		return function ($type, $output) use ($symfonyOutput): void {
 			if (Process::OUT === $type) {
 				// Explicitly just echo out for now (avoid symfony console formatting)
 				echo $output;

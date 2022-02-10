@@ -18,8 +18,7 @@ class MailWriterTest extends UnitTestCase {
 
 	use ProphecyTrait;
 
-	/** @var LogRecord */
-	private $logRecord;
+	private LogRecord $logRecord;
 
 	public function setUp(): void {
 		parent::setUp();

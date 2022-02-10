@@ -14,11 +14,9 @@ use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
  */
 class DeprecationWriter extends AbstractWriter {
 
-	/** @var ?ApplicationType */
-	private $applicationType;
+	private ?ApplicationType $applicationType = null;
 
-	/** @var array */
-	protected $messages = [];
+	protected array $messages = [];
 
 	public function __construct(array $options = []) {
 		parent::__construct($options);
@@ -28,7 +26,7 @@ class DeprecationWriter extends AbstractWriter {
 	}
 
 	/**
-	 * @param LogRecord $record Log record
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {

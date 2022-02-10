@@ -12,6 +12,9 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  */
 class GridelementsContainerTypeValue implements FormDataProviderInterface {
 
+	/**
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 */
 	public function addData(array $result) {
 		if (!ExtensionManagementUtility::isLoaded('gridelements')) {
 			return $result;

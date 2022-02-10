@@ -13,22 +13,16 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class ContentElements implements SingletonInterface {
 
-	/** @var \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer */
-	protected $cObj = null;
+	protected ?ContentObjectRenderer $cObj = null;
 
-	/** @var string */
-	public static $oldProcFunc;
+	public static ?string $oldProcFunc = null;
 
-	/** @var array */
-	protected static $groups = ['vierwd' => []];
-	/** @var array */
-	protected static $groupNames = ['vierwd' => 'FORWARD MEDIA'];
+	protected static array $groups = ['vierwd' => []];
+	protected static array $groupNames = ['vierwd' => 'FORWARD MEDIA'];
 
-	/** @var array */
-	protected static $fceConfiguration = [];
+	protected static array $fceConfiguration = [];
 
-	/** @var array */
-	protected static $usedUids = [];
+	protected static array $usedUids = [];
 
 	public function setContentObjectRenderer(ContentObjectRenderer $cObj): void {
 		$this->cObj = $cObj;

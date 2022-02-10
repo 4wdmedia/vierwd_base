@@ -8,10 +8,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepositoryGetPageOverlayHookInterface;
 
 class NoHttps implements PageRepositoryGetPageOverlayHookInterface {
 
-	/**
-	 * @phpstan-return void
-	 */
-	public function getPageOverlay_preProcess(&$pageInput, &$lUid, PageRepository $parent) {
+	public function getPageOverlay_preProcess(&$pageInput, &$lUid, PageRepository $parent): void {
 		if (!empty($pageInput['url_scheme'])) {
 			// reset to automatic
 			$pageInput['url_scheme'] = 0;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\View;
 
@@ -12,6 +13,7 @@ use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 
 class UtilityTest extends UnitTestCase {
 
+	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
 	protected $resetSingletonInstances = true;
 
 	/**

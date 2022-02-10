@@ -13,14 +13,14 @@ use Vierwd\SvgInliner\SvgInliner;
  */
 class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 
-	/** @var \Vierwd\SvgInliner\SvgInliner */
-	protected static $svgInliner = null;
+	protected static ?SvgInliner $svgInliner = null;
 
 	/**
 	 * Rendering the cObject, SVG
 	 *
 	 * @param array $conf Array of TypoScript properties
 	 * @return string Empty string (the cObject only sets internal data!)
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 */
 	public function render($conf = []) {
 		if (!empty($conf['if.']) && !$this->cObj->checkIf($conf['if.'])) {

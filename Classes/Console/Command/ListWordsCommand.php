@@ -11,10 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ListWordsCommand extends Command {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setDescription('List all words used on the website');
 	}
 
@@ -40,7 +37,7 @@ class ListWordsCommand extends Command {
 		$texts = array_column($texts, 'bodytext');
 
 		$words = [];
-		array_walk($headers, function(string $header) use (&$words) {
+		array_walk($headers, function(string $header) use (&$words): void {
 			$header = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $header);
 			$headerWords = array_map('trim', (array)preg_split('/\b/u', $header));
 			foreach ($headerWords as $word) {
@@ -48,7 +45,7 @@ class ListWordsCommand extends Command {
 			}
 		});
 
-		array_walk($texts, function(string $text) use (&$words) {
+		array_walk($texts, function(string $text) use (&$words): void {
 			$text = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $text);
 			// strip_tags removes all tags and might "join" words together:
 			// "Line<br>Line 2" would become "LineLine 2".
@@ -88,7 +85,7 @@ class ListWordsCommand extends Command {
 		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 		$hyphenationRows = $queryBuilder->execute()->fetchAllAssociative();
 
-		$configuration = implode("\n", array_map(function($hyphenationRow) {
+		$configuration = implode("\n", array_map(function($hyphenationRow): string {
 			return $hyphenationRow['hyphenation'];
 		}, $hyphenationRows));
 		$words = array_map('trim', explode("\n", $configuration));

@@ -23,8 +23,7 @@ class JavascriptOptimization {
 	// Copied from PageRenderer, because it was changed to protected
 	protected const PART_FOOTER = 2;
 
-	/** @var ResourceCompressor */
-	protected $compressor = null;
+	protected ?ResourceCompressor $compressor = null;
 
 	/**
 	 * since TYPO3 6.0 minifyJs does not work.
@@ -66,7 +65,7 @@ class JavascriptOptimization {
 	 * @param string $filename Source filename, relative to requested page
 	 * @return string Filename of the compressed file, relative to requested page
 	 */
-	public function minifyJsFile($filename) {
+	public function minifyJsFile($filename): string {
 		// generate the unique name of the file
 		$filenameAbsolute = Environment::getPublicPath() . '/' . $filename;
 		$unique = $filenameAbsolute . '-min';
