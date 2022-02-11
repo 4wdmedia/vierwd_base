@@ -152,6 +152,7 @@ class ContentElements implements SingletonInterface {
 				continue;
 			}
 			$config += $defaults;
+			assert(is_array($config));
 			$config['filename'] = $fceConfigFile->getFilename();
 
 			if (empty($config['group'])) {
@@ -165,7 +166,7 @@ class ContentElements implements SingletonInterface {
 		array_multisort($names, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $FCEs);
 
 		// Process FCEs
-		/** @var array{'filename': string, 'adminOnly': bool, 'group': string|array, 'pluginName': string, 'name': string, 'description': string, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': string} $config */
+		/** @var array{'filename': string, 'CType': ?string, 'adminOnly': bool, 'group': string|array, 'pluginName': string, 'name': string, 'description': string, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': string} $config */
 		foreach ($FCEs as &$config) {
 			if (!empty($config['pluginName'])) {
 				// create a new plugin

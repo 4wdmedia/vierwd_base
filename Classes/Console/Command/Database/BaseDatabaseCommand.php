@@ -25,10 +25,13 @@ abstract class BaseDatabaseCommand extends Command {
 
 	private array $dbConfig = [];
 
+	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
 	protected InputInterface $input;
 
+	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
 	protected OutputInterface $output;
 
+	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
 	protected CommandDispatcher $commandDispatcher;
 
 	public function __construct(string $name = null, ConnectionConfiguration $connectionConfiguration = null) {

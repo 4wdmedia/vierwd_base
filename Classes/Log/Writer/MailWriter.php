@@ -33,7 +33,7 @@ class MailWriter extends AbstractWriter {
 
 	protected string $sender;
 
-	protected string $receiver;
+	protected string $receiver = '';
 
 	protected string $subject = 'TYPO3 Errors on site %s';
 
@@ -43,6 +43,7 @@ class MailWriter extends AbstractWriter {
 		} else {
 			$this->sender = 'typo3.reports@4wdmedia.de';
 		}
+		$this->setMinErrorLevel(LogLevel::WARNING);
 		parent::__construct($options);
 	}
 
@@ -92,7 +93,7 @@ class MailWriter extends AbstractWriter {
 	}
 
 	public function sendMail(): void {
-		if (!$this->buffer) {
+		if (!$this->buffer || !$this->receiver) {
 			return;
 		}
 

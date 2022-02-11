@@ -21,6 +21,7 @@ class Canonical implements SingletonInterface {
 
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$url = $cObj->stdWrap($url, $params);
+		assert(is_string($url));
 
 		return $url;
 	}

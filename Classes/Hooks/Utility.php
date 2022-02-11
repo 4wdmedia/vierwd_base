@@ -17,7 +17,8 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class Utility {
 
-	protected ?ContentObjectRenderer $cObj;
+	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
+	protected ContentObjectRenderer $cObj;
 
 	public function setContentObjectRenderer(ContentObjectRenderer $cObj): void {
 		$this->cObj = $cObj;

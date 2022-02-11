@@ -19,6 +19,7 @@ class BackendLayoutDataProviderTest extends UnitTestCase {
 	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
 	protected $resetSingletonInstances = true;
 
+	/** @phpstan-ignore-next-line Root is never read, but that's ok */
 	private vfsStreamDirectory $root;
 
 	private TimeTracker $mockTimeTracker;

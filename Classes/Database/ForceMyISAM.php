@@ -41,8 +41,8 @@ class ForceMyISAM extends SqlReader {
 			$parser = GeneralUtility::makeInstance(Parser::class, $statement);
 			$tables = $parser->parse();
 			$table = $tables[0];
-			$forceMyISAM = in_array($table->getName(), static::$MyISAMTables);
-			foreach (static::$tablePrefixes as $tablePrefix) {
+			$forceMyISAM = in_array($table->getName(), self::$MyISAMTables);
+			foreach (self::$tablePrefixes as $tablePrefix) {
 				$forceMyISAM = $forceMyISAM || substr($table->getName(), 0, strlen($tablePrefix)) === $tablePrefix;
 			}
 

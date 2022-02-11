@@ -98,6 +98,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 
 		if (isset($conf['stdWrap.'])) {
 			$value = $this->cObj->stdWrap($value, $conf['stdWrap.']);
+			assert(is_string($value));
 		}
 		return $value;
 	}
