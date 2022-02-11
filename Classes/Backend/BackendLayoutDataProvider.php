@@ -63,8 +63,11 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 * @param array<string, mixed> $data
 	 */
 	protected function createBackendLayout(array $data): BackendLayout {
+		assert(is_string($data['identifier']));
+		assert(is_string($data['title']));
+		assert(is_string($data['config']) || is_array($data['config']));
 		$backendLayout = BackendLayout::create($data['identifier'], $data['title'], $data['config']);
-		if (!empty($data['icon'])) {
+		if (!empty($data['icon']) && is_string($data['icon'])) {
 			$backendLayout->setIconPath($data['icon']);
 		}
 		$backendLayout->setData($data);

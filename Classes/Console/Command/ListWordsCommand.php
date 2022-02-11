@@ -86,6 +86,7 @@ class ListWordsCommand extends Command {
 		$hyphenationRows = $queryBuilder->execute()->fetchAllAssociative();
 
 		$configuration = implode("\n", array_map(function($hyphenationRow): string {
+			assert(is_string($hyphenationRow['hyphenation']));
 			return $hyphenationRow['hyphenation'];
 		}, $hyphenationRows));
 		$words = array_map('trim', explode("\n", $configuration));

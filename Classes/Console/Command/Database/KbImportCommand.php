@@ -21,7 +21,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$config || !$config['ssh']) {
+		if (!$config || !is_array($config) || !$config['ssh']) {
 			$output->writeln('<error>No SSH config found</error>');
 			return 1;
 		}

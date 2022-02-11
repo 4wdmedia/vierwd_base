@@ -1,5 +1,5 @@
 parameters:
-    level: 8
+    level: max
 
     bootstrapFiles:
         - phpstan.bootstrap.php
@@ -30,5 +30,9 @@ parameters:
                 - Classes
         -
             message: '#Parameter \#1 \$callback of function array_map expects \(callable\(string\|false\): mixed\)\|null, ''trim'' given\.#'
+            paths:
+                - Classes
+        -
+            message: '#Parameter \#2 \$callback of function array_walk expects callable\(mixed, int, mixed\): mixed, Closure.* given.#'
             paths:
                 - Classes

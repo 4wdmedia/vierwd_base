@@ -41,6 +41,7 @@ class LastChangeCommand extends Command {
 				// probably no rows in the table
 				continue;
 			}
+			assert(is_int($time));
 			$output->writeln(date('Y-m-d H:i', $time) . ' ' . $table->getName());
 		}
 

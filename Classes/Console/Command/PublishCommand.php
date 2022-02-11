@@ -25,7 +25,7 @@ class PublishCommand extends Command {
 
 	protected function getConfiguredServers(): array {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$config || !$config['ssh']) {
+		if (!$config || !is_array($config) || !$config['ssh']) {
 			throw new \RuntimeException('No SSH config found. Please complete the extension configuration for vierwd_base', 1637242166);
 		}
 
@@ -122,13 +122,13 @@ class PublishCommand extends Command {
 		}
 
 		$composerConfig = json_decode($composerContents, true);
-		if ($composerConfig === false) {
+		if (!is_array($composerConfig)) {
 			throw new \Exception('Could not parse composer.json', 1602247173);
 		}
 
 		$extensionName = ArrayUtility::getValueByPath($composerConfig, 'extra/vierwd/extensionName');
 
-		if (!$extensionName) {
+		if (!$extensionName || !is_string($extensionName)) {
 			throw new \Exception('Could not find extensionName', 1602247310);
 		}
 

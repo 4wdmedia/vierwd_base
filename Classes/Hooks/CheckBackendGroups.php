@@ -51,6 +51,9 @@ class CheckBackendGroups {
 		}
 
 		$adminElements = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base', 'adminElements');
+		if (!is_string($adminElements)) {
+			$adminElements = '';
+		}
 		$adminElements = GeneralUtility::trimExplode(',', $adminElements);
 		$contentElements = array_diff_key($contentElements, array_flip($adminElements));
 

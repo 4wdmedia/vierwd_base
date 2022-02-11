@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Routing\SiteRouteResult;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -29,7 +30,7 @@ class PageNotFoundBeforeSiteRedirect implements MiddlewareInterface {
 
 		// Usually called when "https://www.example.com" was entered, but all sites have "https://www.example.com/lang-key/"
 		// So a redirect to the first possible language is done.
-		if ($site instanceof Site && !($language instanceof SiteLanguage) && $routeResult->getTail()) {
+		if ($site instanceof Site && !($language instanceof SiteLanguage) && $routeResult instanceof SiteRouteResult && $routeResult->getTail()) {
 			return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
 				$GLOBALS['TYPO3_REQUEST'],
 				'The requested page does not exist!',

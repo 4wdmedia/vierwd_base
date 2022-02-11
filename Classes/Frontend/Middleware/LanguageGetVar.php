@@ -21,7 +21,7 @@ class LanguageGetVar implements MiddlewareInterface {
 		$language = $request->getAttribute('language', null);
 		$routeResult = $request->getAttribute('routing', null);
 
-		if ($site instanceof Site && !($language instanceof SiteLanguage) && $routeResult->getUri() && $routeResult->getUri()->getQuery()) {
+		if ($site instanceof Site && !($language instanceof SiteLanguage) && $routeResult instanceof SiteRouteResult && $routeResult->getUri()->getQuery()) {
 			parse_str($routeResult->getUri()->getQuery(), $query);
 			if (!isset($query['L']) || !is_numeric($query['L'])) {
 				return $handler->handle($request);

@@ -69,7 +69,7 @@ class Canonical implements SingletonInterface {
 
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$query = GeneralUtility::_GET();
-		if ($query) {
+		if ($query && is_array($query)) {
 			$query['id'] = $GLOBALS['TSFE']->id;
 			$query = $cacheHashCalculator->getRelevantParameters(GeneralUtility::implodeArrayForUrl('', $query));
 			unset($query['encryptionKey']);

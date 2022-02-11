@@ -26,7 +26,8 @@ class DuplicateFiles {
 		$fileHash = $file->getSha1();
 		$fileIndexRepository = GeneralUtility::makeInstance(FileIndexRepository::class);
 		$files = $fileIndexRepository->findByContentHash($fileHash);
-		$files = array_filter($files, function($indexedFile) use ($file) {
+		assert(is_array($files));
+		$files = array_filter($files, function(array $indexedFile) use ($file): bool {
 			return $indexedFile['storage'] == $file->getStorage()->getUid() && $indexedFile['uid'] != $file->getUid();
 		});
 

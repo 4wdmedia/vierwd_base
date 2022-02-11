@@ -103,7 +103,9 @@ class HotspotEditorElement extends AbstractNode {
 		} else {
 			// unfortunatly the default crop variants are not available publicly
 			$reflectionClass = new \ReflectionClass(ImageManipulationElement::class);
-			$cropVariants = $reflectionClass->getDefaultProperties()['defaultConfig']['cropVariants'];
+			$defaultConfig = $reflectionClass->getDefaultProperties()['defaultConfig'];
+			assert(is_array($defaultConfig));
+			$cropVariants = $defaultConfig['cropVariants'];
 		}
 		$variantCollection = CropVariantCollection::create($this->data['databaseRow']['crop'], $cropVariants);
 

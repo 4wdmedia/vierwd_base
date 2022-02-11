@@ -81,6 +81,9 @@ class JavascriptOptimization {
 		// only create it, if it doesn't exist, yet
 		if (!file_exists(Environment::getPublicPath() . '/' . $targetFile)) {
 			$contents = GeneralUtility::getUrl($filenameAbsolute);
+			if (!is_string($contents)) {
+				$contents = '';
+			}
 			$contents = GeneralUtility::makeInstance(ResourceCompressor::class)->compressJavaScriptSource($contents);
 			// make sure the folder exists
 			if (!is_dir(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/')) {

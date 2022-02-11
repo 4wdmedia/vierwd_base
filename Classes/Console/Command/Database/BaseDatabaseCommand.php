@@ -79,6 +79,8 @@ abstract class BaseDatabaseCommand extends Command {
 			$dbConfig = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
 		}
 
+		assert(is_array($dbConfig));
+
 		foreach ($this->getIgnoredTables() as $table) {
 			$additionalArguments[] = sprintf('--ignore-table=%s.%s', $dbConfig['dbname'], $table);
 		}
@@ -123,6 +125,7 @@ abstract class BaseDatabaseCommand extends Command {
 
 	protected function getIgnoredTables(): array {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+		assert(is_array($config));
 
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
@@ -170,6 +173,7 @@ abstract class BaseDatabaseCommand extends Command {
 		$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
 
 		$dbConfiguration = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+		assert(is_array($dbConfiguration));
 
 		$arguments = [];
 		if (!empty($dbConfiguration['user'])) {
