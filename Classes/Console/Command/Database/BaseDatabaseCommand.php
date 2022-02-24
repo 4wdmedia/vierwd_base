@@ -19,7 +19,7 @@ abstract class BaseDatabaseCommand extends Command {
 	protected const CONNECTION_LOCAL = 'local';
 	protected const CONNECTION_REMOTE = 'remote';
 
-	private static ?string $mysqlTempFile;
+	private static ?string $mysqlTempFile = null;
 
 	private ConnectionConfiguration $connectionConfiguration;
 
