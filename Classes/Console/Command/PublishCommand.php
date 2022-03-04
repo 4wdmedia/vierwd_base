@@ -75,6 +75,7 @@ class PublishCommand extends Command {
 			($dryRun ? '--dry-run' : ''),
 			'--include', '*.css',
 			'--include', '*.js',
+			'--include', '*.json',
 			'--include', '*.gzip',
 			'--include', '*.brotli',
 			'--include', 'Private',
