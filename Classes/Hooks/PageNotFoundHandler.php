@@ -36,7 +36,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		$language = $request->getAttribute('language');
-		if (!$language || !($language instanceof SiteLanguage)) {
+		if (!$language || !($language instanceof SiteLanguage) || !$language->isEnabled()) {
 			$site = $request->getAttribute('site');
 			assert($site instanceof SiteInterface);
 			$language = $site->getDefaultLanguage();
