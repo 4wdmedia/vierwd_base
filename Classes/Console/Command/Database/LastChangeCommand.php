@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
@@ -11,10 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LastChangeCommand extends Command {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setDescription('Show the last changed timestamps for all tables.');
 		$this->setHelp('This only works for tables which have the default TYPO3 tstamp or crdate fields');
 	}
@@ -39,7 +36,7 @@ class LastChangeCommand extends Command {
 			}
 			$result = $connection->query('SELECT ' . $select . ' FROM `' . $table->getName() . '`');
 
-			$time = $result->fetchColumn();
+			$time = (int)$result->fetchColumn();
 			if (!$time) {
 				// probably no rows in the table
 				continue;
