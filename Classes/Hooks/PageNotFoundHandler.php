@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Error\PageErrorHandler\PageErrorHandlerInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -34,8 +35,10 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		$language = $request->getAttribute('language');
-		if (!$language) {
-			$language = $request->getAttribute('site')->getDefaultLanguage();
+		if (!$language || !($language instanceof SiteLanguage) || !$language->isEnabled()) {
+			$site = $request->getAttribute('site');
+			assert($site instanceof SiteInterface);
+			$language = $site->getDefaultLanguage();
 		}
 
 		if ($reasons && in_array($reasons['code'], ['access.page', 'access.subsection'])) {
