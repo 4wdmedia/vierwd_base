@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Hooks;
 
 use DOMDocument;
+use DOMElement;
 use DOMNodeList;
 use DOMXPath;
 
@@ -181,8 +182,8 @@ class Utility {
 			$nodes = $XPath->evaluate('.//text()', $body);
 			assert($nodes instanceof DOMNodeList);
 			foreach ($nodes as $node) {
-				if ($node->nodeType === XML_TEXT_NODE && $node->parentNode->nodeName !== 'script' && $node->parentNode->nodeName !== 'style') {
-					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue);
+				if ($node->nodeType === XML_TEXT_NODE && $node->parentNode && $node->parentNode->nodeName !== 'script' && $node->parentNode->nodeName !== 'style') {
+					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue ?? '');
 				}
 			}
 		}
@@ -204,6 +205,7 @@ class Utility {
 		$nodes = $XPath->evaluate('.//a[@target="_blank"][not(contains(@rel, "noopener"))]', $body);
 		assert($nodes instanceof DOMNodeList);
 		foreach ($nodes as $link) {
+			assert($link instanceof DOMElement);
 			$rel = $link->getAttribute('rel');
 			$rel = trim($rel . ' noopener');
 			$link->setAttribute('rel', $rel);

@@ -36,11 +36,12 @@ class LastChangeCommand extends Command {
 			}
 			$result = $connection->executeQuery('SELECT ' . $select . ' FROM `' . $table->getName() . '`');
 
-			$time = (int)$result->fetchOne();
+			$time = $result->fetchOne();
 			if (!$time) {
 				// probably no rows in the table
 				continue;
 			}
+			assert(is_int($time));
 			$output->writeln(date('Y-m-d H:i', $time) . ' ' . $table->getName());
 		}
 

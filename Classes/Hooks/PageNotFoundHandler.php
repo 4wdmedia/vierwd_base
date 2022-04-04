@@ -43,7 +43,9 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		if ($reasons && in_array($reasons['code'], ['access.page', 'access.subsection'])) {
-			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
+			$requestUri = GeneralUtility::getIndpEnv('REQUEST_URI');
+			assert(is_string($requestUri));
+			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode($requestUri);
 			$statusCode = 403;
 		} else {
 			$uri = (string)$language->getBase() . '404';
