@@ -182,6 +182,7 @@ class Utility {
 			$nodes = $XPath->evaluate('.//text()', $body);
 			assert($nodes instanceof DOMNodeList);
 			foreach ($nodes as $node) {
+				assert($node instanceof DOMElement);
 				if ($node->nodeType === XML_TEXT_NODE && $node->parentNode && $node->parentNode->nodeName !== 'script' && $node->parentNode->nodeName !== 'style') {
 					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue ?? '');
 				}
