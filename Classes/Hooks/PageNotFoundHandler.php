@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Error\PageErrorHandler\PageErrorHandlerInterface;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Site\Entity\SiteInterface;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -42,7 +43,9 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		if ($reasons && in_array($reasons['code'], ['access.page', 'access.subsection'])) {
-			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode(GeneralUtility::getIndpEnv('REQUEST_URI'));
+			$requestUri = GeneralUtility::getIndpEnv('REQUEST_URI');
+			assert(is_string($requestUri));
+			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode($requestUri);
 			$statusCode = 403;
 		} else {
 			$uri = (string)$language->getBase() . '404';

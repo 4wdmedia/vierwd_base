@@ -39,13 +39,8 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 		}
 	}
 
-	/**
-	 * @param DataProviderContext $dataProviderContext
-	 * @param BackendLayoutCollection $backendLayoutCollection
-	 * @return void
-	 */
-	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection) {
-		foreach ($this->backendLayouts as $key => $data) {
+	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection): void {
+		foreach ($this->backendLayouts as $data) {
 			$backendLayout = $this->createBackendLayout($data);
 			$backendLayoutCollection->add($backendLayout);
 		}
