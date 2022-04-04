@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Hooks;
 
 use DOMDocument;
 use DOMElement;
+use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 
@@ -182,7 +183,7 @@ class Utility {
 			$nodes = $XPath->evaluate('.//text()', $body);
 			assert($nodes instanceof DOMNodeList);
 			foreach ($nodes as $node) {
-				assert($node instanceof DOMElement);
+				assert($node instanceof DOMNode);
 				if ($node->nodeType === XML_TEXT_NODE && $node->parentNode && $node->parentNode->nodeName !== 'script' && $node->parentNode->nodeName !== 'style') {
 					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue ?? '');
 				}
