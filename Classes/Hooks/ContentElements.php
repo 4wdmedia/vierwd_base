@@ -371,6 +371,7 @@ class ContentElements implements SingletonInterface {
 	 */
 	static public function addTCA(array $TCA): array {
 		$GLOBALS['TCA'] = $TCA;
+		$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'] += self::$groupNames;
 		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
 			foreach ($configuration['FCEs'] as $config) {
 				$tca = $config['fullTCA'] ?: self::generateTCA($config);
@@ -395,7 +396,7 @@ class ContentElements implements SingletonInterface {
 				$name = $config['name'];
 
 				// FOR USE IN files in Configuration/TCA/Overrides/*.php
-				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier']], 'CType', $extensionKey);
+				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $config['group'] === 'common' ? 'default' : $config['group']], 'CType', $extensionKey);
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
 				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
