@@ -81,6 +81,7 @@ class PublishCommand extends Command {
 			'--include', 'Private',
 			'--include', 'Private/Css',
 			'--include', 'Private/Css/vars.json',
+			'--include', 'Private/SSR/',
 			'--include', 'Public',
 			'--include', 'Public/static',
 			'--include', 'Public/static/lib',
