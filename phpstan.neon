@@ -33,6 +33,6 @@ parameters:
             paths:
                 - Classes
         -
-            message: '#Parameter \#2 \$callback of function array_walk expects callable\(mixed, int, mixed\): mixed, Closure.* given.#'
+            message: '#Parameter \#2 \$callback of function array_walk expects callable\(mixed, int\): mixed, Closure.* given.#'
             paths:
                 - Classes

@@ -16,14 +16,12 @@ class DevMailTransport extends AbstractTransport {
 
 	private const SENDER_ADDRESS = 'clients@4wdmedia.de';
 
-	private string $command;
+	private string $command = '/usr/local/bin/msmtp';
 	private ProcessStream $stream;
+	private array $mailSettings;
 
 	public function __construct(array $mailSettings) {
-		$this->command = '/usr/local/bin/msmtp';
-		if (empty($this->command)) {
-			$this->command = '/usr/local/bin/msmtp';
-		}
+		$this->mailSettings = $mailSettings;
 		$this->stream = new ProcessStream();
 		parent::__construct();
 	}
@@ -33,12 +31,12 @@ class DevMailTransport extends AbstractTransport {
 	}
 
 	private function getReceiverAddress(): string {
-		if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultReceiverAddress'])) {
-			return $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultReceiverAddress'];
+		if (isset($this->mailSettings['defaultReceiverAddress'])) {
+			return $this->mailSettings['defaultReceiverAddress'];
 		}
 
 		// dev-environment sendmail_path contains receiver address
-		$sendmailPathParts = explode(' ', ini_get('sendmail_path') ?? '');
+		$sendmailPathParts = explode(' ', ini_get('sendmail_path') ?: '');
 		foreach ($sendmailPathParts as $commandPart) {
 			if (strpos($commandPart, '@')) {
 				return $commandPart;
@@ -57,7 +55,7 @@ class DevMailTransport extends AbstractTransport {
 			// Update from header
 			$headers = $message->getHeaders();
 			$senderAddress = $headers->getHeaderBody('From')[0];
-			$senderName = $senderAddress ? $senderAddress->getName() : $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromName'];
+			$senderName = $senderAddress ? $senderAddress->getName() : $this->mailSettings['defaultMailFromName'];
 			$headers->remove('From');
 			$sender = new Address(self::SENDER_ADDRESS, $senderName);
 			$headers->addHeader('From', [$sender]);
@@ -87,6 +85,7 @@ class DevMailTransport extends AbstractTransport {
 		$this->stream->setCommand($command);
 		$this->stream->initialize();
 		foreach ($chunks as $chunk) {
+			assert(is_string($chunk));
 			$this->stream->write($chunk);
 		}
 		$this->stream->flush();
