@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -47,7 +48,8 @@ abstract class BaseDatabaseCommand extends Command {
 
 		$this->dbConfig = $this->connectionConfiguration->build();
 
-		$this->commandDispatcher = CommandDispatcher::createFromCommandRun();
+		$typo3cms = Environment::getProjectPath() . '/vendor/bin/typo3cms';
+		$this->commandDispatcher = CommandDispatcher::create($typo3cms);
 	}
 
 	/**

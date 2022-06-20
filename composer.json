@@ -78,6 +78,7 @@
 			"extension-key": "vierwd_base",
 			"web-dir": ".Build/Web",
 			"Package": {
+				"serviceProvider": "Vierwd\\VierwdBase\\Install\\ServiceProvider",
 				"protected": true,
 				"partOfFactoryDefault": true,
 				"partOfMinimalUsableSystem": true
