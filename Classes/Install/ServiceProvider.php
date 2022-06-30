@@ -12,7 +12,7 @@ use Vierwd\VierwdBase\Console\Command\PostComposerCommand;
 class ServiceProvider extends AbstractServiceProvider {
 
 	protected static function getPackagePath(): string {
-		return __DIR__ . '/../';
+		return __DIR__ . '/../../';
 	}
 
 	public function getFactories(): array {
