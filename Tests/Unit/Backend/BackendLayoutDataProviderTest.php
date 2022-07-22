@@ -190,4 +190,5 @@ EOT;
 		$testSubject = new BackendLayoutDataProvider();
 		$this->assertEquals($backendLayoutMock, $testSubject->getBackendLayout('standard', 1));
 	}
+
 }

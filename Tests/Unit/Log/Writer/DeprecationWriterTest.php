@@ -150,4 +150,5 @@ class DeprecationWriterTest extends UnitTestCase {
 		$subject->method('getTrace')->willReturn([$traceEntry]);
 		$this->assertEquals(null, $subject->_call('getVierwdClass'));
 	}
+
 }

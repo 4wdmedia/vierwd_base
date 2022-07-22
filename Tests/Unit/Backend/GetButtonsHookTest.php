@@ -67,4 +67,5 @@ class GetButtonsHookTest extends UnitTestCase {
 		$this->assertEquals('title', $lastButton->getTitle());
 		$this->assertEquals($this->iconMock, $lastButton->getIcon());
 	}
+
 }

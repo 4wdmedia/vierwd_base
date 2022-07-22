@@ -15,4 +15,5 @@ class StorageRepositoryTest extends UnitTestCase {
 		// @phpstan-ignore-next-line AccessibleMockObjectInterface::_call allows more than one argument
 		$this->assertEquals(true, $mock->_call('testCaseSensitivity', '/any/path'));
 	}
+
 }
