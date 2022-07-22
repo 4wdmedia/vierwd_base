@@ -10,10 +10,11 @@
 	{/if}
 	{$logo = $resourceFactory->retrieveFileOrFolderObject($file)}
 
-	{$header = $data.header|default:'Konzeption / Gestaltung / Realisierung'}
+	{$header = $data.header|default:'Concept / Design / Implementation'}
 	{$subline = 'Digital Media / Corporate Design'}
 
-	{if $TSFE->lang === 'de'}
+	{if $siteLanguage && $siteLanguage->getTwoLetterIsoCode() === 'de'}
+		{$header = $data.header|default:'Konzeption / Gestaltung / Realisierung'}
 		{$subline = 'Digitale Medien / Corporate Design'}
 	{/if}
 
