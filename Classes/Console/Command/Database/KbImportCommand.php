@@ -12,10 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class KbImportCommand extends BaseDatabaseCommand {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setDescription('Import database from the current ServiceArea or Live-Server.');
 		$this->addOption('no-backup', null, InputOption::VALUE_NONE, 'Do not create a backup before import');
 		$this->addOption('no-data', null, InputOption::VALUE_NONE, 'Only create tables. Do not import data');

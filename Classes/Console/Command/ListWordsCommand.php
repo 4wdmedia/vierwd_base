@@ -11,10 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ListWordsCommand extends Command {
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function configure() {
+	protected function configure(): void {
 		$this->setDescription('List all words used on the website');
 	}
 

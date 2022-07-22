@@ -12,9 +12,7 @@ use Vierwd\SvgInliner\SvgInliner;
  */
 class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 
-	/**
-	 * @var \Vierwd\SvgInliner\SvgInliner;
-	 */
+	/** @var \Vierwd\SvgInliner\SvgInliner */
 	protected static $svgInliner = null;
 
 	/**

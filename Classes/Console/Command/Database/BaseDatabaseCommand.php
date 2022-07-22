@@ -43,10 +43,7 @@ abstract class BaseDatabaseCommand extends Command {
 		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
 	}
 
-	/**
-	 * @phpstan-return void
-	 */
-	protected function initialize(InputInterface $input, OutputInterface $output) {
+	protected function initialize(InputInterface $input, OutputInterface $output): void {
 		parent::initialize($input, $output);
 
 		$this->input = $input;

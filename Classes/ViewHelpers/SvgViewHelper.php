@@ -22,9 +22,7 @@ class SvgViewHelper extends AbstractViewHelper {
 
 	use CompileWithRenderStatic;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $escapeOutput = false;
 
 	public function initializeArguments() {
