@@ -63,4 +63,5 @@ class ImportCommand extends BaseDatabaseCommand {
 
 		return 0;
 	}
+
 }

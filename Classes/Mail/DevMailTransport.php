@@ -93,4 +93,5 @@ class DevMailTransport extends AbstractTransport {
 
 		$this->getLogger()->debug(sprintf('Email transport "%s" stopped', self::class));
 	}
+
 }

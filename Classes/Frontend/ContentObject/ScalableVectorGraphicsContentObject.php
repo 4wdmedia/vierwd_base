@@ -102,4 +102,5 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 		}
 		return $value;
 	}
+
 }

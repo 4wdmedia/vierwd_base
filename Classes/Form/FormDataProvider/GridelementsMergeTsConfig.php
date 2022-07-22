@@ -52,4 +52,5 @@ class GridelementsMergeTsConfig implements FormDataProviderInterface {
 
 		return $result;
 	}
+
 }

@@ -40,4 +40,5 @@ class LanguageGetVar implements MiddlewareInterface {
 
 		return $handler->handle($request);
 	}
+
 }

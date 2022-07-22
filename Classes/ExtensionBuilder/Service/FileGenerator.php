@@ -59,4 +59,5 @@ class FileGenerator extends \EBT\ExtensionBuilder\Service\FileGenerator {
 
 		return $fileContents;
 	}
+
 }

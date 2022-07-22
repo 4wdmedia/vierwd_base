@@ -14,4 +14,5 @@ class NoHttps implements PageRepositoryGetPageOverlayHookInterface {
 			$pageInput['url_scheme'] = 0;
 		}
 	}
+
 }

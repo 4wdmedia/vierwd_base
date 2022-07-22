@@ -15,4 +15,5 @@ class MailFeature extends ParentMailFeature {
 	protected $presetRegistry = [
 		CustomPreset::class,
 	];
+
 }

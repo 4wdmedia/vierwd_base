@@ -90,4 +90,5 @@ class ExportCommand extends BaseDatabaseCommand {
 
 		return 0;
 	}
+
 }

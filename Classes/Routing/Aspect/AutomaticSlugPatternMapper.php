@@ -110,4 +110,5 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 
 		return $value;
 	}
+
 }

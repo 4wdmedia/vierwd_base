@@ -159,4 +159,5 @@ class JavascriptOptimization {
 		}
 		return $this->compressor;
 	}
+
 }

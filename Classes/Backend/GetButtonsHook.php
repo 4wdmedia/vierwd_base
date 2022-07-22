@@ -59,4 +59,5 @@ class GetButtonsHook {
 
 		return $buttonBars;
 	}
+
 }

@@ -63,4 +63,5 @@ class EchoWriter extends AbstractWriter {
 
 		return $this;
 	}
+
 }

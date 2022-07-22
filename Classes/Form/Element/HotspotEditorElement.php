@@ -111,4 +111,5 @@ class HotspotEditorElement extends AbstractNode {
 
 		return $variantCollection;
 	}
+
 }

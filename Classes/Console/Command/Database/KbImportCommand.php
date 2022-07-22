@@ -62,4 +62,5 @@ class KbImportCommand extends BaseDatabaseCommand {
 
 		return 0;
 	}
+
 }

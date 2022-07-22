@@ -266,4 +266,5 @@ EOF;
 
 		return self::$mysqlTempFile;
 	}
+
 }

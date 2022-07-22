@@ -23,4 +23,5 @@ class SecurityStatus extends ParentSecurityStatus {
 
 		return $statuses;
 	}
+
 }

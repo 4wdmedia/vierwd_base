@@ -140,4 +140,5 @@ class RsyncCommand extends Command {
 			}
 		};
 	}
+
 }

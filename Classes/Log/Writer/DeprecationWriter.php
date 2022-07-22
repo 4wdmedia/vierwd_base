@@ -170,4 +170,5 @@ class DeprecationWriter extends AbstractWriter {
 </script>
 EOT;
 	}
+
 }

@@ -43,4 +43,5 @@ class DuplicateFiles {
 			$flashMessageService->getMessageQueueByIdentifier()->enqueue($message);
 		}
 	}
+
 }

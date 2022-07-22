@@ -32,4 +32,5 @@ class Indexer extends ParentIndexer {
 
 		$context->setAspect('language', $oldLanguageAspect);
 	}
+
 }

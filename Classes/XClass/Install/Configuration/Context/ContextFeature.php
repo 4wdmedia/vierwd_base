@@ -15,4 +15,5 @@ class ContextFeature extends ParentContextFeature {
 	protected $presetRegistry = [
 		CustomPreset::class,
 	];
+
 }

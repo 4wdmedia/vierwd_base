@@ -41,4 +41,5 @@ class FilterFiles {
 
 		return true;
 	}
+
 }

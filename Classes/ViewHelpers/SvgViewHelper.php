@@ -52,4 +52,5 @@ class SvgViewHelper extends AbstractViewHelper {
 		$svgObject = GeneralUtility::makeInstance(ScalableVectorGraphicsContentObject::class, $cObj);
 		return $svgObject->render($arguments);
 	}
+
 }

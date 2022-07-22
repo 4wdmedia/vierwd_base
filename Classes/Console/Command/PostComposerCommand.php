@@ -78,4 +78,5 @@ class PostComposerCommand extends Command {
 			return false;
 		}
 	}
+
 }
