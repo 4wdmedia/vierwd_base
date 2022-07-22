@@ -47,4 +47,5 @@ class MailWriterTest extends UnitTestCase {
 		$subject->writeLog($this->logRecord);
 		$subject->sendMail();
 	}
+
 }

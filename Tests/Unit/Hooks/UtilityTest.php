@@ -139,4 +139,5 @@ class UtilityTest extends UnitTestCase {
 
 		return $tsfe;
 	}
+
 }

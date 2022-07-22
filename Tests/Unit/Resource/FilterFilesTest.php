@@ -37,4 +37,5 @@ class FilterFilesTest extends UnitTestCase {
 			[true, 'valid-file', '/subdir/valid-file'],
 		];
 	}
+
 }

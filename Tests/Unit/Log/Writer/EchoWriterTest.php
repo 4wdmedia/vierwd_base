@@ -89,4 +89,5 @@ class EchoWriterTest extends UnitTestCase {
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::ERROR, 'test record');
 		$subject->writeLog($simpleRecord);
 	}
+
 }

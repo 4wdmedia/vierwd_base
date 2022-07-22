@@ -14,4 +14,5 @@ class StorageRepositoryTest extends UnitTestCase {
 
 		self::assertEquals(true, $mock->_call('testCaseSensitivity', '/any/path'));
 	}
+
 }
