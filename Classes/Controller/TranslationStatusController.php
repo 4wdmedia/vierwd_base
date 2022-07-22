@@ -194,4 +194,5 @@ class TranslationStatusController extends SmartyController {
 		fclose($out);
 		exit;
 	}
+
 }

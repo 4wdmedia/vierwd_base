@@ -101,4 +101,5 @@ class ListWordsCommand extends Command {
 
 		return $replacements;
 	}
+
 }

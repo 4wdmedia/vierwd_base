@@ -57,4 +57,5 @@ class CacheBuster {
 			$event->setPublicUrl($publicUrl);
 		}
 	}
+
 }

@@ -43,4 +43,5 @@ class PageNotFoundBeforeSiteRedirect implements MiddlewareInterface {
 
 		return $handler->handle($request);
 	}
+
 }

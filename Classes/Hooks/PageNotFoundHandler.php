@@ -105,4 +105,5 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			'http_errors' => false,
 		]);
 	}
+
 }

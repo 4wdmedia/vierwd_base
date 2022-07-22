@@ -552,4 +552,5 @@ class ContentElements implements SingletonInterface {
 		$content = preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
 		return $additionalIdTag . $content;
 	}
+
 }

@@ -153,4 +153,5 @@ class PublishCommand extends Command {
 			}
 		};
 	}
+
 }

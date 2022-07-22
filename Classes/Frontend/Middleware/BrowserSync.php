@@ -49,4 +49,5 @@ class BrowserSync implements MiddlewareInterface {
 		$response = $response->withBody($body);
 		return $response;
 	}
+
 }

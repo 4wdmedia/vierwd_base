@@ -13,4 +13,5 @@ class GraphicalFunctions extends \TYPO3\CMS\Core\Imaging\GraphicalFunctions {
 		parent::__construct();
 		$this->init();
 	}
+
 }

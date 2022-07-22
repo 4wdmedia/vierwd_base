@@ -60,4 +60,5 @@ class ForceMyISAM extends SqlReader {
 
 		return $statements;
 	}
+
 }

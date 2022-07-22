@@ -14,4 +14,5 @@ class StorageRepository extends \TYPO3\CMS\Core\Resource\StorageRepository {
 	protected function testCaseSensitivity($absolutePath) {
 		return true;
 	}
+
 }

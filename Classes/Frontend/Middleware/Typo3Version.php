@@ -34,4 +34,5 @@ class Typo3Version implements MiddlewareInterface {
 
 		return $response;
 	}
+
 }

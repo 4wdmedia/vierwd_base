@@ -133,4 +133,5 @@ class CheckBackendGroups {
 		$contentElements = (array)array_combine($elementKeys, $elementNames);
 		return $contentElements;
 	}
+
 }

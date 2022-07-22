@@ -13,4 +13,5 @@ class GifBuilder extends \TYPO3\CMS\Frontend\Imaging\GifBuilder {
 		parent::__construct();
 		$this->init();
 	}
+
 }
