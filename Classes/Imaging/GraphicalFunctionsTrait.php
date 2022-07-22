@@ -12,8 +12,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 trait GraphicalFunctionsTrait {
 
 	public function init(): void {
-		$this->cmds['jpg'] .= ' -interlace Plane';
-		$this->cmds['jpeg'] = $this->cmds['jpg'];
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace'])) {
+			$this->cmds['jpg'] .= ' -interlace Plane';
+			$this->cmds['jpeg'] = $this->cmds['jpg'];
+		}
 		$this->cmds['webp'] = ' -quality 85';
 	}
 
@@ -39,7 +41,7 @@ trait GraphicalFunctionsTrait {
 				$params .= ' -quality ' . $this->jpegQuality;
 			}
 
-			if (strpos($params, '-interlace') === false) {
+			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($params, '-interlace') === false) {
 				$params .= ' -interlace Plane';
 			}
 
@@ -51,7 +53,7 @@ trait GraphicalFunctionsTrait {
 				$params .= ' -quality 85';
 			}
 
-			if (strpos($params, '-interlace') === false) {
+			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($params, '-interlace') === false) {
 				$params .= ' -interlace Plane';
 			}
 		}
@@ -86,4 +88,5 @@ trait GraphicalFunctionsTrait {
 		GeneralUtility::fixPermissions($output);
 		return $ret;
 	}
+
 }
