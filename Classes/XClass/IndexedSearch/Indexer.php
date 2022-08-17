@@ -15,6 +15,9 @@ class Indexer extends ParentIndexer {
 			$this->conf['content'] = str_replace($GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst'], '@', $this->conf['content']);
 		}
 
+		// remove Soft-Hyphens from content.
+		$this->conf['content'] = str_replace(html_entity_decode('&shy;'), '', $this->conf['content']);
+
 		$context = GeneralUtility::makeInstance(Context::class);
 		/** @var \TYPO3\CMS\Core\Context\LanguageAspect $languageAspect */
 		$languageAspect = $context->getAspect('language');
