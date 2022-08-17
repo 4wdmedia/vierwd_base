@@ -17,7 +17,7 @@ class Indexer {
 		}
 
 		// remove Soft-Hyphens from content.
-		$this->conf['content'] = str_replace(html_entity_decode('&shy;'), '', $this->conf['content']);
+		$pObj->content = str_replace(html_entity_decode('&shy;'), '', $pObj->content);
 
 		$context = GeneralUtility::makeInstance(Context::class);
 		/** @var \TYPO3\CMS\Core\Context\LanguageAspect $languageAspect */
