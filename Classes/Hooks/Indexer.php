@@ -16,6 +16,9 @@ class Indexer {
 			$pObj->content = str_replace($pObj->config['config']['spamProtectEmailAddresses_atSubst'], '@', $pObj->content);
 		}
 
+		// remove Soft-Hyphens from content.
+		$this->conf['content'] = str_replace(html_entity_decode('&shy;'), '', $this->conf['content']);
+
 		$context = GeneralUtility::makeInstance(Context::class);
 		/** @var \TYPO3\CMS\Core\Context\LanguageAspect $languageAspect */
 		$languageAspect = $context->getAspect('language');
