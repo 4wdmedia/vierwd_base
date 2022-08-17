@@ -27,6 +27,9 @@ class SvgViewHelper extends AbstractViewHelper {
 	 */
 	protected $escapeOutput = false;
 
+	/**
+	 * @return void
+	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerArgument('width', 'integer', 'width');
