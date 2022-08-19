@@ -556,4 +556,23 @@ class ContentElements implements SingletonInterface {
 		return $additionalIdTag . $content;
 	}
 
+	public function addContentElementsToAllowList(string $allowDeny): string {
+		$allowDenyValues = GeneralUtility::trimExplode(',', $allowDeny);
+
+		foreach (self::$fceConfiguration as $configuration) {
+			foreach ($configuration['FCEs'] as $config) {
+				if (empty($config['CType']) || !empty($config['adminOnly'])) {
+					continue;
+				}
+
+				$allowValue = 'tt_content:CType:' . $config['CType'] . ':ALLOW';
+				if (!in_array($allowValue, $allowDenyValues, true)) {
+					$allowDenyValues[] = $allowValue;
+				}
+			}
+		}
+
+		return implode(',', $allowDenyValues);
+	}
+
 }

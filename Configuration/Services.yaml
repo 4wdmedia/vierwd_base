@@ -10,6 +10,11 @@ services:
   Vierwd\VierwdBase\Backend\GetButtonsHook:
     public: true
 
+  Vierwd\VierwdBase\ContentElements\ModifyUserGroups:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdModifyGroups'
+        event: TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent
   Vierwd\VierwdBase\Resource\CacheBuster:
     tags:
       - name: event.listener
