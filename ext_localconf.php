@@ -44,7 +44,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search
 	// Indexing Hook in TSFE is too early. It happens before Meta-Tags are replaced and title is generated
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] as $hookClass) {
-			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][$hookClass] = function($params, $tsfe) use ($hookClass) {
+			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][$hookClass] = function($params, $tsfe) use ($hookClass): void {
 				$_procObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($hookClass);
 				$_procObj->hook_indexContent($tsfe);
 			};
@@ -176,7 +176,7 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 	// **************
 	// Allow Shift-Reload even without admin login in local context
 	if (!empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
-		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['headerNoCache'][] = function($params) {
+		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['headerNoCache'][] = function(array $params): void {
 			$params['disableAcquireCacheData'] = true;
 		};
 	}
