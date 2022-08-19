@@ -43,3 +43,7 @@ plugin.tx_vierwdbase {
 	}
 }
 
+[applicationContext == "Development"]
+# ensure, that js is re-rendered with each page request
+page.1660920281 = USER_INT
+[global]
