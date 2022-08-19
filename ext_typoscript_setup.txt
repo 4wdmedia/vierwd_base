@@ -36,3 +36,10 @@ config.tx_vierwd {
 	# Disable automatic adding of ids to html-tags. This might be useful for pages which return JSON or other data
 	# disableElementId = 1
 }
+
+plugin.tx_vierwdbase {
+	linkIcons {
+		# link-class = EXT:vierwd_example/Resources/Public/static/img/font-awesome/arrow-right.svg
+	}
+}
+
