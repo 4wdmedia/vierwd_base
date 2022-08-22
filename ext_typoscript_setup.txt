@@ -43,6 +43,16 @@ plugin.tx_vierwdbase {
 	}
 }
 
+lib.parseFunc_RTE.externalBlocks.ul.stdWrap.HTMLparser = 1
+lib.parseFunc_RTE.externalBlocks.ul.stdWrap.HTMLparser.keepNonMatchedTags = 1
+lib.parseFunc_RTE.externalBlocks.ul.stdWrap.HTMLparser.tags.ul.fixAttrib.class.always = 1
+lib.parseFunc_RTE.externalBlocks.ul.stdWrap.HTMLparser.tags.ul.fixAttrib.class.default = unordered-list
+
+lib.parseFunc_RTE.externalBlocks.ol.stdWrap.HTMLparser = 1
+lib.parseFunc_RTE.externalBlocks.ol.stdWrap.HTMLparser.keepNonMatchedTags = 1
+lib.parseFunc_RTE.externalBlocks.ol.stdWrap.HTMLparser.tags.ol.fixAttrib.class.always = 1
+lib.parseFunc_RTE.externalBlocks.ol.stdWrap.HTMLparser.tags.ol.fixAttrib.class.default = ordered-list
+
 [applicationContext == "Development"]
 # ensure, that js is re-rendered with each page request
 page.1660920281 = USER_INT
