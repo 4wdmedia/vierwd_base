@@ -30,6 +30,11 @@ services:
       - name: event.listener
         identifier: 'vierwdCustomContentElements'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+  Vierwd\VierwdBase\Hooks\IndexFilesAfterImport:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdIndexFilesAfterImport'
+        event: TYPO3\CMS\Extensionmanager\Event\AfterExtensionFilesHaveBeenImportedEvent
 
   Vierwd\VierwdBase\Console\Command\PostComposerCommand:
     tags:
