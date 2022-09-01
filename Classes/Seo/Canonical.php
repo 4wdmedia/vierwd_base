@@ -106,7 +106,6 @@ class Canonical implements SingletonInterface {
 				$url = $cObj->typoLink_URL([
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
-					'useCacheHash' => true,
 					'additionalParams' => GeneralUtility::implodeArrayForUrl('', $query),
 				]);
 			}
