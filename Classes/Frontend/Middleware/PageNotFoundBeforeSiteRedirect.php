@@ -32,7 +32,7 @@ class PageNotFoundBeforeSiteRedirect implements MiddlewareInterface {
 		// So a redirect to the first possible language is done.
 		if ($site instanceof Site && !($language instanceof SiteLanguage) && $routeResult instanceof SiteRouteResult && $routeResult->getTail()) {
 			return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
-				$GLOBALS['TYPO3_REQUEST'],
+				$GLOBALS['TYPO3_REQUEST'] ?? $request,
 				'The requested page does not exist!',
 				['code' => PageAccessFailureReasons::PAGE_NOT_FOUND]
 			);
