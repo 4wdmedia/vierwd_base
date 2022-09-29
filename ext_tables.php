@@ -25,15 +25,6 @@ if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) {
 	unset($reportProviders);
 }
 
-// Add custom Icons
-$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
-$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Public/Icons/');
-foreach (new \GlobIterator($path . '*.svg') as $icon) {
-	$iconRegistry->registerIcon('vierwd-' . $icon->getBasename('.svg'), \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class, [
-		'source' => 'EXT:vierwd_base/Resources/Public/Icons/' . $icon->getFilename(),
-	]);
-}
-
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_vierwdbase_hyphenation');
 
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base');
