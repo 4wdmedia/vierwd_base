@@ -98,4 +98,37 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 
 		return $value;
 	}
+
+	protected function resolveOverlay(?array $record): ?array {
+		$record = parent::resolveOverlay($record);
+		if (!$record) {
+			return $record;
+		}
+
+		$currentLanguageId = $this->siteLanguage->getLanguageId();
+		if (isset($record['sys_language_uid']) && $record['sys_language_uid'] === $currentLanguageId) {
+			return $record;
+		}
+
+		$fallbackLanguages = $this->resolveAllRelevantLanguageIds();
+		$pageRepository = $this->createPageRepository();
+		foreach ($fallbackLanguages as $languageId) {
+			if (in_array($languageId, [-1, 0, $currentLanguageId])) {
+				continue;
+			}
+
+			if ($this->tableName === 'pages') {
+				$recordOverlay = $pageRepository->getPageOverlay($record, $languageId);
+			} else {
+				$recordOverlay = $pageRepository->getRecordOverlay($this->tableName, $record, $languageId) ?: null;
+			}
+
+			if (is_array($recordOverlay) && isset($recordOverlay['sys_language_uid']) && $recordOverlay['sys_language_uid'] === $languageId) {
+				return $recordOverlay;
+			}
+		}
+
+		return $record;
+	}
+
 }
