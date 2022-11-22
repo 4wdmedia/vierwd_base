@@ -46,4 +46,5 @@ class LastChangeCommand extends Command {
 
 		return 0;
 	}
+
 }

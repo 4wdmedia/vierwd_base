@@ -89,4 +89,5 @@ trait GraphicalFunctionsTrait {
 		GeneralUtility::fixPermissions($output);
 		return $ret;
 	}
+
 }

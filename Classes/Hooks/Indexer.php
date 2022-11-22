@@ -38,4 +38,5 @@ class Indexer {
 		$pObj->content = $contentBefore;
 		$context->setAspect('language', $oldLanguageAspect);
 	}
+
 }

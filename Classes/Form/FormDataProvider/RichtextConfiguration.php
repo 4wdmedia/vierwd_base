@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Form\FormDataProvider;
 
@@ -15,6 +15,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  * - Add cache-buster for contentsCss
  */
 class RichtextConfiguration implements FormDataProviderInterface {
+
 	/**
 	 * @param array $result Given result array
 	 * @return array Modified result array
@@ -79,4 +80,5 @@ class RichtextConfiguration implements FormDataProviderInterface {
 
 		return array_values($stylesSet);
 	}
+
 }

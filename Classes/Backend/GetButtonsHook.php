@@ -57,4 +57,5 @@ class GetButtonsHook {
 	protected function getLanguageService(): LanguageService {
 		return $GLOBALS['LANG'];
 	}
+
 }

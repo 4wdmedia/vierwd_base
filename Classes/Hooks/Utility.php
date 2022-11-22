@@ -200,4 +200,5 @@ class Utility {
 			$link->setAttribute('rel', $rel);
 		}
 	}
+
 }

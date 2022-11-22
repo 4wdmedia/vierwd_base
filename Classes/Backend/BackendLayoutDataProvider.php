@@ -55,7 +55,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 *
 	 * @param string $identifier
 	 * @param int $pageId
-	 * @return NULL|BackendLayout
+	 * @return ?BackendLayout
 	 */
 	public function getBackendLayout($identifier, $pageId) {
 		$backendLayout = null;

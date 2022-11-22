@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Database;
 
@@ -60,4 +60,5 @@ class ForceMyISAM extends SqlReader {
 
 		return $statements;
 	}
+
 }

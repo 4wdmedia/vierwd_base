@@ -118,4 +118,5 @@ class Canonical implements SingletonInterface {
 
 		return $url;
 	}
+
 }

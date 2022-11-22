@@ -32,4 +32,5 @@ class Typo3Version {
 
 		return $response;
 	}
+
 }

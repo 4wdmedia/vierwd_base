@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
@@ -266,4 +266,5 @@ EOF;
 
 		return self::$mysqlTempFile;
 	}
+
 }

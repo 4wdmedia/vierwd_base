@@ -162,7 +162,7 @@ class TranslationStatusController extends SmartyController {
 		$table = [array_merge(['Key'], $languages)];
 		foreach ($translationKeys as $translationKey) {
 			$row = [$translationKey];
-			foreach ($translations as $languageKey => $languageTranslations) {
+			foreach ($translations as $languageTranslations) {
 				$row[] = $languageTranslations[$translationKey] ?? '';
 			}
 
@@ -194,4 +194,5 @@ class TranslationStatusController extends SmartyController {
 		fclose($out);
 		exit;
 	}
+
 }

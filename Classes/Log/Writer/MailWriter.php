@@ -105,4 +105,5 @@ class MailWriter extends AbstractWriter {
 
 		$mailer->send($message);
 	}
+
 }

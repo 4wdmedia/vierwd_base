@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
@@ -65,4 +65,5 @@ class KbImportCommand extends BaseDatabaseCommand {
 
 		return 0;
 	}
+
 }

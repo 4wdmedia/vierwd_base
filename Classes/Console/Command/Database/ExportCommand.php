@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
@@ -93,4 +93,5 @@ class ExportCommand extends BaseDatabaseCommand {
 
 		return 0;
 	}
+
 }

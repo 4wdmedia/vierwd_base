@@ -50,4 +50,5 @@ class CacheBuster {
 			$params['publicUrl'] = $GLOBALS['TSFE']->absRefPrefix . $params['publicUrl'];
 		}
 	}
+
 }

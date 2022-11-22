@@ -11,4 +11,5 @@ class ImageFeature extends ParentImageFeature {
 	protected $presetRegistry = [
 		CustomPreset::class,
 	];
+
 }

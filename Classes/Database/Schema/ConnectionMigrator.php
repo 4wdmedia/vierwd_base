@@ -15,4 +15,5 @@ class ConnectionMigrator extends \TYPO3\CMS\Core\Database\Schema\ConnectionMigra
 
 		return $schema;
 	}
+
 }

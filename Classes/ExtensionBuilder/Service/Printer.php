@@ -112,4 +112,5 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		$string = (string)parent::pStmt_ClassMethod($node);
 		return (string)preg_replace('/\n\s+\{/', ' {', $string);
 	}
+
 }
