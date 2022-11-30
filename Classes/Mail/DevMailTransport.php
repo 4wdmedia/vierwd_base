@@ -78,10 +78,6 @@ class DevMailTransport extends AbstractTransport {
 
 		$chunks = AbstractStream::replace("\r\n", "\n", $message->toIterable());
 
-		if (!str_contains($command, ' -i') && !str_contains($command, ' -oi')) {
-			$chunks = AbstractStream::replace("\n.", "\n..", $chunks);
-		}
-
 		$this->stream->setCommand($command);
 		$this->stream->initialize();
 		foreach ($chunks as $chunk) {
