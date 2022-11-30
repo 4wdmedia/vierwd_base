@@ -206,6 +206,7 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['AutomaticSlugPatternMapper'] = \Vierwd\VierwdBase\Routing\Aspect\AutomaticSlugPatternMapper::class;
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['StaticMapper'] = \Vierwd\VierwdBase\Routing\Aspect\StaticMapper::class;
 
 // Setup Plugins directoy
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_smarty']['pluginDirs'][] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('vierwd_base', 'Resources/Private/Smarty');
