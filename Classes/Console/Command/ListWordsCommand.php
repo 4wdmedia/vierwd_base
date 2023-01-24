@@ -52,6 +52,8 @@ class ListWordsCommand extends Command {
 			// We prepend a space before tags, to prevent those joined words
 			$text = str_replace('<', ' <', $text);
 			$text = strip_tags($text);
+			$text = html_entity_decode($text);
+			$text = preg_replace('/\s+/u', ' ', $text);
 			$textWords = array_map('trim', (array)preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
 				$words[$word] = mb_strlen((string)$word);
