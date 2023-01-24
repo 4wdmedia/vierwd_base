@@ -85,7 +85,8 @@ class RsyncCommand extends Command {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file_storage');
 		$storages = $queryBuilder->select('configuration')
 			->from('sys_file_storage')
-			->andWhere('configuration LIKE "<%"')
+			->andWhere($queryBuilder->expr()->like('configuration', $queryBuilder->createNamedParameter('<%')))
+			->andWhere($queryBuilder->expr()->eq('driver', $queryBuilder->createNamedParameter('Local')))
 			->execute();
 
 		$flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
