@@ -57,6 +57,8 @@ class DevMailTransport extends AbstractTransport {
 			$senderAddress = $headers->getHeaderBody('From')[0];
 			$senderName = $senderAddress ? $senderAddress->getName() : $this->mailSettings['defaultMailFromName'];
 			$headers->remove('From');
+			$headers->remove('Cc');
+			$headers->remove('Bcc');
 			$sender = new Address(self::SENDER_ADDRESS, $senderName);
 			$headers->addHeader('From', [$sender]);
 		}
