@@ -15,7 +15,7 @@ class ModifyUserGroups {
 		foreach ($groups as &$group) {
 			if ($group['title'] === 'Redakteur') {
 				$contentElements = GeneralUtility::makeInstance(ContentElements::class);
-				$group['explicit_allowdeny'] = $contentElements->addContentElementsToAllowList($group['explicit_allowdeny']);
+				$group['explicit_allowdeny'] = $contentElements->addContentElementsToAllowList($group['explicit_allowdeny'] ?? '');
 			}
 		}
 		$event->setGroups($groups);
