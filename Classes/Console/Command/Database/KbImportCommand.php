@@ -16,6 +16,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$this->setDescription('Import database from the current ServiceArea or Live-Server.');
 		$this->addOption('no-backup', null, InputOption::VALUE_NONE, 'Do not create a backup before import');
 		$this->addOption('no-data', null, InputOption::VALUE_NONE, 'Only create tables. Do not import data');
+		$this->addOption('content-only', null, InputOption::VALUE_NONE, 'Only import content tables (tt_content, pages and sys_file_reference)');
 		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');
 	}
 
@@ -32,6 +33,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		}
 
 		$noData = $input->getOption('no-data');
+		$contentOnly = $input->getOption('content-only');
 
 		$commandLine = array_merge(['mysql'], $this->buildConnectionArguments(), ['--default-character-set=utf8mb4']);
 		$localMysqlProcess = new Process($commandLine);
@@ -39,7 +41,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		if ($noData) {
 			$commandLine = $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE, true) . ' 2>/dev/null';
 		} else {
-			$commandLine = $this->getExportDataTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null';
+			$commandLine = $this->getExportDataTablesCommand(self::CONNECTION_REMOTE, $contentOnly) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand(self::CONNECTION_REMOTE) . ' 2>/dev/null';
 		}
 		$remoteMysqlProcess = Process::fromShellCommandline($commandLine);
 

@@ -65,7 +65,7 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * get the command line to export all tables containing export worthy data
 	 */
-	protected function getExportDataTablesCommand(string $type = self::CONNECTION_LOCAL): string {
+	protected function getExportDataTablesCommand(string $type = self::CONNECTION_LOCAL, bool $contentOnly = false): string {
 		$additionalArguments = [
 			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
@@ -83,8 +83,14 @@ abstract class BaseDatabaseCommand extends Command {
 
 		assert(is_array($dbConfig));
 
-		foreach ($this->getIgnoredTables() as $table) {
-			$additionalArguments[] = sprintf('--ignore-table=%s.%s', $dbConfig['dbname'], $table);
+		if ($contentOnly) {
+			$additionalArguments[] = 'pages';
+			$additionalArguments[] = 'sys_file_reference';
+			$additionalArguments[] = 'tt_content';
+		} else {
+			foreach ($this->getIgnoredTables() as $table) {
+				$additionalArguments[] = sprintf('--ignore-table=%s.%s', $dbConfig['dbname'], $table);
+			}
 		}
 
 		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
