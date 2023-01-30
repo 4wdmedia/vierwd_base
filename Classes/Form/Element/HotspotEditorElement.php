@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Form\Element;
 
@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use Vierwd\VierwdSmarty\View\StandaloneSmartyView;
 
@@ -63,7 +64,7 @@ class HotspotEditorElement extends AbstractNode {
 			$scaledImages[$variantName] = $scaledImage;
 		}
 
-		$view = new StandaloneSmartyView();
+		$view = GeneralUtility::makeInstance(StandaloneSmartyView::class);
 		$view->setTemplateRootPaths(['EXT:vierwd_base/Resources/Private/Templates/']);
 
 		$view->assignMultiple([
