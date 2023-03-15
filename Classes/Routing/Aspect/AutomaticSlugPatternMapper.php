@@ -90,8 +90,8 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 		$value = trim($value);
 
 		$value = (string)preg_replace('/\W+/u', '-', $value);
-		if (strlen($value) > 50) {
-			$value = substr($value, 0, 50);
+		if (mb_strlen($value) > 50) {
+			$value = mb_substr($value, 0, 50);
 		}
 		// remove leading and trailing -
 		$value = trim($value, '-');
