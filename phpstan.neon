@@ -14,6 +14,7 @@ parameters:
 
     checkMissingIterableValueType: false
 
+    checkDynamicProperties: true
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
     reportStaticMethodSignatures: true
