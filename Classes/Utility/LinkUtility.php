@@ -62,7 +62,7 @@ class LinkUtility {
 			$urlData = self::$typolinkCodecService->decode($typolink);
 			$linkData = self::$linkService->resolve($urlData['url']);
 
-			$isPhonelink = $linkData['type'] === 'phone' || $linkData['url'] && str_starts_with($linkData['url'], 'tel://');
+			$isPhonelink = $linkData['type'] === 'phone' || ($linkData['url'] ?? null) && str_starts_with($linkData['url'], 'tel://');
 			if ($isPhonelink) {
 				$linkData['type'] = 'phone';
 			}
@@ -99,7 +99,7 @@ class LinkUtility {
 
 			$isExternal = !$isVideo && !$isPhonelink && ($pathData['host'] || $urlData['target']);
 
-			$isAnchor = $pathData['fragment'] && $linkData['pageuid'] == $GLOBALS['TSFE']->id;
+			$isAnchor = isset($pathData['fragment']) && $linkData['pageuid'] == $GLOBALS['TSFE']->id;
 
 			if (!$urlData['class']) {
 				if ($isDownload) {
