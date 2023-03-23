@@ -54,6 +54,7 @@ class ListWordsCommand extends Command {
 			$text = strip_tags($text);
 			$text = html_entity_decode($text);
 			$text = preg_replace('/\s+/u', ' ', $text);
+			assert(is_string($text));
 			$textWords = array_map('trim', (array)preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
 				$words[$word] = mb_strlen((string)$word);

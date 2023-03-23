@@ -34,6 +34,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 
 		$noData = $input->getOption('no-data');
 		$contentOnly = $input->getOption('content-only');
+		assert(is_bool($contentOnly));
 
 		$commandLine = array_merge(['mysql'], $this->buildConnectionArguments(), ['--default-character-set=utf8mb4']);
 		$localMysqlProcess = new Process($commandLine);
