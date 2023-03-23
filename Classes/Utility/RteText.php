@@ -46,7 +46,9 @@ class RteText {
 		}, $content);
 		assert(is_string($content));
 
-		$content = preg_replace('/(?:<p>)?%VIDEO%(?<videoID>[^%]*)%(<?:\/p>)?/', '<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/$1?rel=0&color=white" frameborder="0" allowfullscreen></iframe></div>', $content);
+		$content = preg_replace_callback('/(?:<p>)?%VIDEO%(?<videoID>[^%]*)%(<?:\/p>)?/', function($matches): string {
+			return YouTubeUtility::generatePreview($matches['videoID']);
+		}, $content);
 		assert(is_string($content));
 
 		return $content;
