@@ -11,6 +11,17 @@
 				<source>Read less</source>
 				<target>Weniger lesen</target>
 			</trans-unit>
+
+			<trans-unit id="youtube-preview.accept">
+				<source>Accept and play video</source>
+				<target>Akzeptieren und abspielen</target>
+				<note>The text appears on the consent button.</note>
+			</trans-unit>
+			<trans-unit id="youtube-preview.text">
+				<source><![CDATA[By playing the video, data is transmitted to Google Ireland Limited. For further information on processing, please see Google's <a href="https://policies.google.com/privacy" class="external-link-new-window" target="_blank">Privacy Policy</a>.]]></source>
+				<target><![CDATA[Durch das Abspielen des Videos werden Daten an Google Ireland Limited übermittelt. Weitere Informationen zur Verarbeitung findest du in den <a href="https://policies.google.com/privacy" class="external-link-new-window" target="_blank">Datenschutzhinweisen</a> von Google.]]></target>
+				<note>Please keep the CDATA section and the link. Only translate the text within the link.</note>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
