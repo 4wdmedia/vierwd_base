@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2">
+	<file source-language="en" datatype="plaintext" original="messages" date="2023-03-23T11:39:48+01:00" product-name="vierwd_base">
+		<header/>
+		<body>
+			<trans-unit id="text.read-more">
+				<source>Read more</source>
+				<target>Weiterlesen</target>
+			</trans-unit>
+			<trans-unit id="text.read-less">
+				<source>Read less</source>
+				<target>Weniger lesen</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
