@@ -110,6 +110,7 @@ class YouTubeUtility {
 		$tryNames = ['maxresdefault.jpg', 'mqdefault.jpg', '0.jpg'];
 		foreach ($tryNames as $tryName) {
 			$previewImage = GeneralUtility::getUrl(
+				// @phpstan-ignore-next-line Safe\sprintf is not needed in PHP 8.0. But this code might run on PHP 7.4
 				sprintf('https://img.youtube.com/vi/%s/%s', $videoId, $tryName)
 			);
 			if ($previewImage !== false) {
@@ -123,6 +124,7 @@ class YouTubeUtility {
 	}
 
 	public static function getOEmbedUrl(string $videoId, string $format = 'json'): string {
+		// @phpstan-ignore-next-line Safe\sprintf is not needed in PHP 8.0. But this code might run on PHP 7.4
 		return sprintf('https://www.youtube.com/oembed?url=%s&format=%s', rawurlencode(sprintf('https://www.youtube.com/watch?v=%s', rawurlencode($videoId))), rawurlencode($format));
 	}
 
