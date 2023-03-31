@@ -31,7 +31,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.composer/cache
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: dependencies-composer-${{ hashFiles('composer.json') }}
           restore-keys: dependencies-composer-
 
