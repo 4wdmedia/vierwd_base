@@ -41,3 +41,8 @@ parameters:
         -
             message: '#^Call to deprecated method prophesize\(\) of class .*#'
             path: Tests
+        -
+            message: '#^Call to deprecated function Safe\\sprintf\(\)#'
+            paths:
+                - Classes
+            reportUnmatched: false
