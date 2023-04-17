@@ -23,7 +23,7 @@ class ListWordsCommand extends Command {
 		$headers = $queryBuilder->selectLiteral('DISTINCT header')
 			->from('tt_content')
 			->where('header!=""')
-			->execute()
+			->executeQuery()
 			->fetchAllAssociative();
 		$headers = array_column($headers, 'header');
 
@@ -32,7 +32,7 @@ class ListWordsCommand extends Command {
 			->from('tt_content')
 			->where('bodytext!=""')
 			->andWhere($queryBuilder->expr()->isNotNull('bodytext'))
-			->execute()
+			->executeQuery()
 			->fetchAllAssociative();
 		$texts = array_column($texts, 'bodytext');
 
@@ -86,7 +86,7 @@ class ListWordsCommand extends Command {
 	protected function getHyphenationWords(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
 		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
-		$hyphenationRows = $queryBuilder->execute()->fetchAllAssociative();
+		$hyphenationRows = $queryBuilder->executeQuery()->fetchAllAssociative();
 
 		$configuration = implode("\n", array_map(function($hyphenationRow): string {
 			assert(is_string($hyphenationRow['hyphenation']));

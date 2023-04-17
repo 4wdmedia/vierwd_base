@@ -107,7 +107,7 @@ class CheckBackendGroups {
 	protected function getBackendGroups(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('be_groups');
 		$queryBuilder->select('*')->from('be_groups');
-		return $queryBuilder->execute()->fetchAllAssociative();
+		return $queryBuilder->executeQuery()->fetchAllAssociative();
 	}
 
 	protected function getLanguageService(): LanguageService {
