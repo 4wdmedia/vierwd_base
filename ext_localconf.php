@@ -169,10 +169,6 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Frontend\Page\
 }
 
 if (!empty($_SERVER['VIERWD_CONFIG'])) {
-	// *****************************
-	// disable https on dev-machines
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['getPageOverlay'][] = \Vierwd\VierwdBase\Hooks\NoHttps::class;
-
 	// **************
 	// Allow Shift-Reload even without admin login in local context
 	if (!empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
