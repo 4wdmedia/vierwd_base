@@ -9,6 +9,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Http\Stream;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -23,8 +25,13 @@ class BrowserSync implements MiddlewareInterface {
 
 		$TSFE = $GLOBALS['TSFE'];
 
-		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['browserSync']) && !$TSFE->config['config.']['tx_vierwd.']['browserSync']) {
-			return $response;
+		try {
+			$browserSync = ArrayUtility::getValueByPath($TSFE->config, 'config/tx_vierwd./browserSync');
+			if (!$browserSync) {
+				return $response;
+			}
+		} catch (MissingArrayPathException $th) {
+			// ignore
 		}
 
 		// check if the port 3000 is open
