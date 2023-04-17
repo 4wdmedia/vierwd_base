@@ -125,7 +125,7 @@ abstract class BaseDatabaseCommand extends Command {
 	protected function isDbEmpty(): bool {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
-		$schemaManager = $connection->getSchemaManager();
+		$schemaManager = $connection->createSchemaManager();
 		$tables = $schemaManager->listTableNames();
 
 		return !$tables;
@@ -137,7 +137,7 @@ abstract class BaseDatabaseCommand extends Command {
 
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
-		$schemaManager = $connection->getSchemaManager();
+		$schemaManager = $connection->createSchemaManager();
 		$tables = $schemaManager->listTableNames();
 
 		$ignoreTables = [

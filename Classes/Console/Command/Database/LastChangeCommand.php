@@ -19,7 +19,7 @@ class LastChangeCommand extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
-		$schemaManager = $connection->getSchemaManager();
+		$schemaManager = $connection->createSchemaManager();
 		$tables = $schemaManager->listTables();
 		foreach ($tables as $table) {
 			$hasTstamp = $table->hasColumn('tstamp');
