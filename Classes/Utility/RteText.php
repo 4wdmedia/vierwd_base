@@ -27,7 +27,7 @@ class RteText {
 			self::$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		}
 
-		$content = self::$cObj->parseFunc($content, [], '< lib.parseFunc_RTE');
+		$content = self::$cObj->parseFunc($content, null, '< lib.parseFunc_RTE');
 
 		$readMore = LocalizationUtility::translate('text.read-more', 'VierwdBase') ?? '';
 		$readLess = LocalizationUtility::translate('text.read-less', 'VierwdBase') ?? '';

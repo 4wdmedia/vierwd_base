@@ -8,6 +8,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Resource\AbstractFile;
 use TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent;
 use TYPO3\CMS\Core\Resource\Index\FileIndexRepository;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -36,7 +37,7 @@ class DuplicateFiles {
 			$message = GeneralUtility::makeInstance(FlashMessage::class,
 				'Die Datei existiert bereits an einer anderen Stelle: ' . $files[0]['identifier'],
 				'Doppelte Datei',
-				FlashMessage::WARNING,
+				ContextualFeedbackSeverity::WARNING,
 				true // whether message should be stored in session
 			);
 			$flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);

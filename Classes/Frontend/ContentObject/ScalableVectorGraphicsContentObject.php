@@ -23,7 +23,9 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 */
 	public function render($conf = []) {
-		if (!empty($conf['if.']) && !$this->cObj->checkIf($conf['if.'])) {
+		$cObj = $this->getContentObjectRenderer();
+
+		if (!empty($conf['if.']) && !$cObj->checkIf($conf['if.'])) {
 			return '';
 		}
 
@@ -41,11 +43,11 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 		$conf['value'] = $conf['value'] ?? null;
 		$conf['class'] = $conf['class'] ?? null;
 
-		$width = isset($conf['width.']) ? $this->cObj->stdWrap($conf['width'], $conf['width.']) : $conf['width'];
-		$height = isset($conf['height.']) ? $this->cObj->stdWrap($conf['height'], $conf['height.']) : $conf['height'];
-		$src = isset($conf['src.']) ? $this->cObj->stdWrap($conf['src'], $conf['src.']) : $conf['src'];
-		$value = isset($conf['value.']) ? $this->cObj->stdWrap($conf['value'], $conf['value.']) : $conf['value'];
-		$class = isset($conf['class.']) ? $this->cObj->stdWrap($conf['class'], $conf['class.']) : $conf['class'];
+		$width = isset($conf['width.']) ? $cObj->stdWrap($conf['width'], $conf['width.']) : $conf['width'];
+		$height = isset($conf['height.']) ? $cObj->stdWrap($conf['height'], $conf['height.']) : $conf['height'];
+		$src = isset($conf['src.']) ? $cObj->stdWrap($conf['src'], $conf['src.']) : $conf['src'];
+		$value = isset($conf['value.']) ? $cObj->stdWrap($conf['value'], $conf['value.']) : $conf['value'];
+		$class = isset($conf['class.']) ? $cObj->stdWrap($conf['class'], $conf['class.']) : $conf['class'];
 
 		$identifier = '';
 		if ($src) {
@@ -97,7 +99,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 		$value = self::$svgInliner->renderSVG($value, $options);
 
 		if (isset($conf['stdWrap.'])) {
-			$value = $this->cObj->stdWrap($value, $conf['stdWrap.']);
+			$value = $cObj->stdWrap($value, $conf['stdWrap.']);
 			assert(is_string($value));
 		}
 		return $value;

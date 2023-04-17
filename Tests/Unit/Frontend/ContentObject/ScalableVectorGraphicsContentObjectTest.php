@@ -13,8 +13,19 @@ use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject
 
 class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 
-	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
-	protected $resetSingletonInstances = true;
+	protected bool $resetSingletonInstances = true;
+
+	public function setUp(): void {
+		parent::setUp();
+
+		$GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects']['SVG'] = ScalableVectorGraphicsContentObject::class;
+	}
+
+	public function tearDown(): void {
+		parent::tearDown();
+
+		unset($GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects']['SVG']);
+	}
 
 	/**
 	 * inlining an svg
@@ -31,7 +42,6 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$cObj->setRequest($requestMock);
-		$cObj->registerContentObjectClass(ScalableVectorGraphicsContentObject::class, 'SVG');
 
 		$svg = $cObj->cObjGetSingle('SVG', [
 			'value' => '<svg xmlns="http://www.w3.org/2000/svg"></svg>',

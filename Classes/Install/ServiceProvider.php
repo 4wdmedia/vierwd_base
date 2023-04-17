@@ -15,6 +15,10 @@ class ServiceProvider extends AbstractServiceProvider {
 		return __DIR__ . '/../../';
 	}
 
+	protected static function getPackageName(): string {
+		return 'vierwd/typo3-base';
+	}
+
 	public function getFactories(): array {
 		return [
 			PostComposerCommand::class => [ static::class, 'getPostComposerCommand' ],

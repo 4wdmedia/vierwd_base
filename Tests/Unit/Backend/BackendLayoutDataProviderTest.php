@@ -16,8 +16,7 @@ use Vierwd\VierwdBase\Backend\BackendLayoutDataProvider;
 
 class BackendLayoutDataProviderTest extends UnitTestCase {
 
-	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
-	protected $resetSingletonInstances = true;
+	protected bool $resetSingletonInstances = true;
 
 	/** @phpstan-ignore-next-line Root is never read, but that's ok */
 	private vfsStreamDirectory $root;

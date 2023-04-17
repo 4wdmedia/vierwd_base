@@ -73,10 +73,14 @@ class Utility {
 		$typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
 		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($params['meta.']);
 		foreach ($metaTags as $key => $data) {
-			$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
-			$required = !empty($data['required']);
+			$attribute = $defaultAttribute;
+			$required = false;
+			$value = '';
 
 			if (is_array($data)) {
+				$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
+				$required = !empty($data['required']);
+
 				// check if all keys are numeric
 				$onlyNumericKeys = !array_filter(array_keys($data), function($key) {
 					return !is_integer($key);
@@ -95,14 +99,14 @@ class Utility {
 							continue;
 						}
 
-						$pageRenderer->setMetaTag($attribute, $key, $value);
+						$pageRenderer->setMetaTag($attribute, (string)$key, $value);
 					}
 					continue;
 				}
 
 				$nodeValue = isset($data['_typoScriptNodeValue']) ? $data['_typoScriptNodeValue'] : '';
 				$value = trim((string)$this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.']));
-			} else {
+			} else if (is_scalar($data)) {
 				$value = (string)$data;
 			}
 
@@ -110,7 +114,7 @@ class Utility {
 				continue;
 			}
 
-			$pageRenderer->setMetaTag($attribute, $key, $value);
+			$pageRenderer->setMetaTag($attribute, (string)$key, $value);
 		}
 
 		return $content;

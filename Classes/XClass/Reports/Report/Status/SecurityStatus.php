@@ -12,10 +12,7 @@ use TYPO3\CMS\Reports\Report\Status\SecurityStatus as ParentSecurityStatus;
  */
 class SecurityStatus extends ParentSecurityStatus {
 
-	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
-	 */
-	public function getStatus(ServerRequestInterface $request = null) {
+	public function getStatus(ServerRequestInterface $request = null): array {
 		$statuses = parent::getStatus($request);
 
 		unset($statuses['encryptedConnectionStatus']);

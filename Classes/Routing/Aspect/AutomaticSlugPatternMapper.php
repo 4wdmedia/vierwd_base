@@ -132,7 +132,7 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 			if ($this->tableName === 'pages') {
 				$recordOverlay = $pageRepository->getPageOverlay($record, $languageId);
 			} else {
-				$recordOverlay = $pageRepository->getRecordOverlay($this->tableName, $record, $languageId) ?: null;
+				$recordOverlay = $pageRepository->getLanguageOverlay($this->tableName, $record, $languageId) ?: null;
 			}
 
 			if (is_array($recordOverlay) && isset($recordOverlay['sys_language_uid']) && $recordOverlay['sys_language_uid'] === $languageId) {

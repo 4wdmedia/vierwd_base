@@ -13,8 +13,7 @@ use Vierwd\VierwdBase\Hooks\Utility as BaseUtility;
 
 class UtilityTest extends UnitTestCase {
 
-	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
-	protected $resetSingletonInstances = true;
+	protected bool $resetSingletonInstances = true;
 
 	/**
 	 * test adding meta tags to page
