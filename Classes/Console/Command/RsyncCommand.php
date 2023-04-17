@@ -84,7 +84,9 @@ class RsyncCommand extends Command {
 			->from('sys_file_storage')
 			->andWhere($queryBuilder->expr()->like('configuration', $queryBuilder->createNamedParameter('<%')))
 			->andWhere($queryBuilder->expr()->eq('driver', $queryBuilder->createNamedParameter('Local')))
-			->execute();
+			->executeQuery()
+			->fetchAllAssociative()
+		;
 
 		$flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
 		$folders = [];
