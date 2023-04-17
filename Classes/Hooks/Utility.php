@@ -14,6 +14,8 @@ use Masterminds\HTML5;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -121,13 +123,22 @@ class Utility {
 	}
 
 	public function postProcessHTML(array $params, TypoScriptFrontendController $TSFE): void {
-		if (!empty($TSFE->config['config']['disableAllHeaderCode'])) {
-			// do not process content, if all headers are disabled. Probably plain text variant
-			return;
+		try {
+			$disableAllHeaderCode = ArrayUtility::getValueByPath($TSFE->config, 'config/disableAllHeaderCode');
+			if ($disableAllHeaderCode) {
+				return;
+			}
+		} catch (MissingArrayPathException $th) {
+			// ignore
 		}
 
-		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['postProcessHTML']) && !$TSFE->config['config.']['tx_vierwd.']['postProcessHTML']) {
-			return;
+		try {
+			$postProcessHTML = ArrayUtility::getValueByPath($TSFE->config, 'config/tx_vierwd./postProcessHTML');
+			if (!$postProcessHTML) {
+				return;
+			}
+		} catch (MissingArrayPathException $th) {
+			// ignore
 		}
 
 		if (!$TSFE->content) {
