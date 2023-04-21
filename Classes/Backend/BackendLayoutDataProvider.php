@@ -7,7 +7,9 @@ use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection;
 use TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext;
 use TYPO3\CMS\Backend\View\BackendLayout\DataProviderInterface;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
+use TYPO3\CMS\Core\TypoScript\AST\AstBuilder;
+use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
+use TYPO3\CMS\Core\TypoScript\Tokenizer\LossyTokenizer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BackendLayoutDataProvider implements DataProviderInterface {
@@ -20,21 +22,23 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 			return;
 		}
 
+		$tokenizer = GeneralUtility::makeInstance(LossyTokenizer::class);
+		$astBuilder = GeneralUtility::makeInstance(AstBuilder::class);
+
 		$paths = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'];
 		foreach ($paths as $path) {
-			$parser = GeneralUtility::makeInstance(TypoScriptParser::class);
-
 			foreach (new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS) as $file) {
 				if (!$file instanceof \SplFileInfo || is_dir($file->getPathname())) {
 					continue;
 				}
 				$content = (string)file_get_contents($file->getPathname());
-				$parser->parse($content);
-				if (!$parser->errors) {
-					$key = $file->getBasename('.' . $file->getExtension());
-					$parser->setup['identifier'] = $key;
-					$this->backendLayouts[$key] = $parser->setup;
-				}
+				$lineStream = $tokenizer->tokenize($content);
+				$rootNode = GeneralUtility::makeInstance(RootNode::class);
+				$typoScriptConfig = $astBuilder->build($lineStream, $rootNode)->toArray();
+
+				$key = $file->getBasename('.' . $file->getExtension());
+				$typoScriptConfig['identifier'] = $key;
+				$this->backendLayouts[$key] = $typoScriptConfig;
 			}
 		}
 	}
