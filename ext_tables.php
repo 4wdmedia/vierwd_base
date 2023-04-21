@@ -26,21 +26,3 @@ if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) {
 }
 
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base');
-
-if (TYPO3_MODE === 'BE') {
-	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-		'VierwdBase',
-		'tools', // Make module a submodule of 'tools'
-		'translationstate', // Submodule key
-		'', // Position
-		[
-			\Vierwd\VierwdBase\Controller\TranslationStatusController::class => 'index,export',
-		],
-		[
-			'access' => 'admin',
-			'icon'   => 'EXT:vierwd_base/Resources/Public/Icons/translation-status.svg',
-			'labels' => 'LLL:EXT:vierwd_base/Resources/Private/Language/locallang_mod.xlf',
-			'name'   => 'tools_TranslationStatus',
-		]
-	);
-}

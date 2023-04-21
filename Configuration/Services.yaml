@@ -15,6 +15,10 @@ services:
       - name: event.listener
         identifier: 'vierwdModifyGroups'
         event: TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent
+
+  Vierwd\VierwdBase\Controller\:
+    resource: '../Classes/Controller/*'
+
   Vierwd\VierwdBase\Resource\CacheBuster:
     tags:
       - name: event.listener
