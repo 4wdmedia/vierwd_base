@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\View;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -65,7 +66,7 @@ class UtilityTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testProcessHtml(): void {
-		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
+		/** @var BaseUtility&MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
@@ -96,7 +97,7 @@ class UtilityTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testProcessHtmlWithLongScript(): void {
-		/** @var BaseUtility&\PHPUnit\Framework\MockObject\MockObject $utility */
+		/** @var BaseUtility&MockObject $utility */
 		$utility = $this->getMockBuilder(BaseUtility::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
@@ -118,11 +119,8 @@ class UtilityTest extends UnitTestCase {
 		self::assertEquals($expectedContent, $actualContent);
 	}
 
-	/**
-	 * @return TypoScriptFrontendController&\PHPUnit\Framework\MockObject\MockObject
-	 */
-	protected function setupTsfeMock() {
-		/** @var TypoScriptFrontendController&\PHPUnit\Framework\MockObject\MockObject $tsfe */
+	protected function setupTsfeMock(): TypoScriptFrontendController&MockObject {
+		/** @var TypoScriptFrontendController&MockObject $tsfe */
 		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
 			->getMock();
