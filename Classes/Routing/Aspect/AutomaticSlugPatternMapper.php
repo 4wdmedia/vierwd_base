@@ -6,7 +6,7 @@ namespace Vierwd\VierwdBase\Routing\Aspect;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Routing\Aspect\PersistedPatternMapper;
-use TYPO3\CMS\Core\Site\SiteLanguageAwareTrait;
+// use TYPO3\CMS\Core\Site\SiteLanguageAwareTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 
-	use SiteLanguageAwareTrait;
+	// use SiteLanguageAwareTrait;
 
 	public function __construct(array $settings) {
 		parent::__construct($settings);
@@ -111,36 +111,39 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 		return $value;
 	}
 
-	protected function resolveOverlay(?array $record): ?array {
-		$record = parent::resolveOverlay($record);
-		if (!$record) {
-			return $record;
-		}
+	// TODO: Maybe this is not needed anymore
+	// TYPO3 v9 did not use the fallback languages and generated a slug with the default language
 
-		$currentLanguageId = $this->siteLanguage->getLanguageId();
-		if (isset($record['sys_language_uid']) && $record['sys_language_uid'] === $currentLanguageId) {
-			return $record;
-		}
+	// protected function resolveOverlay(?array $record): ?array {
+	// 	$record = parent::resolveOverlay($record);
+	// 	if (!$record) {
+	// 		return $record;
+	// 	}
 
-		$fallbackLanguages = $this->resolveAllRelevantLanguageIds();
-		$pageRepository = $this->createPageRepository();
-		foreach ($fallbackLanguages as $languageId) {
-			if (in_array($languageId, [-1, 0, $currentLanguageId])) {
-				continue;
-			}
+	// 	$currentLanguageId = $this->siteLanguage->getLanguageId();
+	// 	if (isset($record['sys_language_uid']) && $record['sys_language_uid'] === $currentLanguageId) {
+	// 		return $record;
+	// 	}
 
-			if ($this->tableName === 'pages') {
-				$recordOverlay = $pageRepository->getPageOverlay($record, $languageId);
-			} else {
-				$recordOverlay = $pageRepository->getLanguageOverlay($this->tableName, $record, $languageId) ?: null;
-			}
+	// 	$fallbackLanguages = $this->resolveAllRelevantLanguageIds();
+	// 	$pageRepository = $this->createPageRepository();
+	// 	foreach ($fallbackLanguages as $languageId) {
+	// 		if (in_array($languageId, [-1, 0, $currentLanguageId])) {
+	// 			continue;
+	// 		}
 
-			if (is_array($recordOverlay) && isset($recordOverlay['sys_language_uid']) && $recordOverlay['sys_language_uid'] === $languageId) {
-				return $recordOverlay;
-			}
-		}
+	// 		if ($this->tableName === 'pages') {
+	// 			$recordOverlay = $pageRepository->getPageOverlay($record, $languageId);
+	// 		} else {
+	// 			$recordOverlay = $pageRepository->getLanguageOverlay($this->tableName, $record, $languageId) ?: null;
+	// 		}
 
-		return $record;
-	}
+	// 		if (is_array($recordOverlay) && isset($recordOverlay['sys_language_uid']) && $recordOverlay['sys_language_uid'] === $languageId) {
+	// 			return $recordOverlay;
+	// 		}
+	// 	}
+
+	// 	return $record;
+	// }
 
 }
