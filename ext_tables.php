@@ -1,5 +1,5 @@
 <?php
-defined('TYPO3_MODE') || die('Access denied.');
+defined('TYPO3') || die();
 
 if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) {
 	// remove some reports to prevent unneeded report-mails
