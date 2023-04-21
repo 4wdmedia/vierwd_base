@@ -10,6 +10,9 @@ return [
 		'dividers2tabs' => true,
 		'searchFields' => 'hyphenation',
 		'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg',
+		'security' => [
+			'ignorePageTypeRestriction' => true,
+		],
 	],
 	'types' => [
 		'1' => ['showitem' => 'hyphenation'],

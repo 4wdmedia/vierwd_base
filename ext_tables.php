@@ -25,8 +25,6 @@ if (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI) {
 	unset($reportProviders);
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_vierwdbase_hyphenation');
-
 \Vierwd\VierwdBase\Hooks\ContentElements::addFCEs('vierwd_base');
 
 if (TYPO3_MODE === 'BE') {
