@@ -62,7 +62,7 @@ class LinkUtility {
 			$urlData = self::$typolinkCodecService->decode($typolink);
 			$linkData = self::$linkService->resolve($urlData['url']);
 
-			$isPhonelink = $linkData['type'] === 'phone' || ($linkData['url'] ?? null) && str_starts_with($linkData['url'], 'tel://');
+			$isPhonelink = $linkData['type'] === 'phone' || !empty($linkData['url'])  && str_starts_with($linkData['url'], 'tel://');
 			if ($isPhonelink) {
 				$linkData['type'] = 'phone';
 			}
@@ -81,7 +81,7 @@ class LinkUtility {
 
 			$pathData = parse_url($link);
 			assert(is_array($pathData));
-			$isVideo = !$isDownload && $pathData && in_array($pathData['host'], ['www.youtube.com', 'vimeo.com', 'youtu.be', 'www.youtube-nocookie.com']);
+			$isVideo = !$isDownload && $pathData && in_array(!empty($pathData['host']), ['www.youtube.com', 'vimeo.com', 'youtu.be', 'www.youtube-nocookie.com']);
 
 			if ($isVideo) {
 				$matches = null;
@@ -97,9 +97,9 @@ class LinkUtility {
 				}
 			}
 
-			$isExternal = !$isVideo && !$isPhonelink && ($pathData['host'] || $urlData['target']);
+			$isExternal = !$isVideo && !$isPhonelink && (!empty($pathData['host']) || !empty($urlData['target']));
 
-			$isAnchor = isset($pathData['fragment']) && $linkData['pageuid'] == $GLOBALS['TSFE']->id;
+			$isAnchor = !empty($pathData['fragment']) && ($linkData['pageuid'] ?? false) == $GLOBALS['TSFE']->id;
 
 			if (!$urlData['class']) {
 				if ($isDownload) {
