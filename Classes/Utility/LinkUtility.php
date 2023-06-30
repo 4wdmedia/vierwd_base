@@ -81,7 +81,7 @@ class LinkUtility {
 
 			$pathData = parse_url($link);
 			assert(is_array($pathData));
-			$isVideo = !$isDownload && $pathData && in_array(!empty($pathData['host']), ['www.youtube.com', 'vimeo.com', 'youtu.be', 'www.youtube-nocookie.com']);
+			$isVideo = !$isDownload && $pathData && in_array($pathData['host'] ?? null, ['www.youtube.com', 'vimeo.com', 'youtu.be', 'www.youtube-nocookie.com']);
 
 			if ($isVideo) {
 				$matches = null;

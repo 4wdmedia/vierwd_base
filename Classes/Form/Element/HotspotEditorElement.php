@@ -98,7 +98,7 @@ class HotspotEditorElement extends AbstractNode {
 	}
 
 	protected function getCropVariantCollection(): CropVariantCollection {
-		if ($this->data['processedTca']['columns']['crop']['config']['cropVariants']) {
+		if ($this->data['processedTca']['columns']['crop']['config']['cropVariants'] ?? null) {
 			$cropVariants = $this->data['processedTca']['columns']['crop']['config']['cropVariants'];
 		} else {
 			// unfortunatly the default crop variants are not available publicly
