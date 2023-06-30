@@ -61,9 +61,9 @@ class ListWordsCommand extends Command {
 			}
 		});
 
-		$words = array_filter($words, function($length) {
-			return $length > 7;
-		});
+		$words = array_filter($words, function($length, $word) {
+			return $length > 7 && !is_numeric($word);
+		}, ARRAY_FILTER_USE_BOTH);
 
 		$words = array_keys($words);
 		$words = (array)array_combine($words, $words);

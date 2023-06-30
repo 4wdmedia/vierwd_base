@@ -167,7 +167,12 @@ class Utility {
 			$replacements = [];
 			$shy          = html_entity_decode('&shy;', 0, 'UTF-8');
 			foreach ($hyphenationWords as $word) {
-				$replacements[trim(str_replace(['#', '|', '•', $shy], '', $word))] = trim(str_replace(['#', '|', '•'], $shy, $word));
+				$searchWord = trim(str_replace(['#', '|', '•', $shy], '', $word));
+				if (is_numeric($searchWord)) {
+					// Do not add shy within long numbers
+					continue;
+				}
+				$replacements[$searchWord] = trim(str_replace(['#', '|', '•'], $shy, $word));
 			}
 
 			uksort($replacements, function($word1, $word2) {
