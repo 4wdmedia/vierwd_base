@@ -21,6 +21,8 @@ class DevMailTransport extends AbstractTransport {
 	private array $mailSettings;
 
 	public function __construct(array $mailSettings) {
+		$this->command = ($_SERVER['BREW_PREFIX'] ?? '/usr/local') . '/bin/msmtp';
+
 		$this->mailSettings = $mailSettings;
 		$this->stream = new ProcessStream();
 		parent::__construct();
@@ -35,16 +37,20 @@ class DevMailTransport extends AbstractTransport {
 			return $this->mailSettings['defaultReceiverAddress'];
 		}
 
-		// dev-environment sendmail_path contains receiver address
-		$sendmailPathParts = explode(' ', ini_get('sendmail_path') ?: '');
-		foreach ($sendmailPathParts as $commandPart) {
-			if (strpos($commandPart, '@')) {
-				return $commandPart;
-			}
-		}
-
 		if (isset($_SERVER['VIERWD_EMAIL'])) {
 			return $_SERVER['VIERWD_EMAIL'];
+		}
+
+		// dev-environment sendmail_path contains receiver address
+		$sendmailPathParts = explode(' ', ini_get('sendmail_path') ?: '');
+		$lastEmail = '';
+		foreach ($sendmailPathParts as $commandPart) {
+			if (strpos($commandPart, '@')) {
+				$lastEmail = $commandPart;
+			}
+		}
+		if ($lastEmail) {
+			return $lastEmail;
 		}
 
 		throw new \Exception('Could not find default mail receiver address', 1653980884);
