@@ -28,6 +28,7 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
 		"friendsofphp/php-cs-fixer": "^3.15.0",
 		"jangregor/phpstan-prophecy": "^1.0.0",
+		"mikey179/vfsstream": "^1.6",
 		"phpspec/prophecy-phpunit": "^2.0",
 		"phpstan/extension-installer": "^1.0.0",
 		"phpstan/phpstan-deprecation-rules": "^1.0.0",
