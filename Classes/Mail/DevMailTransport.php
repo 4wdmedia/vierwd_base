@@ -60,8 +60,12 @@ class DevMailTransport extends AbstractTransport {
 		if ($message instanceof Message) {
 			// Update from header
 			$headers = $message->getHeaders();
-			$senderAddress = $headers->getHeaderBody('From')[0];
-			$senderName = $senderAddress ? $senderAddress->getName() : $this->mailSettings['defaultMailFromName'];
+			$fromHeaders = $headers->getHeaderBody('From');
+			$senderName = $this->mailSettings['defaultMailFromName'];
+			if ($fromHeaders && is_array($fromHeaders)) {
+				$senderAddress = $fromHeaders[0];
+				$senderName = $senderAddress->getName();
+			}
 			$headers->remove('From');
 			$headers->remove('Cc');
 			$headers->remove('Bcc');
