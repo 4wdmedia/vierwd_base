@@ -24,10 +24,6 @@ config.tx_vierwd {
 	# Disable automatic adding of rel="noopener" to external links
 	# noopener = 0
 
-	# Prepending of absRefPrefix to public URLs of images (when getPublicUrl() is called).
-	# Better use $imageService->getImageUri() within template
-	prependAbsRefPrefixToPublicUrl = 1
-
 	# Content-Elements get an id-attribute with their element id.
 	# translated elements can be prefixed with their original element id.
 	# This behaviour is disabled by default
