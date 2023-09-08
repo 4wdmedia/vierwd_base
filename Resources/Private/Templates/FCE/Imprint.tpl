@@ -13,7 +13,7 @@
 	{$header = $data.header|default:'Concept / Design / Implementation'}
 	{$subline = 'Digital Media / Corporate Design'}
 
-	{if $siteLanguage && $siteLanguage->getTwoLetterIsoCode() === 'de'}
+	{if $siteLanguage && $siteLanguage->getLocale()->getLanguageCode() === 'de'}
 		{$header = $data.header|default:'Konzeption / Gestaltung / Realisierung'}
 		{$subline = 'Digitale Medien / Corporate Design'}
 	{/if}
