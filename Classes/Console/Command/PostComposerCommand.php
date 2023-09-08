@@ -50,8 +50,8 @@ class PostComposerCommand extends Command {
 			}
 		}
 
-		$typo3cms = Environment::getProjectPath() . '/vendor/bin/typo3cms';
-		$commandDispatcher = CommandDispatcher::create($typo3cms);
+		$typo3Command = Environment::getProjectPath() . '/vendor/bin/typo3';
+		$commandDispatcher = CommandDispatcher::create($typo3Command);
 
 		// check if database is fully available
 		if ($this->hasValidDatabaseConnection()) {

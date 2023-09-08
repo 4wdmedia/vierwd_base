@@ -48,8 +48,8 @@ abstract class BaseDatabaseCommand extends Command {
 
 		$this->dbConfig = $this->connectionConfiguration->build();
 
-		$typo3cms = Environment::getProjectPath() . '/vendor/bin/typo3cms';
-		$this->commandDispatcher = CommandDispatcher::create($typo3cms);
+		$typo3Command = Environment::getProjectPath() . '/vendor/bin/typo3';
+		$this->commandDispatcher = CommandDispatcher::create($typo3Command);
 	}
 
 	/**
