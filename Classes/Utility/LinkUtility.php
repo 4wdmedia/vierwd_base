@@ -72,10 +72,10 @@ class LinkUtility {
 			$link = self::$cObj->typoLink_URL(['parameter' => $typolink]);
 
 			if ($isPagelink) {
-				$externalURL = $GLOBALS['TSFE']->sys_page->getExtURL($GLOBALS['TSFE']->sys_page->getPage($linkData['pageuid']));
-				if ($externalURL) {
+				$targetPage = $GLOBALS['TSFE']->sys_page->getPage($linkData['pageuid']);
+				if ($targetPage && $targetPage['doktype'] === PageRepository::DOKTYPE_LINK && $targetPage['url']) {
 					$isPagelink = false;
-					$link = $externalURL;
+					$link = $targetPage['url'];
 				}
 			}
 
