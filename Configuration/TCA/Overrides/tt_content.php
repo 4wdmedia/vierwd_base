@@ -1,7 +1,7 @@
 <?php
 
 // Header is a required field
-$GLOBALS['TCA']['tt_content']['columns']['header']['config']['eval'] = 'trim,required';
+$GLOBALS['TCA']['tt_content']['columns']['header']['config']['required'] = true;
 
 // Disable file Upload in content-elements
 $GLOBALS['TCA']['tt_content']['columns']['image']['config']['appearance']['fileUploadAllowed'] = false;
@@ -40,7 +40,10 @@ if (empty($GLOBALS['TCA']['tt_content']['columns']['section_frame'])) {
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => [['Automatisch', '0']],
+			'items' => [[
+				'label' => 'Automatisch',
+				'value' => '0',
+			]],
 		],
 	];
 
