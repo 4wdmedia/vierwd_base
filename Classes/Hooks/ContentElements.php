@@ -15,8 +15,6 @@ class ContentElements implements SingletonInterface {
 
 	protected ?ContentObjectRenderer $cObj = null;
 
-	public static ?string $oldProcFunc = null;
-
 	protected static array $groups = ['vierwd' => []];
 	protected static array $groupNames = ['vierwd' => 'FORWARD MEDIA'];
 
@@ -35,72 +33,6 @@ class ContentElements implements SingletonInterface {
 		$GLOBALS['TCA'] = $event->getTca();
 		self::addTCA($GLOBALS['TCA']);
 		$event->setTca($GLOBALS['TCA']);
-	}
-
-	/**
-	 * process the CType and sort custom FCEs into a special group
-	 * @param object|null $refObj
-	 */
-	public function processCType(array $params, $refObj): array {
-		if (static::$oldProcFunc) {
-			GeneralUtility::callUserFunction(static::$oldProcFunc, $params, $refObj);
-		}
-
-		$CTypes = [];
-		foreach (self::$groups as $groupKey => $groupCTypes) {
-			foreach ($groupCTypes as $CType) {
-				$CTypes[$CType] = $groupKey;
-			}
-		}
-
-		$defaultGroups = [
-			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.standard' => 'common',
-			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.lists' => 'lists',
-			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.menu' => 'menu',
-			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.special' => 'special',
-			'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:CType.div.forms' => 'forms',
-		];
-
-		$groups = [];
-		$currentGroup = '';
-		foreach ($params['items'] as $item) {
-			if ($item[1] === '--div--') {
-				// it's a group
-				$groupName = $defaultGroups[$item[0]] ?? $item[0];
-				$currentGroup = $groupName;
-				continue;
-			}
-
-			// convert the name
-			$item[0] = $GLOBALS['LANG']->sL($item[0]);
-
-			if (isset($CTypes[$item[1]])) {
-				$group = $CTypes[$item[1]];
-				$groups[$group][] = $item;
-			} else {
-				$groups[$currentGroup][] = $item;
-			}
-		}
-
-		$defaultGroups = array_flip($defaultGroups);
-		$items = [];
-		foreach ($groups as $groupKey => $elements) {
-			$groupName = self::$groupNames[$groupKey] ?? $defaultGroups[$groupKey];
-			$items[] = [$groupName, '--div--'];
-
-			if (isset(self::$groupNames[$groupKey])) {
-				// Custom group -> sort
-				usort($elements, function(array $plugin1, array $plugin2): int {
-					return strnatcasecmp($plugin1[0], $plugin2[0]);
-				});
-			}
-
-			$items = array_merge($items, $elements);
-		}
-
-		$params['items'] = $items;
-
-		return $params['items'];
 	}
 
 	static public function initializeFCEs(string $extensionKey): void {
