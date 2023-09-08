@@ -14,6 +14,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\Prin
 ];
 
 // ***************
+// shorten some paths to static files via the /static/ redirect in .htaccess
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] = \Vierwd\VierwdBase\Frontend\RenderPostProcess::class . '->renderPostProcess';
+
+// ***************
 // minify JS hook
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsMinify';
 $GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsCompressHandler';
