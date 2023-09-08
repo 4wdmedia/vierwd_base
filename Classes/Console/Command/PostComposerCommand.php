@@ -32,8 +32,8 @@ class PostComposerCommand extends Command {
 			if (!is_link($staticResources)) {
 				$composerFile = Environment::getProjectPath() . '/composer.json';
 				$composerInfo = json_decode((string)file_get_contents($composerFile), true);
-				if (is_array($composerInfo) && isset($composerInfo['extra'], $composerInfo['extra']['extensionName'])) {
-					$target = 'typo3conf/ext/' . $composerInfo['extra']['extensionName'] . '/Resources/Public/static';
+				if (is_array($composerInfo) && isset($composerInfo['extra']['vierwd/typo3-base']['composerName'])) {
+					$target = '_assets/' . md5('/vendor/' . $composerInfo['extra']['vierwd/typo3-base']['composerName'] . '/') . '/static';
 					$target = escapeshellarg($target);
 					$staticResources = escapeshellarg($staticResources);
 					`ln -s $target $staticResources`;
