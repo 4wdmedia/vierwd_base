@@ -10,6 +10,8 @@ use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject
  */
 function smarty_function_svg(array $params, Smarty_Internal_Template $smarty): string {
 	$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-	$svgObject = GeneralUtility::makeInstance(ScalableVectorGraphicsContentObject::class, $cObj);
+	$svgObject = GeneralUtility::makeInstance(ScalableVectorGraphicsContentObject::class);
+	$svgObject->setRequest($GLOBALS['TYPO3_REQUEST']);
+	$svgObject->setContentObjectRenderer($cObj);
 	return $svgObject->render($params);
 }
