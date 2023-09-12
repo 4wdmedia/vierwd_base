@@ -7,12 +7,8 @@ return [
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'dividers2tabs' => true,
 		'searchFields' => 'hyphenation',
 		'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg',
-	],
-	'interface' => [
-		'showRecordFieldList' => 'hyphenation',
 	],
 	'types' => [
 		'1' => ['showitem' => 'hyphenation'],
