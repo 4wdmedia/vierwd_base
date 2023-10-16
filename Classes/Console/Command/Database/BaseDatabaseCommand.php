@@ -137,6 +137,8 @@ abstract class BaseDatabaseCommand extends Command {
 
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
+		// Get all tables (even the filtered tables)
+		$connection->getConfiguration()->setSchemaAssetsFilter(null);
 		$schemaManager = $connection->createSchemaManager();
 		$tables = $schemaManager->listTableNames();
 
