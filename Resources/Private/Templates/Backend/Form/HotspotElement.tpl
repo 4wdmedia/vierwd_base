@@ -8,7 +8,7 @@
 		<div class="form-control-wrap">
 			<select class="vierwd-hotspot__image-variant form-control form-control-adapt">
 				{foreach $cropVariants as $cropVariant => $cropConfig}
-					{$scaledImageUrl = $scaledImages[$cropVariant]->getPublicUrl(true)}
+					{$scaledImageUrl = $scaledImages[$cropVariant]->getPublicUrl()}
 					{$croppedImageWidth = $croppedImages[$cropVariant]->getProperty('width')}
 					{$croppedImageHeight = $croppedImages[$cropVariant]->getProperty('height')}
 					<option value="{$cropVariant}" data-image="{$scaledImageUrl}" data-width="{$croppedImageWidth}" data-height="{$croppedImageHeight}">
@@ -39,6 +39,6 @@
 
 	<div class="vierwd-hotspot__image-container">
 		<div class="vierwd-hotspot__position"></div>
-		<img src="{$scaledImages[$currentVariant]->getPublicUrl(true)}" data-width="{$croppedImages[$currentVariant]->getProperty('width')}" data-height="{$croppedImages[$currentVariant]->getProperty('height')}" class="vierwd-hotspot__image">
+		<img src="{$scaledImages[$currentVariant]->getPublicUrl()}" data-width="{$croppedImages[$currentVariant]->getProperty('width')}" data-height="{$croppedImages[$currentVariant]->getProperty('height')}" class="vierwd-hotspot__image">
 	</div>
 </div>
