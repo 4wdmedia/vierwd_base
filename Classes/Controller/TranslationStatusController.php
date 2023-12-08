@@ -3,13 +3,31 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Controller;
 
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Module\ModuleProvider;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\FluidViewAdapter;
 use Vierwd\VierwdSmarty\Controller\SmartyController;
 
 class TranslationStatusController extends SmartyController {
+
+	public function __construct(
+		protected readonly PageRenderer $pageRenderer,
+		protected readonly IconFactory $iconFactory,
+		protected readonly UriBuilder $backendUriBuilder,
+		protected readonly ModuleProvider $moduleProvider,
+		protected readonly FlashMessageService $flashMessageService,
+		protected readonly ExtensionConfiguration $extensionConfiguration,
+	) {
+	}
 
 	/**
 	 * get a list of language files. Returns an array with extensionName and fileName.
@@ -126,9 +144,9 @@ class TranslationStatusController extends SmartyController {
 		];
 	}
 
-	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): void {
+	public function indexAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false): ResponseInterface {
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-		$pageRenderer->loadRequireJsModule('TYPO3/CMS/VierwdBase/TranslationStatus');
+		$pageRenderer->loadJavaScriptModule('@vierwd/vierwd_base/TranslationStatus.js');
 		$pageRenderer->addCssFile('EXT:vierwd_base/Resources/Public/Css/translation-status.css');
 
 		$languageFiles = $this->getLanguageFiles();
@@ -146,6 +164,20 @@ class TranslationStatusController extends SmartyController {
 		if ($extensionName && $fileName) {
 			$this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
 		}
+
+		$moduleTemplate = new ModuleTemplate(
+			$this->pageRenderer,
+			$this->iconFactory,
+			$this->backendUriBuilder,
+			$this->moduleProvider,
+			$this->flashMessageService,
+			$this->extensionConfiguration,
+			// @phpstan-ignore-next-line
+			new FluidViewAdapter($this->view),
+			$this->request
+		);
+
+		return $this->htmlResponse($moduleTemplate->render());
 	}
 
 	public function exportAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false, string $search = '', array $languages = []): void {

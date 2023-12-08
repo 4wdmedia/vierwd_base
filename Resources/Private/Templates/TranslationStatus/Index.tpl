@@ -4,7 +4,7 @@
 <div class="module-docheader-bar t3js-module-docheader-bar">
 	<div class="module-docheader-bar module-docheader-bar-navigation form-inline">
 		<div class="form-group form-group-sm">
-			<select class="form-control" name="_fileSelector" onchange="if(this.options[this.selectedIndex].value){ window.location.href=(this.options[this.selectedIndex].value);}">
+			<select class="form-control" name="_fileSelector">
 				{if !$currentFileName}
 					<option>Datei auswählen</option>
 				{/if}
@@ -35,12 +35,12 @@
 
 {block name=content}
 {fluid}
+<h1>Übersetzungsstatus</h1>
 <f:form action="export" id="exportForm">
 	<f:form.hidden name="showAllLabels" value="{$currentShowAllLabels}" />
 	<f:form.hidden name="extensionName" value="{$currentExtensionName}" />
 	<f:form.hidden name="fileName" value="{$currentFileName}" />
 
-	<h1>Übersetzungsstatus</h1>
 	{if !$currentFileName}
 		<p>
 			Bitte wählen Sie eine Datei aus, die überprüft werden soll.
@@ -89,9 +89,10 @@
 	{/if}
 
 	<div class="typo3-listOptions">
-		<div class="checkbox">
-			<label for="check-show-all-translations">
-				<input type="checkbox" class="checkbox" onclick="window.location.href = '{uri_action arguments=[extensionName => $currentExtensionName, fileName => $currentFileName, showAllLabels => !$currentShowAllLabels]}'; return false;" id="check-show-all-translations" value="1"{if $currentShowAllLabels} checked{/if}>Alle Labels anzeigen
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" data-href="{uri_action arguments=[extensionName => $currentExtensionName, fileName => $currentFileName, showAllLabels => !$currentShowAllLabels]}" id="check-show-all-translations" value="1"{if $currentShowAllLabels} checked{/if}>
+			<label for="check-show-all-translations" class="form-check-label">
+				Alle Labels anzeigen
 			</label>
 		</div>
 	</div>
