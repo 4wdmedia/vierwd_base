@@ -10,7 +10,7 @@ use Vierwd\VierwdBase\XClass\Core\Resource\StorageRepository;
 class StorageRepositoryTest extends UnitTestCase {
 
 	public function testCaseSensitivity(): void {
-		$mock = $this->getAccessibleMock(StorageRepository::class, ['dummy'], [], '', false);
+		$mock = $this->getAccessibleMock(StorageRepository::class, null, [], '', false);
 
 		self::assertEquals(true, $mock->_call('testCaseSensitivity', '/any/path'));
 	}

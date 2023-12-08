@@ -27,10 +27,10 @@ class MailWriterTest extends UnitTestCase {
 
 	public function testWritingLogSendsMail(): void {
 		$mailMessage = $this->prophesize(MailMessage::class);
-		$mailMessage->from('sender@4wdmedia.de')->shouldBeCalled();
-		$mailMessage->to('receiver@4wdmedia.de')->shouldBeCalled();
-		$mailMessage->subject('subject')->shouldBeCalled();
-		$mailMessage->text(Argument::any())->shouldBeCalled();
+		$mailMessage->from('sender@4wdmedia.de')->shouldBeCalled()->willReturn($mailMessage);
+		$mailMessage->to('receiver@4wdmedia.de')->shouldBeCalled()->willReturn($mailMessage);
+		$mailMessage->subject('subject')->shouldBeCalled()->willReturn($mailMessage);
+		$mailMessage->text(Argument::any())->shouldBeCalled()->willReturn($mailMessage);
 		$mailMessage->send()->shouldBeCalled();
 
 		GeneralUtility::addInstance(MailMessage::class, $mailMessage->reveal());

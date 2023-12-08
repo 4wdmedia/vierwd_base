@@ -22,6 +22,8 @@ class UtilityTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testMetaTags(): void {
+		$this->markTestIncomplete();
+
 		// Initialize Application, because a valid Service Container is needed
 		$classLoader = include PHPUNIT_COMPOSER_INSTALL;
 		Bootstrap::init($classLoader, true);

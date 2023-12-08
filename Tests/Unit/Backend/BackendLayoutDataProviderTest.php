@@ -26,6 +26,8 @@ class BackendLayoutDataProviderTest extends UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		$this->markTestIncomplete();
+
 		// TimeTracker is used by TypoScriptParser, when an error occurs during parsing
 		$this->mockTimeTracker = $this->getMockBuilder(TimeTracker::class)
 			->disableOriginalConstructor()

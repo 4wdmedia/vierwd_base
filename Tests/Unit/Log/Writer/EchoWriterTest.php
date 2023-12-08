@@ -39,7 +39,7 @@ class EchoWriterTest extends UnitTestCase {
 		$this->setUpEnvironment(false);
 
 		/** @var EchoWriter&\TYPO3\TestingFramework\Core\AccessibleObjectInterface $subject */
-		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
+		$subject = $this->getAccessibleMock(EchoWriter::class, null);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 		$subject->writeLog($simpleRecord);
 		$property = new \ReflectionProperty(EchoWriter::class, 'output');
@@ -57,7 +57,7 @@ class EchoWriterTest extends UnitTestCase {
 		GeneralUtility::addInstance(StreamOutput::class, $outputMock->reveal());
 
 		/** @var EchoWriter&\TYPO3\TestingFramework\Core\AccessibleObjectInterface $subject */
-		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
+		$subject = $this->getAccessibleMock(EchoWriter::class, null);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 		$subject->writeLog($simpleRecord);
 	}
@@ -71,7 +71,7 @@ class EchoWriterTest extends UnitTestCase {
 		GeneralUtility::addInstance(StreamOutput::class, $outputMock->reveal());
 
 		/** @var EchoWriter&\TYPO3\TestingFramework\Core\AccessibleObjectInterface $subject */
-		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
+		$subject = $this->getAccessibleMock(EchoWriter::class, null);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::NOTICE, 'test record');
 		$subject->writeLog($simpleRecord);
 	}
@@ -85,7 +85,7 @@ class EchoWriterTest extends UnitTestCase {
 		GeneralUtility::addInstance(StreamOutput::class, $outputMock->reveal());
 
 		/** @var EchoWriter&\TYPO3\TestingFramework\Core\AccessibleObjectInterface $subject */
-		$subject = $this->getAccessibleMock(EchoWriter::class, ['dummy']);
+		$subject = $this->getAccessibleMock(EchoWriter::class, null);
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::ERROR, 'test record');
 		$subject->writeLog($simpleRecord);
 	}

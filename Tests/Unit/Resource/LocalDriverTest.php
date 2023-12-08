@@ -9,6 +9,8 @@ use Vierwd\VierwdBase\Resource\LocalDriver;
 
 class LocalDriverTest extends UnitTestCase {
 
+	protected bool $resetSingletonInstances = true;
+
 	/**
 	 * @dataProvider getSanitizeFileNameTestData
 	 */
