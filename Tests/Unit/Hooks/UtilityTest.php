@@ -25,6 +25,7 @@ class UtilityTest extends UnitTestCase {
 		$this->markTestIncomplete();
 
 		// Initialize Application, because a valid Service Container is needed
+		// @phpstan-ignore-next-line markTestIncomplete finishes code execution
 		$classLoader = include PHPUNIT_COMPOSER_INSTALL;
 		Bootstrap::init($classLoader, true);
 

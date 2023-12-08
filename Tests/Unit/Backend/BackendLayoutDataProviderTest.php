@@ -21,18 +21,17 @@ class BackendLayoutDataProviderTest extends UnitTestCase {
 	/** @phpstan-ignore-next-line Root is never read, but that's ok */
 	private vfsStreamDirectory $root;
 
-	private TimeTracker $mockTimeTracker;
-
 	public function setUp(): void {
 		parent::setUp();
 
 		$this->markTestIncomplete();
 
 		// TimeTracker is used by TypoScriptParser, when an error occurs during parsing
-		$this->mockTimeTracker = $this->getMockBuilder(TimeTracker::class)
+		// @phpstan-ignore-next-line markTestIncomplete finishes code execution
+		$mockTimeTracker = $this->getMockBuilder(TimeTracker::class)
 			->disableOriginalConstructor()
 			->getMock();
-		GeneralUtility::setSingletonInstance(TimeTracker::class, $this->mockTimeTracker);
+		GeneralUtility::setSingletonInstance(TimeTracker::class, $mockTimeTracker);
 
 		$standardLayout = <<<EOT
 			title = Standard

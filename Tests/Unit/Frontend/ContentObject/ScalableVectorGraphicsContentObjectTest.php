@@ -17,8 +17,9 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
-		$this->markTestIncomplete();
 
+		$this->markTestIncomplete();
+		// @phpstan-ignore-next-line markTestIncomplete finishes code execution
 		$GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects']['SVG'] = ScalableVectorGraphicsContentObject::class;
 	}
 
