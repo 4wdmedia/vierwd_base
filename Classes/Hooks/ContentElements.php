@@ -168,7 +168,7 @@ class ContentElements implements SingletonInterface {
 		array_multisort($names, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE, $FCEs);
 
 		// Process FCEs
-		/** @var array{'filename': string, 'CType': ?string, 'adminOnly': bool, 'group': string|array, 'pluginName': string, 'name': string, 'description': string, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': string} $config */
+		/** @var array{'filename': string, 'CType': ?string, 'adminOnly': bool, 'group': string|array, 'pluginName': string, 'name': string, 'description': string, 'containerGrid': array, 'iconIdentifier': string, 'controllerActions': array, 'nonCacheableActions': array, 'template': string, 'flexform': string, 'tcaType': string, 'fullTCA': string, 'tcaAdditions': array|callable, 'typoScript': string|callable|null, 'tsConfig': string|callable|null} $config */
 		foreach ($FCEs as &$config) {
 			if (!empty($config['pluginName'])) {
 				// create a new plugin
@@ -212,7 +212,7 @@ class ContentElements implements SingletonInterface {
 			if ($config['typoScript'] ?? false) {
 				if (is_string($config['typoScript'])) {
 					$typoScript .= $config['typoScript'] . "\n";
-				} else if (is_callable($config['typoScript'])) {
+				} else {
 					$typoScript .= call_user_func($config['typoScript'], $config) . "\n";
 				}
 			}
