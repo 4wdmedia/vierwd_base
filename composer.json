@@ -25,6 +25,7 @@
 		"vierwd/typo3-smarty": "^12.x-dev"
 	},
 	"require-dev": {
+		"b13/container": "^2.3",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
 		"friendsofphp/php-cs-fixer": "^3.15.0",
 		"jangregor/phpstan-prophecy": "^1.0.0",
