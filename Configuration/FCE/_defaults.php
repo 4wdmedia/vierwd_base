@@ -7,6 +7,7 @@ return [
 	'pluginName' => '',
 	'name' => '',
 	'description' => '',
+	'containerGrid' => [],
 	'iconIdentifier' => 'content-plugin',
 	'controllerActions' => [],
 	'nonCacheableActions' => [],
@@ -15,4 +16,6 @@ return [
 	'tcaType' => '',
 	'fullTCA' => '',
 	'tcaAdditions' => [],
+	'typoScript' => '',
+	'tsConfig' => '',
 ];
