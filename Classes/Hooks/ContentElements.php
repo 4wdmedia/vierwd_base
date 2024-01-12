@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use B13\Container\Tca\ContainerConfiguration;
+use B13\Container\Tca\Registry as ContainerRegistry;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -207,6 +209,14 @@ class ContentElements implements SingletonInterface {
 				}
 			}
 
+			if ($config['typoScript'] ?? false) {
+				if (is_string($config['typoScript'])) {
+					$typoScript .= $config['typoScript'] . "\n";
+				} else if (is_callable($config['typoScript'])) {
+					$typoScript .= call_user_func($config['typoScript'], $config) . "\n";
+				}
+			}
+
 			if (is_array($config['group'])) {
 				foreach ($config['group'] as $group) {
 					self::$groups[$group][] = $config['CType'];
@@ -353,6 +363,14 @@ class ContentElements implements SingletonInterface {
 				'	}' . "\n" .
 				'}' . "\n";
 			}
+
+			if ($config['tsConfig'] ?? false) {
+				if (is_string($config['tsConfig'])) {
+					$pageTS .= $config['tsConfig'] . "\n";
+				} else if (is_callable($config['tsConfig'])) {
+					$pageTS .= call_user_func($config['tsConfig'], $config) . "\n";
+				}
+			}
 		}
 
 		if ($typoScript) {
@@ -389,12 +407,22 @@ class ContentElements implements SingletonInterface {
 					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['config']['enableRichtext'] = true;
 				}
 
-				foreach ($config['tcaAdditions'] as $tcaAddition) {
-					$method = array_shift($tcaAddition);
-					if ($method == 'addToAllTCAtypes') {
-						// FOR USE IN files in Configuration/TCA/Overrides/*.php
-						ExtensionManagementUtility::addToAllTCAtypes('tt_content', $tcaAddition[0], $tcaAddition[1], $tcaAddition[2]);
+				if ($config['containerGrid']) {
+					$containerConfiguration = new ContainerConfiguration($config['CType'], $config['name'], $config['description'], $config['containerGrid']);
+					$containerConfiguration->setIcon($config['iconIdentifier']);
+					GeneralUtility::makeInstance(ContainerRegistry::class)->configureContainer($containerConfiguration);
+				}
+
+				if (is_array($config['tcaAdditions'])) {
+					foreach ($config['tcaAdditions'] as $tcaAddition) {
+						$method = array_shift($tcaAddition);
+						if ($method == 'addToAllTCAtypes') {
+							// FOR USE IN files in Configuration/TCA/Overrides/*.php
+							ExtensionManagementUtility::addToAllTCAtypes('tt_content', $tcaAddition[0], $tcaAddition[1], $tcaAddition[2]);
+						}
 					}
+				} else if (is_callable($config['tcaAdditions'])) {
+					call_user_func($config['tcaAdditions'], $config);
 				}
 
 				$name = $config['name'];
