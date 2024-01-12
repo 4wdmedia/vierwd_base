@@ -217,13 +217,14 @@ class ContentElements implements SingletonInterface {
 	 * @param string $extensionKey
 	 */
 	static public function addFCEs(string $extensionKey, bool $isLocalConf = false): void {
-		self::initializeFCEs($extensionKey);
-
 		if (!$isLocalConf) {
 			// calling this method in ext_tables.php is not needed anymore.
 			// All other methods are called with an event
+			trigger_error('Calling ContentElements::addFCEs from ext_tables is deprecated.', E_USER_DEPRECATED);
 			return;
 		}
+
+		self::initializeFCEs($extensionKey);
 
 		$typoScript = self::$fceConfiguration[$extensionKey]['typoScript'];
 		$pageTS = self::$fceConfiguration[$extensionKey]['pageTS'];
