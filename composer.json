@@ -23,7 +23,7 @@
 		"symfony/polyfill-php80": "^1.23",
 		"thecodingmachine/safe": "^1.3 || ^2.0",
 		"vierwd/svg-inliner": "^1.0",
-		"vierwd/typo3-smarty": "^11.5.0"
+		"vierwd/typo3-smarty": "^11.5.0@dev"
 	},
 	"require-dev": {
 		"b13/container": "^2.3",
