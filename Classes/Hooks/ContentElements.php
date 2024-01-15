@@ -110,7 +110,16 @@ class ContentElements implements SingletonInterface {
 				}
 
 				$config['generatePlugin'] = true;
-				$config['pluginSignature'] = $pluginSignature;
+
+				if ($pluginSignature != $config['CType']) {
+					// Copy from generated plugin without lib.stdheader
+					$typoScript .= 'tmp < tt_content.' . $pluginSignature . ".20\n" .
+						'tt_content.' . $config['CType'] . " < tmp\n" .
+						"tmp >\n" .
+						'tt_content.' . $pluginSignature . " >\n";
+				} else {
+					$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $pluginSignature . ".20\n";
+				}
 			} else {
 				$config['generatePlugin'] = false;
 			}
@@ -120,6 +129,15 @@ class ContentElements implements SingletonInterface {
 			}
 
 			// update typoscript
+			$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
+			if (in_array('media', $tcaType)) {
+				$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
+				$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = assets' . "\n";
+			} else if (in_array('image', $tcaType)) {
+				$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
+				$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = image' . "\n";
+			}
+
 			if ($config['template']) {
 				$template = $config['template'];
 
@@ -130,15 +148,6 @@ class ContentElements implements SingletonInterface {
 
 				$typoScript .= 'tt_content.' . $config['CType'] . ' =< plugin.tx_vierwdsmarty' . "\n";
 				$typoScript .= 'tt_content.' . $config['CType'] . '.settings.template = ' . $template . "\n";
-
-				$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
-				if (in_array('media', $tcaType)) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = assets' . "\n";
-				} else if (in_array('image', $tcaType)) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = image' . "\n";
-				}
 			}
 
 			if ($config['typoScript'] ?? false) {
@@ -249,25 +258,6 @@ class ContentElements implements SingletonInterface {
 					$config['nonCacheableActions'],
 					ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 				);
-
-				if ($config['pluginSignature'] != $config['CType']) {
-					// Copy from generated plugin without lib.stdheader
-					$typoScript .= 'tmp < tt_content.' . $config['pluginSignature'] . ".20\n" .
-						'tt_content.' . $config['CType'] . " < tmp\n" .
-						"tmp >\n" .
-						'tt_content.' . $config['pluginSignature'] . " >\n";
-				} else {
-					$typoScript .= 'tt_content.' . $config['CType'] . ' < tt_content.' . $config['pluginSignature'] . ".20\n";
-				}
-
-				$tcaType = GeneralUtility::trimExplode(',', $config['tcaType']);
-				if (in_array('media', $tcaType)) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = assets' . "\n";
-				} else if (in_array('image', $tcaType)) {
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10 = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor' . "\n";
-					$typoScript .= 'tt_content.' . $config['CType'] . '.dataProcessing.10.references.fieldName = image' . "\n";
-				}
 			}
 
 			$name = $config['name'];
