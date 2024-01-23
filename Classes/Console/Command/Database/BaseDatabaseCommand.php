@@ -60,25 +60,17 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * get the command line to export all tables containing export worthy data
 	 */
-	protected function getExportDataTablesCommand(?string $dbName = null, ?string $server = null, bool $contentOnly = false): string {
+	protected function getExportDataTablesCommand(?string $serverName = null, ?string $serverPath = null, bool $contentOnly = false): string {
+		$dbName = $this->getDatabaseName($serverName);
 		$additionalArguments = [
-			'--defaults-file=' . $this->getMysqlDefaultsFilePath($server),
+			'--defaults-file=' . $this->getMysqlDefaultsFilePath($serverPath),
 			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
 			'--set-charset',
 			'--net_buffer_length=16000',
 			'--extended-insert',
+			$dbName,
 		];
-
-		if (!$dbName) {
-			$dbName = $this->dbConfig['dbname'];
-			if ($server) {
-				$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-				$dbConfig = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
-				assert(is_array($dbConfig));
-				$dbName = $dbConfig['dbname'];
-			}
-		}
 
 		if ($contentOnly) {
 			$additionalArguments[] = 'pages';
@@ -98,13 +90,15 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * get the command line to export all tables where we only need the structure
 	 */
-	protected function getExportStructureTablesCommand(?string $server = null, bool $allTables = false): string {
+	protected function getExportStructureTablesCommand(?string $serverName = null, ?string $serverPath = null, bool $allTables = false): string {
+		$dbName = $this->getDatabaseName($serverName);
 		$additionalArguments = [
-			'--defaults-file=' . $this->getMysqlDefaultsFilePath($server),
+			'--defaults-file=' . $this->getMysqlDefaultsFilePath($serverPath),
 			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
 			'--set-charset',
 			'--no-data',
+			$dbName,
 		];
 
 		if (!$allTables) {
@@ -186,6 +180,25 @@ abstract class BaseDatabaseCommand extends Command {
 		$serverPath = rtrim($serverPath, '/');
 
 		return $serverPath . '/.my.cnf';
+	}
+
+	protected function getDatabaseName(?string $serverName): string {
+		if (!$serverName) {
+			return $this->dbConfig['dbname'];
+		}
+
+		if ($serverName === 'live') {
+			$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+			$dbConfig = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+			assert(is_array($dbConfig));
+			return $dbConfig['dbname'];
+		}
+
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['serverDatabase']) && isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['serverDatabase'][$serverName])) {
+			return $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['serverDatabase'][$serverName];
+		}
+
+		throw new \Exception('Unknown server name ' . $serverName, 1706021098);
 	}
 
 }

@@ -60,9 +60,9 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$localMysqlProcess = new Process($commandLine);
 
 		if ($noData) {
-			$commandLine = $this->getExportStructureTablesCommand($serverPath, true) . ' 2>/dev/null';
+			$commandLine = $this->getExportStructureTablesCommand($server, $serverPath, true) . ' 2>/dev/null';
 		} else {
-			$commandLine = $this->getExportDataTablesCommand($server, $serverPath, $contentOnly) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand($serverPath) . ' 2>/dev/null';
+			$commandLine = $this->getExportDataTablesCommand($server, $serverPath, $contentOnly) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand($server, $serverPath) . ' 2>/dev/null';
 		}
 		$remoteMysqlProcess = Process::fromShellCommandline($commandLine);
 
