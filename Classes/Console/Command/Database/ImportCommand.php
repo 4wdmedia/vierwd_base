@@ -48,7 +48,11 @@ class ImportCommand extends BaseDatabaseCommand {
 
 
 		// Perform import
-		$commandLine = array_merge(['mysql'], $this->buildConnectionArguments(), ['--default-character-set=utf8mb4']);
+		$commandLine = array_merge([
+			'mysql',
+			'--defaults-file=' . $this->getMysqlDefaultsFilePath(),
+			'--default-character-set=utf8mb4',
+		]);
 		$mysqlProcess = new Process($commandLine);
 		$commandLine = 'gzip -c -d ' . escapeshellarg($importPath) . ' | ' . $mysqlProcess->getCommandLine();
 
