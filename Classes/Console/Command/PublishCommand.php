@@ -9,56 +9,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PublishCommand extends Command {
+
+	use ServerTrait;
 
 	protected function configure(): void {
 		$this->setDescription('Upload JavaScript and CSS to server with no need to commit it to git.');
 		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
-		$this->addArgument('server', InputArgument::REQUIRED, 'To which server do you want to publish? live or other configured servers');
-	}
-
-	protected function getConfiguredServers(): array {
-		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$config || !is_array($config) || !$config['ssh']) {
-			throw new \RuntimeException('No SSH config found. Please complete the extension configuration for vierwd_base', 1637242166);
-		}
-
-		if ($config['ssh']['serverPath'] === '~/kundenbereich/') {
-			// serverPath still has default value
-			throw new \RuntimeException('No ssh server path set. Please complete the extension configuration for vierwd_base', 1637242227);
-		}
-
-		$servers = ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['servers'] ?? []);
-
-		$liveServer = [
-			'live' => $config['ssh']['liveUser'] . '@' . $config['ssh']['liveHost'] . ':' . $config['ssh']['serverPath'],
-		];
-
-		return $liveServer + $servers;
+		$servers = $this->getConfiguredServers();
+		$this->addArgument('server', InputArgument::REQUIRED, 'To which server do you want to publish? ' . implode(', ', array_keys($servers)));
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$dryRun = $input->getOption('dry-run');
 
 		try {
-			$servers = $this->getConfiguredServers();
+			$basePath = $this->getConfiguredServerPath($input);
 		} catch (\Throwable $e) {
 			$output->writeln('<error>' . $e->getMessage() . '</error>');
 			return 1;
 		}
-
-		$server = $input->getArgument('server');
-		if (!isset($servers[$server])) {
-			throw new \Exception('Invalid server: ' . $server, 1622039016);
-		}
-
-		$basePath = rtrim($servers[$server], '/');
 
 		$extensionName = $this->getExtensionName();
 		$localPath = ExtensionManagementUtility::extPath($extensionName, 'Resources/');

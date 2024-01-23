@@ -17,11 +17,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 abstract class BaseDatabaseCommand extends Command {
 
-	protected const CONNECTION_LOCAL = 'local';
-	protected const CONNECTION_REMOTE = 'remote';
-
-	private static ?string $mysqlTempFile = null;
-
 	private ConnectionConfiguration $connectionConfiguration;
 
 	private array $dbConfig = [];
@@ -65,8 +60,9 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * get the command line to export all tables containing export worthy data
 	 */
-	protected function getExportDataTablesCommand(string $type = self::CONNECTION_LOCAL, bool $contentOnly = false): string {
+	protected function getExportDataTablesCommand(?string $dbName = null, ?string $server = null, bool $contentOnly = false): string {
 		$additionalArguments = [
+			'--defaults-file=' . $this->getMysqlDefaultsFilePath($server),
 			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
 			'--set-charset',
@@ -74,14 +70,15 @@ abstract class BaseDatabaseCommand extends Command {
 			'--extended-insert',
 		];
 
-		if ($type === self::CONNECTION_LOCAL) {
-			$dbConfig = $this->dbConfig;
-		} else {
-			$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-			$dbConfig = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+		if (!$dbName) {
+			$dbName = $this->dbConfig['dbname'];
+			if ($server) {
+				$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+				$dbConfig = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
+				assert(is_array($dbConfig));
+				$dbName = $dbConfig['dbname'];
+			}
 		}
-
-		assert(is_array($dbConfig));
 
 		if ($contentOnly) {
 			$additionalArguments[] = 'pages';
@@ -89,12 +86,11 @@ abstract class BaseDatabaseCommand extends Command {
 			$additionalArguments[] = 'tt_content';
 		} else {
 			foreach ($this->getIgnoredTables() as $table) {
-				$additionalArguments[] = sprintf('--ignore-table=%s.%s', $dbConfig['dbname'], $table);
+				$additionalArguments[] = sprintf('--ignore-table=%s.%s', $dbName, $table);
 			}
 		}
 
-		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
-		$commandLine = array_merge(['mysqldump'], $connectionArguments, $additionalArguments);
+		$commandLine = array_merge(['mysqldump'], $additionalArguments);
 		$process = new Process($commandLine);
 		return $process->getCommandLine();
 	}
@@ -102,8 +98,9 @@ abstract class BaseDatabaseCommand extends Command {
 	/**
 	 * get the command line to export all tables where we only need the structure
 	 */
-	protected function getExportStructureTablesCommand(string $type = self::CONNECTION_LOCAL, bool $allTables = false): string {
+	protected function getExportStructureTablesCommand(?string $server = null, bool $allTables = false): string {
 		$additionalArguments = [
+			'--defaults-file=' . $this->getMysqlDefaultsFilePath($server),
 			'--skip-lock-tables',
 			'--default-character-set=utf8mb4',
 			'--set-charset',
@@ -116,8 +113,7 @@ abstract class BaseDatabaseCommand extends Command {
 			}
 		}
 
-		$connectionArguments = $type === self::CONNECTION_LOCAL ? $this->buildConnectionArguments() : $this->buildRemoteConnectionArguments();
-		$commandLine = array_merge(['mysqldump'], $connectionArguments, $additionalArguments);
+		$commandLine = array_merge(['mysqldump'], $additionalArguments);
 		$process = new Process($commandLine);
 		return $process->getCommandLine();
 	}
@@ -179,100 +175,17 @@ abstract class BaseDatabaseCommand extends Command {
 		};
 	}
 
-	private function buildRemoteConnectionArguments(): array {
-		$configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+	protected function getMysqlDefaultsFilePath(?string $serverPath = null): string {
+		if (!$serverPath) {
+			return Environment::getProjectPath() . '/.my.cnf';
+		}
 
-		$dbConfiguration = $configurationManager->getConfigurationValueByPath('DB/Connections/Default');
-		assert(is_array($dbConfiguration));
+		if (str_contains($serverPath, ':')) {
+			[, $serverPath] = explode(':', $serverPath);
+		}
+		$serverPath = rtrim($serverPath, '/');
 
-		$arguments = [];
-		if (!empty($dbConfiguration['user'])) {
-			$arguments[] = '-u';
-			$arguments[] = $dbConfiguration['user'];
-		}
-		if (!empty($dbConfiguration['password'])) {
-			$arguments[] = '-p' . $dbConfiguration['password'];
-		}
-		if (!empty($dbConfiguration['host'])) {
-			$arguments[] = '-h';
-			$arguments[] = $dbConfiguration['host'];
-		}
-		if (!empty($dbConfiguration['port'])) {
-			$arguments[] = '-P';
-			$arguments[] = $dbConfiguration['port'];
-		}
-		if (!empty($dbConfiguration['unix_socket'])) {
-			$arguments[] = '-S';
-			$arguments[] = $dbConfiguration['unix_socket'];
-		}
-		$arguments[] = $dbConfiguration['dbname'];
-
-		return $arguments;
-	}
-
-	/**
-	 * copied from \Helhum\Typo3Console\Database\Process\MysqlCommand
-	 */
-	protected function buildConnectionArguments(): array {
-		$arguments = [];
-
-		$configFile = $this->createTemporaryMysqlConfigurationFile();
-		if ($configFile) {
-			$arguments[] = '--defaults-extra-file=' . $configFile;
-		}
-		if (!empty($this->dbConfig['host'])) {
-			$arguments[] = '-h';
-			$arguments[] = $this->dbConfig['host'];
-		}
-		if (!empty($this->dbConfig['port'])) {
-			$arguments[] = '-P';
-			$arguments[] = $this->dbConfig['port'];
-		}
-		if (!empty($this->dbConfig['unix_socket'])) {
-			$arguments[] = '-S';
-			$arguments[] = $this->dbConfig['unix_socket'];
-		}
-		$arguments[] = $this->dbConfig['dbname'];
-
-		return $arguments;
-	}
-
-	/**
-	 * copied from \Helhum\Typo3Console\Database\Process\MysqlCommand
-	 */
-	private function createTemporaryMysqlConfigurationFile(): ?string {
-		if (empty($this->dbConfig['user']) && !isset($this->dbConfig['password'])) {
-			return null;
-		}
-		if (self::$mysqlTempFile !== null && file_exists(self::$mysqlTempFile)) {
-			return self::$mysqlTempFile;
-		}
-		$userDefinition = '';
-		$passwordDefinition = '';
-		if (!empty($this->dbConfig['user'])) {
-			$userDefinition = sprintf('user="%s"', $this->dbConfig['user']);
-		}
-		if (!empty($this->dbConfig['password'])) {
-			$passwordDefinition = sprintf('password="%s"', $this->dbConfig['password']);
-		}
-		$confFileContent = <<<EOF
-[mysqldump]
-$userDefinition
-$passwordDefinition
-
-[client]
-$userDefinition
-$passwordDefinition
-EOF;
-		$mysqlTempFile = tempnam(sys_get_temp_dir(), 'typo3_console_my_cnf_');
-		if ($mysqlTempFile === false) {
-			throw new \Exception('Could not create temporary file for MySQL connection', 1604071267);
-		}
-		self::$mysqlTempFile = $mysqlTempFile;
-		file_put_contents(self::$mysqlTempFile, $confFileContent);
-		register_shutdown_function('unlink', self::$mysqlTempFile);
-
-		return self::$mysqlTempFile;
+		return $serverPath . '/.my.cnf';
 	}
 
 }

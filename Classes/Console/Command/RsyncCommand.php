@@ -4,11 +4,11 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Service\FlexFormService;
@@ -16,24 +16,23 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RsyncCommand extends Command {
 
+	use ServerTrait;
+
 	protected function configure(): void {
 		$this->setDescription('Import database from the current ServiceArea or Live-Server');
 		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');
 		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
+		$servers = $this->getConfiguredServers();
+		$this->addArgument('server', InputArgument::OPTIONAL, 'From which server do you want to sync? ' . implode(', ', array_keys($servers)), 'live');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$dryRun = $input->getOption('dry-run');
 
-		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$config || !is_array($config) || !$config['ssh']) {
-			$output->writeln('<error>No SSH config found</error>');
-			return 1;
-		}
-
-		if ($config['ssh']['serverPath'] === '~/kundenbereich/') {
-			// serverPath still has default value
-			$output->writeln('<error>No ssh server path set in extension configuration</error>');
+		try {
+			$serverPath = $this->getConfiguredServerPath($input);
+		} catch (\Throwable $e) {
+			$output->writeln('<error>' . $e->getMessage() . '</error>');
 			return 1;
 		}
 
@@ -42,7 +41,7 @@ class RsyncCommand extends Command {
 			$output->writeln('<error>No folders configured for rsync</error>');
 			return 1;
 		}
-		$folders = $this->transformFolders($folders, $config['ssh']);
+		$folders = $this->transformFolders($folders, $serverPath);
 
 		$excludeFrom = '';
 		if (file_exists(Environment::getProjectPath() . '/rsync-excludes.txt')) {
@@ -113,19 +112,18 @@ class RsyncCommand extends Command {
 		return $folders;
 	}
 
-	protected function transformFolders(array $folders, array $sshConfig): array {
+	protected function transformFolders(array $folders, string $serverPath): array {
 		$publicPrefix = trim(str_replace(Environment::getProjectPath(), '', Environment::getPublicPath()), '/') . '/';
 		if ($publicPrefix !== '/') {
 			$publicPrefix = '/' . $publicPrefix;
 		}
-		$serverPath = rtrim($sshConfig['serverPath'], '/') . '/';
+		$serverPath = rtrim($serverPath, '/') . '/';
 
-		$folders = array_map(function(string $path) use ($sshConfig, $serverPath, $publicPrefix) {
+		$folders = array_map(function(string $path) use ($serverPath, $publicPrefix) {
 			$path = $serverPath . '.' . $publicPrefix . $path;
 
 			// normalize path a bit (replace ../)
-			$path = preg_replace('/[^\/]+\/\.\.\//', '', $path);
-			return $sshConfig['liveUser'] . '@' . $sshConfig['liveHost'] . ':' . $path;
+			return preg_replace('/[^\/]+\/\.\.\//', '', $path);
 		}, $folders);
 
 		return $folders;
