@@ -15,6 +15,8 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\file_put_contents;
+
 abstract class BaseDatabaseCommand extends Command {
 
 	private ConnectionConfiguration $connectionConfiguration;
@@ -199,6 +201,21 @@ abstract class BaseDatabaseCommand extends Command {
 		}
 
 		throw new \Exception('Unknown server name ' . $serverName, 1706021098);
+	}
+
+	protected function ensureMysqlConfigExists(): void {
+		$defaultsFile = $this->getMysqlDefaultsFilePath();
+		if (!file_exists($defaultsFile)) {
+			file_put_contents($defaultsFile, implode("\n", [
+				'[client]',
+				'user = ' . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['user'],
+				'password = "' . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['password'] . '"',
+				'host = "' . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['host'] . '"',
+				'',
+				'[mysql]',
+				'database = "' . $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'] . '"',
+			]));
+		}
 	}
 
 }

@@ -34,6 +34,7 @@ class ImportCommand extends BaseDatabaseCommand {
 			return 1;
 		}
 
+		$this->ensureMysqlConfigExists();
 
 		// Show info about import
 		$bytes = (int)filesize($importPath);

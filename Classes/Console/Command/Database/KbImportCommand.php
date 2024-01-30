@@ -43,6 +43,8 @@ class KbImportCommand extends BaseDatabaseCommand {
 		}
 		[$host, $serverPath] = explode(':', $serverPath);
 
+		$this->ensureMysqlConfigExists();
+
 		if (!$this->isDbEmpty() && !$input->getOption('no-backup')) {
 			// Create backup first
 			$this->createBackup();

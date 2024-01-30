@@ -38,6 +38,8 @@ class ExportCommand extends BaseDatabaseCommand {
 			return 1;
 		}
 
+		$this->ensureMysqlConfigExists();
+
 		$command1 = $this->getExportDataTablesCommand();
 		$command2 = $this->getExportStructureTablesCommand();
 
