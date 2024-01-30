@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Backend;
 
 use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
+use TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -25,15 +26,11 @@ class GetButtonsHook {
 		$this->languageService = $languageServiceFactory->createFromUserPreferences($GLOBALS['BE_USER'] ?? null);
 	}
 
-	/**
-	 * @param array<string, array> $params
-	 * @return array<string, array>
-	 */
-	public function adjustSaveAndClose(array $params): array {
-		$buttonBars = $params['buttons'];
+	public function __invoke(ModifyButtonBarEvent $event): void {
+		$buttonBars = $event->getButtons();
 
 		if (empty($buttonBars) || empty($buttonBars['left'])) {
-			return $buttonBars;
+			return;
 		}
 
 		// find the save button and replace it
@@ -56,8 +53,7 @@ class GetButtonsHook {
 			}
 			unset($buttonGroup);
 		}
-
-		return $buttonBars;
+		$event->setButtons($buttonBars);
 	}
 
 }

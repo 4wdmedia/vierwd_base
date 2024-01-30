@@ -83,10 +83,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\Driver\Lo
 ];
 
 // **************
-// Make save-and-close the default action
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['Backend\Template\Components\ButtonBar']['getButtonsHook'][] = \Vierwd\VierwdBase\Backend\GetButtonsHook::class . '->adjustSaveAndClose';
-
-// **************
 // Fix incorrect umlauts during editing of data
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = \Vierwd\VierwdBase\Hooks\DataHandler::class;
 
