@@ -5,7 +5,9 @@ namespace Vierwd\VierwdBase\Tests\Unit\Backend\Unit\Backend;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
+use TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -42,7 +44,9 @@ class GetButtonsHookTest extends UnitTestCase {
 
 	public function testAdjustSaveAndCloseWithoutLeftButtons(): void {
 		$arrayWithoutLeftButtons = ['right' => 'ignore'];
-		self::assertEquals($arrayWithoutLeftButtons, $this->subject->adjustSaveAndClose(['buttons' => $arrayWithoutLeftButtons]));
+		$event = new ModifyButtonBarEvent($arrayWithoutLeftButtons, $this->prophesize(ButtonBar::class)->reveal());
+		call_user_func($this->subject, $event);
+		self::assertEquals($arrayWithoutLeftButtons, $event->getButtons());
 	}
 
 	public function testAdjustSaveAndCloseWithoutSavedOkButton(): void {
@@ -53,7 +57,9 @@ class GetButtonsHookTest extends UnitTestCase {
 				'group' => [$saveButtonMock->reveal()],
 			],
 		];
-		self::assertEquals($buttons, $this->subject->adjustSaveAndClose(['buttons' => $buttons]));
+		$event = new ModifyButtonBarEvent($buttons, $this->prophesize(ButtonBar::class)->reveal());
+		call_user_func($this->subject, $event);
+		self::assertEquals($buttons, $event->getButtons());
 	}
 
 	public function testAdjustSaveAndCloseWithSavedOkButton(): void {
@@ -66,8 +72,10 @@ class GetButtonsHookTest extends UnitTestCase {
 				],
 			],
 		];
-		$result = $this->subject->adjustSaveAndClose(['buttons' => $buttons]);
-		$lastButton = array_pop($result['left']['group']);
+		$event = new ModifyButtonBarEvent($buttons, $this->prophesize(ButtonBar::class)->reveal());
+		call_user_func($this->subject, $event);
+		$buttons = $event->getButtons();
+		$lastButton = array_pop($buttons['left']['group']);
 		self::assertEquals('_saveandclosedok', $lastButton->getName());
 		self::assertEquals('1', $lastButton->getValue());
 		self::assertEquals(false, $lastButton->getShowLabelText());
