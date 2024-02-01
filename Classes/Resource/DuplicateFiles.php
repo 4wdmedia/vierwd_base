@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Resource;
 
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Resource\AbstractFile;
@@ -19,7 +21,11 @@ class DuplicateFiles {
 	public function __invoke(AfterFileAddedEvent $event): void {
 		$file = $event->getFile();
 
-		if (!($file instanceof AbstractFile) || !$file->getSize() || !(TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_BE) || (TYPO3_REQUESTTYPE & TYPO3_REQUESTTYPE_CLI)) {
+		if (!ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend() || Environment::isCli()) {
+			return;
+		}
+
+		if (!($file instanceof AbstractFile) || !$file->getSize()) {
 			// do not check for existence of empty files
 			return;
 		}
