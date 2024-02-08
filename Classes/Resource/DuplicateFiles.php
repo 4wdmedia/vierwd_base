@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Resource;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -20,7 +21,7 @@ class DuplicateFiles {
 	public function __invoke(AfterFileAddedEvent $event): void {
 		$file = $event->getFile();
 
-		if (!ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend() || Environment::isCli()) {
+		if (Environment::isCli() || !($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface || !ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()) {
 			return;
 		}
 
