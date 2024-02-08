@@ -418,7 +418,11 @@ class ContentElements implements SingletonInterface {
 				$name = $config['name'];
 
 				// FOR USE IN files in Configuration/TCA/Overrides/*.php
-				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $config['group'] === 'common' ? 'default' : $config['group']], 'CType', $extensionKey);
+				$group = $config['group'] === 'common' ? 'default' : $config['group'];
+				if (is_array($group)) {
+					$group = current($group);
+				}
+				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $group], 'CType', $extensionKey);
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
 				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
