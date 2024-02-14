@@ -386,6 +386,12 @@ class ContentElements implements SingletonInterface {
 		$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['itemGroups'] += self::$groupNames;
 		foreach (self::$fceConfiguration as $extensionKey => $configuration) {
 			foreach ($configuration['FCEs'] as $config) {
+				if ($config['containerGrid']) {
+					$containerConfiguration = new ContainerConfiguration($config['CType'], $config['name'], $config['description'], $config['containerGrid']);
+					$containerConfiguration->setIcon($config['iconIdentifier']);
+					GeneralUtility::makeInstance(ContainerRegistry::class)->configureContainer($containerConfiguration);
+				}
+
 				$tca = $config['fullTCA'] ?: self::generateTCA($config);
 
 				if (ExtensionManagementUtility::isLoaded('gridelements') && strpos($tca, 'tx_gridelements_container, tx_gridelements_columns') === false) {
@@ -395,12 +401,6 @@ class ContentElements implements SingletonInterface {
 				$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['showitem'] = $tca;
 				if (in_array('richtext', GeneralUtility::trimExplode(',', $config['tcaType']))) {
 					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['bodytext']['config']['enableRichtext'] = true;
-				}
-
-				if ($config['containerGrid']) {
-					$containerConfiguration = new ContainerConfiguration($config['CType'], $config['name'], $config['description'], $config['containerGrid']);
-					$containerConfiguration->setIcon($config['iconIdentifier']);
-					GeneralUtility::makeInstance(ContainerRegistry::class)->configureContainer($containerConfiguration);
 				}
 
 				if (is_array($config['tcaAdditions'])) {
