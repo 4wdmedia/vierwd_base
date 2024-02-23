@@ -29,6 +29,7 @@ class PublishCommand extends Command {
 
 		try {
 			$basePath = $this->getConfiguredServerPath($input);
+			$basePath = rtrim($basePath, '/');
 		} catch (\Throwable $e) {
 			$output->writeln('<error>' . $e->getMessage() . '</error>');
 			return 1;
@@ -36,9 +37,9 @@ class PublishCommand extends Command {
 
 		$extensionName = $this->getExtensionName();
 		$localPath = ExtensionManagementUtility::extPath($extensionName, 'Resources/');
-		$serverPath = $basePath . '/public/typo3conf/ext/' . $extensionName . '/Resources/';
+		$serverPath = $basePath . '/packages/' . $extensionName . '/Resources/';
 
-		$prettyServerPath = preg_replace('/^([^:]*@[^:]*:)(.*)$/', '$1<options=bold>$2</>', $basePath) . '/public/typo3conf/ext/' . $extensionName . '/Resources/';
+		$prettyServerPath = preg_replace('/^([^:]*@[^:]*:)(.*)$/', '$1<options=bold>$2</>', $basePath) . '/packages/' . $extensionName . '/Resources/';
 		$output->writeln(sprintf('<info>Publishing to %s</info>', $prettyServerPath));
 
 		$command = array_filter([
