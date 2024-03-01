@@ -56,6 +56,7 @@ class PublishCommand extends Command {
 			'--include', 'Private/SSR/',
 			'--include', 'Public',
 			'--include', 'Public/static',
+			'--include', 'Public/static/build',
 			'--include', 'Public/static/lib',
 			'--include', 'Public/static/script',
 			'--include', 'Public/static/script/lib',
