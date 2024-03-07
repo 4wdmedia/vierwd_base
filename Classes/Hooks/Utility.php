@@ -3,22 +3,10 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Hooks;
 
-use DOMDocument;
-use DOMElement;
-use DOMNode;
-use DOMNodeList;
-use DOMXPath;
-
-use Masterminds\HTML5;
-
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class Utility {
 
@@ -120,118 +108,6 @@ class Utility {
 		}
 
 		return $content;
-	}
-
-	public function postProcessHTML(array $params, TypoScriptFrontendController $TSFE): void {
-		try {
-			$disableAllHeaderCode = ArrayUtility::getValueByPath($TSFE->config, 'config/disableAllHeaderCode');
-			if ($disableAllHeaderCode) {
-				return;
-			}
-		} catch (MissingArrayPathException $th) {
-			// ignore
-		}
-
-		try {
-			$postProcessHTML = ArrayUtility::getValueByPath($TSFE->config, 'config/tx_vierwd./postProcessHTML');
-			if (!$postProcessHTML) {
-				return;
-			}
-		} catch (MissingArrayPathException $th) {
-			// ignore
-		}
-
-		if (!$TSFE->content) {
-			return;
-		}
-
-		$content = $TSFE->content;
-
-		$html5 = new HTML5(['disable_html_ns' => true]);
-		$document = $html5->loadHTML($content);
-
-		$this->addHyphenation($document);
-		$this->addNoopener($document);
-
-		$TSFE->content = $html5->saveHTML($document);
-	}
-
-	/**
-	 * get all hyphenation words
-	 */
-	protected function getHyphenationWords(): array {
-		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
-		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
-		$hyphenationRows = $queryBuilder->executeQuery()->fetchAllAssociative();
-
-		$configuration = implode("\n", array_map(function($hyphenationRow) {
-			return $hyphenationRow['hyphenation'];
-		}, $hyphenationRows));
-		$words = array_map('trim', explode("\n", $configuration));
-
-		return $words;
-	}
-
-	private function addHyphenation(DOMDocument $document): void {
-		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['hyphenation']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['hyphenation']) {
-			return;
-		}
-
-		$hyphenationWords = $this->getHyphenationWords();
-		if ($hyphenationWords && $GLOBALS['TSFE']->content) {
-			$replacements = [];
-			$shy          = html_entity_decode('&shy;', 0, 'UTF-8');
-			foreach ($hyphenationWords as $word) {
-				$searchWord = trim(str_replace(['#', '|', '•', $shy], '', $word));
-				if (is_numeric($searchWord)) {
-					// Do not add shy within long numbers
-					continue;
-				}
-				$replacements[$searchWord] = trim(str_replace(['#', '|', '•'], $shy, $word));
-			}
-
-			uksort($replacements, function($word1, $word2) {
-				return strlen($word2) - strlen($word1);
-			});
-
-			$searchWords  = array_keys($replacements);
-			$replaceWords = array_values($replacements);
-
-			$body = $document->getElementsByTagName('body')->item(0);
-
-			$XPath = new DOMXPath($document);
-			$nodes = $XPath->evaluate('.//text()', $body);
-			assert($nodes instanceof DOMNodeList);
-			foreach ($nodes as $node) {
-				assert($node instanceof DOMNode);
-				if ($node->nodeType === XML_TEXT_NODE && $node->parentNode && $node->parentNode->nodeName !== 'script' && $node->parentNode->nodeName !== 'style') {
-					$node->nodeValue = str_replace($searchWords, $replaceWords, $node->nodeValue ?? '');
-				}
-			}
-		}
-	}
-
-	/**
-	 * add rel=noopener to all external links.
-	 *
-	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
-	 */
-	private function addNoopener(DOMDocument $document): void {
-		if (isset($GLOBALS['TSFE']->config['config']['tx_vierwd.'], $GLOBALS['TSFE']->config['config']['tx_vierwd.']['noopener']) && !$GLOBALS['TSFE']->config['config.']['tx_vierwd.']['noopener']) {
-			return;
-		}
-
-		$body = $document->getElementsByTagName('body')->item(0);
-
-		$XPath = new DOMXPath($document);
-		$nodes = $XPath->evaluate('.//a[@target="_blank"][not(contains(@rel, "noopener"))]', $body);
-		assert($nodes instanceof DOMNodeList);
-		foreach ($nodes as $link) {
-			assert($link instanceof DOMElement);
-			$rel = $link->getAttribute('rel');
-			$rel = trim($rel . ' noopener');
-			$link->setAttribute('rel', $rel);
-		}
 	}
 
 }

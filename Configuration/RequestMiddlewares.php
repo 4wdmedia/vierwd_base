@@ -1,5 +1,8 @@
 <?php
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 $vierwdMiddlewares = [
 	'frontend' => [
 		'vierwd/base/404-before-site-redirect' => [
@@ -26,6 +29,19 @@ $vierwdMiddlewares = [
 		],
 	],
 ];
+
+$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+if (!$extConf['cachedPostprocessing']) {
+	$vierwdMiddlewares['frontend']['vierwd/base/postprocess-html'] = [
+		'target' => \Vierwd\VierwdBase\Frontend\PostProcessHTML::class,
+		'after' => [
+			'typo3/cms-frontend/prepare-tsfe-rendering',
+		],
+		'before' => [
+			'typo3/cms-frontend/content-length-headers',
+		],
+	];
+}
 
 if (!empty($_SERVER['VIERWD_CONFIG'])) {
 	$vierwdMiddlewares['frontend']['vierwd/base/browser-sync'] = [

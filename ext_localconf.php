@@ -90,14 +90,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\Driver\Lo
 // Fix incorrect umlauts during editing of data
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = \Vierwd\VierwdBase\Hooks\DataHandler::class;
 
-// **************
-// Hyphenate words in generated html
-if ($extConf['cachedPostprocessing']) {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-all']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
-} else {
-	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['hook_eofe']['tx_vierwd'] = \Vierwd\VierwdBase\Hooks\Utility::class . '->postProcessHTML';
-}
-
 // *****************
 // Warn when no editor has access to edit some content elements
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = \Vierwd\VierwdBase\Hooks\CheckBackendGroups::class;

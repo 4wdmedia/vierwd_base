@@ -42,6 +42,12 @@ services:
       - name: event.listener
         identifier: 'vierwdIndexFilesAfterImport'
         event: TYPO3\CMS\Extensionmanager\Event\AfterExtensionFilesHaveBeenImportedEvent
+  Vierwd\VierwdBase\Frontend\PostProcessHTML:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdPostProcessHTML'
+        method: processCached
+        event: TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent
 
   Vierwd\VierwdBase\Console\Command\PostComposerCommand:
     tags:
