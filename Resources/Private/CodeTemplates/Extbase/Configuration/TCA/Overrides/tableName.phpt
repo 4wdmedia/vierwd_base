@@ -5,12 +5,11 @@ defined('TYPO3') || die();
 
 <f:for each="{domainObjects}" as="domainObject"><f:if condition="{domainObject.mappedToExistingTable}">
 <f:render partial="TCA/Columns.phpt" arguments="{extension: domainObject.extension, domainObject:domainObject, settings:settings}" />
-$GLOBALS['TCA']['{domainObject.databaseTableName}']['columns'][$GLOBALS['TCA']['{domainObject.databaseTableName}']['ctrl']['type']]['config']['items'][] = ['LLL:EXT:{domainObject.extension.extensionKey}/Resources/Private/Language/locallang_db.xlf:{domainObject.mapToTable}.tx_extbase_type.{domainObject.recordType}','{domainObject.recordType}'];
-</f:if><f:if condition="{domainObject.categorizable}">
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::makeCategorizable(
-	'{extension.extensionKey}',
-	'{domainObject.databaseTableName}'
-);</f:if>
+$GLOBALS['TCA']['{domainObject.databaseTableName}']['columns'][$GLOBALS['TCA']['{domainObject.databaseTableName}']['ctrl']['type']]['config']['items'][] = [
+	'LLL:EXT:{domainObject.extension.extensionKey}/Resources/Private/Language/locallang_db.xlf:{domainObject.mapToTable}.tx_extbase_type.{domainObject.recordType}',
+	'{domainObject.recordType}'
+];
+</f:if>
 // unset all exclude fields to allow editors access to all fields
 foreach ($GLOBALS['TCA']['{domainObject.databaseTableName}']['columns'] as $column => $columnConfiguration) {
 	unset($GLOBALS['TCA']['{domainObject.databaseTableName}']['columns'][$column]['exclude']);
@@ -23,3 +22,4 @@ unset($column, $columnConfiguration);
 	'EXT:{domainObject.extension.extensionKey}/Resources/Private/Language/locallang_csh_{domainObject.databaseTableName}.xlf'
 );
 </f:if>
+<f:if condition="{domainObject.mappedToExistingTable}">//{domainObject.mapToTable}</f:if>
