@@ -48,31 +48,43 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 						continue;
 					}
 
-					$methodProperty = lcfirst(substr($methodName, 3));
-					if (substr($methodName, 0, 3) === 'get' && 'Returns the ' . $methodProperty === $method->getDescription()) {
+					$firstParameter = $method->getParameters()[0] ?? null;
+					$typeHint = $firstParameter ? $firstParameter->getTypeHint() : '';
+					$typeHint = ltrim($typeHint, '?');
+					$type = explode('\\', $typeHint);
+					$type = array_pop($type);
+					$methodProperty = $firstParameter ? preg_quote($type ?: $firstParameter->getName()) : '';
+					$methodPropertyName = preg_quote(substr($methodName, str_starts_with($methodName, 'is') ? 2 : 3));
+
+					$methodDescription = $method->getDescription();
+					if (preg_match('/Returns the (boolean state of )?(' . $methodProperty . '|' . $methodPropertyName . ')/i', $methodDescription)) {
 						$method->setDescription('');
 						continue;
 					}
 
-					if (substr($methodName, 0, 3) === 'set' && 'Sets the ' . $methodProperty === $method->getDescription()) {
+					if (preg_match('/Sets the (' . $methodProperty . '|' . $methodPropertyName . ')/i', $methodDescription)) {
 						$method->setDescription('');
 						continue;
 					}
 
-					if (substr($methodName, 0, 3) === 'add' && 'Adds a ' . ucfirst($methodProperty) === $method->getDescription()) {
+					if (preg_match('/Adds a (' . $methodProperty . '|' . $methodPropertyName . ')/i', $methodDescription)) {
 						$method->setDescription('');
 						continue;
 					}
 
-					$methodProperty = substr($methodName, 6);
-					if (substr($methodName, 0, 6) === 'remove' && 'Removes a ' . $methodProperty === $method->getDescription()) {
+					if (preg_match('/Removes a (' . $methodProperty . '|' . $methodPropertyName . ')/i', $methodDescription)) {
 						$method->setDescription('');
 						continue;
 					}
 				}
 			}
 		}
-		return parent::renderFileObject($fileObject, $addDeclareStrictTypes);
+
+		$resultingCode = parent::renderFileObject($fileObject, $addDeclareStrictTypes);
+		$resultingCode = str_replace(LF . LF . 'declare(strict_types=1);' . LF . LF . LF, LF . 'declare(strict_types = 1);' . LF . LF, $resultingCode);
+		$resultingCode = str_replace(';' . LF . 'class', ';' . LF . LF . 'class', $resultingCode);
+
+		return $resultingCode;
 	}
 
 	public function render($stmts): string {

@@ -9,6 +9,10 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\File
 	'className' => \Vierwd\VierwdBase\ExtensionBuilder\Service\FileGenerator::class,
 ];
 
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\LocalizationService::class] = [
+	'className' => Vierwd\VierwdBase\ExtensionBuilder\Service\LocalizationService::class,
+];
+
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\Printer::class] = [
 	'className' => Vierwd\VierwdBase\ExtensionBuilder\Service\Printer::class,
 ];
