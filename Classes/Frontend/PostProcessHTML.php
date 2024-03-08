@@ -30,11 +30,15 @@ class PostProcessHTML implements MiddlewareInterface {
 		$response = $handler->handle($request);
 
 		$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if ($extConf['cachedPostprocessing']) {
+		assert(is_array($extConf));
+		if ($extConf['cachedPostprocessing'] ?? true) {
 			return $response;
 		}
 
 		$TSFE = $request->getAttribute('frontend.controller');
+		if (!$TSFE) {
+			return $response;
+		}
 		$content = (string)$response->getBody();
 		$content = $this->postProcessHTML($content, $TSFE);
 		$body = new Stream('php://temp', 'wb+');
@@ -45,7 +49,8 @@ class PostProcessHTML implements MiddlewareInterface {
 
 	public function processCached(AfterCacheableContentIsGeneratedEvent $event): void {
 		$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$extConf['cachedPostprocessing']) {
+		assert(is_array($extConf));
+		if (!($extConf['cachedPostprocessing'] ?? true)) {
 			return;
 		}
 		$TSFE = $event->getController();
@@ -87,7 +92,7 @@ class PostProcessHTML implements MiddlewareInterface {
 	/**
 	 * get all hyphenation words
 	 */
-	private function getHyphenationWords(): array {
+	protected function getHyphenationWords(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tx_vierwdbase_hyphenation');
 		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 		$hyphenationRows = $queryBuilder->executeQuery()->fetchAllAssociative();
@@ -101,6 +106,7 @@ class PostProcessHTML implements MiddlewareInterface {
 	}
 
 	private function addHyphenation(DOMDocument $document, TypoScriptFrontendController $TSFE): void {
+		// @phpstan-ignore-next-line
 		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['hyphenation']) && !$TSFE->config['config.']['tx_vierwd.']['hyphenation']) {
 			return;
 		}
@@ -145,6 +151,7 @@ class PostProcessHTML implements MiddlewareInterface {
 	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
 	 */
 	private function addNoopener(DOMDocument $document, TypoScriptFrontendController $TSFE): void {
+		// @phpstan-ignore-next-line
 		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['noopener']) && !$TSFE->config['config.']['tx_vierwd.']['noopener']) {
 			return;
 		}
