@@ -6,6 +6,7 @@ namespace Vierwd\VierwdBase\Form\Element;
 use TYPO3\CMS\Backend\Form\AbstractNode;
 use TYPO3\CMS\Backend\Form\Element\ImageManipulationElement;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
@@ -22,20 +23,12 @@ class HotspotEditorElement extends AbstractNode {
 	public function render() {
 		$html = $this->getHtml();
 
+		$result = $this->initializeResultArray();
+
 		if ($html) {
-			$result = [
-				'html' => $html,
-				'additionalInlineLanguageLabelFiles' => [],
-				'stylesheetFiles' => ['EXT:vierwd_base/Resources/Public/Css/hotspot-editor.css'],
-				'requireJsModules' => ['TYPO3/CMS/VierwdBase/HotspotEditor'],
-			];
-		} else {
-			$result = [
-				'html' => '',
-				'additionalInlineLanguageLabelFiles' => [],
-				'stylesheetFiles' => [],
-				'requireJsModules' => [],
-			];
+			$result['html'] = $html;
+			$result['stylesheetFiles'][] = 'EXT:vierwd_base/Resources/Public/Css/hotspot-editor.css';
+			$result['javaScriptModules'][] = JavaScriptModuleInstruction::create('@vierwd/vierwd_base/HotspotEditor.js');
 		}
 
 		return $result;
