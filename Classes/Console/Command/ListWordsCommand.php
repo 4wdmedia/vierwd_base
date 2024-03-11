@@ -36,6 +36,39 @@ class ListWordsCommand extends Command {
 			->fetchAllAssociative();
 		$texts = array_column($texts, 'bodytext');
 
+		foreach ($GLOBALS['TCA'] as $tableName => $tableConfig) {
+			if (!str_starts_with($tableName, 'tx_vierwd') || $tableName === 'tx_vierwdbase_hyphenation') {
+				continue;
+			}
+
+			$rteFields = [];
+			foreach ($tableConfig['columns'] as $columnName => $columnConfig) {
+				if (!isset($columnConfig['config'], $columnConfig['config']['type']) || $columnConfig['config']['type'] !== 'text') {
+					continue;
+				}
+
+				if (($columnConfig['config']['rows'] ?? 1) < 2 && empty($columnConfig['config']['enableRichtext'])) {
+					continue;
+				}
+				$rteFields[] = $columnName;
+			}
+
+			foreach ($rteFields as $rteField) {
+				$queryBuilder = $connection->createQueryBuilder();
+				$rteTexts = $queryBuilder->select($rteField . ' AS text')
+					->distinct()
+					->from($tableName)
+					->andWhere($queryBuilder->expr()->neq($rteField, $queryBuilder->createNamedParameter('')))
+					->andWhere($queryBuilder->expr()->isNotNull($rteField))
+					->executeQuery()
+					->fetchAllAssociative()
+				;
+				$rteTexts = array_column($rteTexts, 'text');
+				$texts = array_merge($texts, $rteTexts);
+			}
+		}
+		$texts = array_filter(array_unique($texts));
+
 		$words = [];
 		array_walk($headers, function(string $header) use (&$words): void {
 			$header = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $header);
