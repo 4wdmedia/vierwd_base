@@ -46,7 +46,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search
 
 	// ***************
 	// Indexing Hook in TSFE is too early. It happens before Meta-Tags are replaced and title is generated
-	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
+	if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing']) && is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'])) {
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['pageIndexing'] as $hookClass) {
 			$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['contentPostProc-output'][$hookClass] = function($params, $tsfe) use ($hookClass): void {
 				$_procObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($hookClass);
