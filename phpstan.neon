@@ -12,8 +12,6 @@ parameters:
     excludePaths:
         - Classes/ExtensionBuilder/
 
-    checkMissingIterableValueType: false
-
     checkDynamicProperties: true
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
@@ -21,6 +19,8 @@ parameters:
     checkUninitializedProperties: true
 
     ignoreErrors:
+        -
+            identifier: missingType.iterableValue
         -
             message: '#Parameter \#1 \$callback of function array_map expects \(callable\(string\|false\): mixed\)\|null, ''trim'' given\.#'
             paths:

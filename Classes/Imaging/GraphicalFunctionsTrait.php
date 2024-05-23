@@ -93,7 +93,7 @@ trait GraphicalFunctionsTrait {
 		$ret = CommandUtility::exec($cmd);
 		// Change the permissions of the file
 		GeneralUtility::fixPermissions($output);
-		return $ret;
+		return is_string($ret) ? $ret : '';
 	}
 
 }
