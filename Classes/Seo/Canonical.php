@@ -75,7 +75,7 @@ class Canonical implements SingletonInterface {
 			unset($query['encryptionKey']);
 			unset($query['cHash']);
 
-			$removeParameters = (array)$GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'];
+			$removeParameters = $GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'] ?? [];
 			$removeParameters = array_filter($removeParameters);
 			foreach ($removeParameters as $parameter) {
 				if (ArrayUtility::isValidPath($query, $parameter, '|')) {
