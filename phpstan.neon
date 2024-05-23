@@ -12,8 +12,6 @@ parameters:
     excludePaths:
         - Classes/ExtensionBuilder/
 
-    checkMissingIterableValueType: false
-
     checkDynamicProperties: true
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
@@ -21,6 +19,8 @@ parameters:
     checkUninitializedProperties: true
 
     ignoreErrors:
+        -
+            identifier: missingType.iterableValue
         -
             message: '#Cannot call method fetchAllAssociative\(\) on Doctrine\\DBAL\\Result\|int\.#'
             paths:
