@@ -15,7 +15,6 @@ class GridelementsMergeTsConfig implements FormDataProviderInterface {
 	/**
 	 * Merge type specific page TS to pageTsConfig
 	 *
-	 * @param array $result
 	 * @return array
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
 	 */

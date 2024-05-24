@@ -21,7 +21,7 @@ trait GraphicalFunctionsTrait {
 	}
 
 	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 * {@inheritdoc}
 	 */
 	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {
 		// Note: mustCreate has another default value
@@ -66,7 +66,7 @@ trait GraphicalFunctionsTrait {
 	}
 
 	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 * {@inheritdoc}
 	 */
 	public function imageMagickExec($input, $output, $params, $frame = 0) {
 		if (!$this->processorEnabled) {

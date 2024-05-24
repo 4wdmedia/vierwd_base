@@ -12,9 +12,8 @@ class FilterFilesTest extends UnitTestCase {
 
 	/**
 	 * @dataProvider getSanitizeFileNameTestData
-	 * @param bool|int $expected
 	 */
-	public function testFilterFilesCallback($expected, string $itemName, string $itemIdentifier): void {
+	public function testFilterFilesCallback(bool|int $expected, string $itemName, string $itemIdentifier): void {
 		/** @var DriverInterface $driverInstance */
 		$driverInstance = $this->getMockBuilder(DriverInterface::class)
 			->disableOriginalConstructor()

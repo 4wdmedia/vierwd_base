@@ -232,8 +232,6 @@ class ContentElements implements SingletonInterface {
 
 	/**
 	 * add Content Elements
-	 *
-	 * @param string $extensionKey
 	 */
 	static public function addFCEs(string $extensionKey, bool $isLocalConf = false): void {
 		if (!$isLocalConf) {
@@ -310,7 +308,6 @@ class ContentElements implements SingletonInterface {
 	 * Generate TCA for FCEs.
 	 * Gets called in TCA/Overrides/tt_content.php and will be cached.
 	 *
-	 * @param array $TCA
 	 * @return array modified $TCA
 	 */
 	static public function addTCA(array $TCA): array {

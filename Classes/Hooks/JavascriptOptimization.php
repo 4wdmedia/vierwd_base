@@ -65,7 +65,7 @@ class JavascriptOptimization {
 	 * @param string $filename Source filename, relative to requested page
 	 * @return string Filename of the compressed file, relative to requested page
 	 */
-	public function minifyJsFile($filename): string {
+	public function minifyJsFile(string $filename): string {
 		// generate the unique name of the file
 		$filenameAbsolute = Environment::getPublicPath() . '/' . $filename;
 		$unique = $filenameAbsolute . '-min';

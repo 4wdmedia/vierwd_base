@@ -47,10 +47,7 @@ class MailWriter extends AbstractWriter {
 		parent::__construct($options);
 	}
 
-	/**
-	 * @param int|string $minErrorLevel
-	 */
-	public function setMinErrorLevel($minErrorLevel): void {
+	public function setMinErrorLevel(int|string $minErrorLevel): void {
 		$this->sendMail = false;
 		$this->minErrorLevel = LogLevel::normalizeLevel($minErrorLevel);
 	}

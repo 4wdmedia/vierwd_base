@@ -51,7 +51,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	}
 
 	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
+	 * {@inheritdoc}
 	 */
 	public function getBackendLayout($identifier, $pageId) {
 		$backendLayout = null;

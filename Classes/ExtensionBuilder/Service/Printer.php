@@ -87,6 +87,9 @@ class Printer extends \EBT\ExtensionBuilder\Service\Printer {
 		return $resultingCode;
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function render($stmts): string {
 		$code = parent::render($stmts);
 		$code = $this->trimTrailingWhitespace($code);

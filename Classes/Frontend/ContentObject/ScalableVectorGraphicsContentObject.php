@@ -21,6 +21,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 	 * @param array $conf Array of TypoScript properties
 	 * @return string Empty string (the cObject only sets internal data!)
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
 	 */
 	public function render($conf = []) {
 		$cObj = $this->getContentObjectRenderer();

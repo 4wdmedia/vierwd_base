@@ -41,11 +41,7 @@ class SvgViewHelper extends AbstractViewHelper {
 	/**
 	 * renders an SVG
 	 *
-	 * @param array $arguments
-	 * @param \Closure $renderChildrenClosure
-	 * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
-	 * @return string
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+	 * {@inheritdoc}
 	 */
 	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
