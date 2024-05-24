@@ -90,6 +90,7 @@ class RsyncCommand extends Command {
 		$flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
 		$folders = [];
 		foreach ($storages as $storage) {
+			assert(is_string($storage['configuration']));
 			$configuration = $flexFormService->convertFlexFormContentToArray($storage['configuration']);
 			if (!$configuration || !isset($configuration['pathType']) || $configuration['pathType'] !== 'relative') {
 				continue;

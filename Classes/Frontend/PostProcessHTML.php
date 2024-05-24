@@ -29,11 +29,15 @@ class PostProcessHTML implements MiddlewareInterface {
 		$response = $handler->handle($request);
 
 		$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if ($extConf['cachedPostprocessing']) {
+		assert(is_array($extConf));
+		if ($extConf['cachedPostprocessing'] ?? true) {
 			return $response;
 		}
 
 		$TSFE = $request->getAttribute('frontend.controller');
+		if (!$TSFE) {
+			return $response;
+		}
 		$content = (string)$response->getBody();
 		$content = $this->postProcessHTML($content, $TSFE);
 		$body = new Stream('php://temp', 'wb+');
@@ -44,7 +48,8 @@ class PostProcessHTML implements MiddlewareInterface {
 
 	public function processCached(array $params, TypoScriptFrontendController $TSFE): void {
 		$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$extConf['cachedPostprocessing']) {
+		assert(is_array($extConf));
+		if (empty($extConf['cachedPostprocessing'])) {
 			return;
 		}
 		$TSFE->content = $this->postProcessHTML($TSFE->content, $TSFE);
