@@ -9,6 +9,9 @@ use Vierwd\VierwdBase\Resource\LocalDriver;
 
 class LocalDriverTest extends UnitTestCase {
 
+	/** @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint */
+	protected $resetSingletonInstances = true;
+
 	/**
 	 * @dataProvider getSanitizeFileNameTestData
 	 */
