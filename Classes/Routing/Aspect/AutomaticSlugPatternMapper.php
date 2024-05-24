@@ -32,6 +32,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *           routeFieldPattern: '^(?P<title>.+)-(?P<uid>\d+)$'
  *           routeFieldResult: '{title}-{uid}'
  *           matchFields: ['uid']
+ *           checkExistence: false
+ *
+ * When generating a URL, a warning is generated if the target entity does not exist.
+ * You can disable this warning using checkExistence: false
  */
 class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 
@@ -43,6 +47,24 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 		if (!isset($this->settings['matchFields']) || !is_array($this->settings['matchFields'])) {
 			$this->settings['matchFields'] = ['uid'];
 		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function generate(string $value): ?string {
+		$generatedValue = parent::generate($value);
+		if ($generatedValue !== null) {
+			return $generatedValue;
+		}
+
+		if ($this->settings['checkExistence'] ?? true) {
+			trigger_error('URL Generation failed for ' . $this->settings['tableName'] . ': ' . $value, E_USER_WARNING);
+		}
+		// https://forge.typo3.org/issues/103844
+		// Since TYPO3 v11.5.37 only URLs to valid entites are generated.
+		// In some cases we want to allow invalid URLs as well
+		return $value;
 	}
 
 	protected function createRouteResult(?array $result): ?string {
