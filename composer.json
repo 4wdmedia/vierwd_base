@@ -2,6 +2,7 @@
 	"name": "vierwd/typo3-base",
 	"description": "FORWARD MEDIA TYPO3 base setup",
 	"type": "typo3-cms-extension",
+	"license": "MIT",
 	"keywords": [
 		"TYPO3",
 		"extension"
