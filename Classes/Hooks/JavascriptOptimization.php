@@ -146,9 +146,9 @@ class JavascriptOptimization {
 			}
 
 			if ($properties['section'] == self::PART_FOOTER) {
-				$pageRenderer->addJsFooterInlineCode($file, $content, false);
+				$pageRenderer->addJsFooterInlineCode($file, $content, false, false, true);
 			} else {
-				$pageRenderer->addJsInlineCode($file, $content, false);
+				$pageRenderer->addJsInlineCode($file, $content, false, false, true);
 			}
 		}
 	}
