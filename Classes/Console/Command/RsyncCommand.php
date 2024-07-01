@@ -98,6 +98,10 @@ class RsyncCommand extends Command {
 			$folders[] = $configuration['basePath'];
 		}
 
+		$folders = array_filter($folders, function(string $path): bool {
+			return !str_starts_with($path, 'typo3conf/ext/');
+		});
+
 		if (!$folders) {
 			// check if fileadmin exists and use that
 			if (is_dir(Environment::getPublicPath() . '/fileadmin/')) {
