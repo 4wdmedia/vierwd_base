@@ -42,6 +42,12 @@ services:
       - name: event.listener
         identifier: 'vierwdIndexFilesAfterImport'
         event: TYPO3\CMS\Extensionmanager\Event\AfterExtensionFilesHaveBeenImportedEvent
+  # Add Link Icons https://trello.com/c/V7FscJkV/
+  Vierwd\VierwdBase\Frontend\TypolinkIcons:
+    tags:
+      - name: event.listener
+        event: TYPO3\CMS\Frontend\Event\AfterLinkIsGeneratedEvent
+        method: 'addLinkIcon'
   Vierwd\VierwdBase\Frontend\PostProcessHTML:
     tags:
       - name: event.listener

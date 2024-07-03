@@ -203,11 +203,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['StaticMapper'] = \Vier
 // Setup Plugins directoy
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_smarty']['pluginDirs'][] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('vierwd_base', 'Resources/Private/Smarty');
 
-
-// ***************
-// Add Link Icons https://trello.com/c/V7FscJkV/
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_content.php']['typoLink_PostProc'][] = \Vierwd\VierwdBase\Frontend\TypolinkIcons::class . '->addLinkIcon';
-
 unset($extConf);
 
 // Add custom Icons

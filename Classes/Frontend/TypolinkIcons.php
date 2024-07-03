@@ -4,12 +4,13 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Event\AfterLinkIsGeneratedEvent;
 
 class TypolinkIcons {
 
-	public function addLinkIcon(array $params, ContentObjectRenderer $cObj): void {
-		$tagAttributes =& $params['tagAttributes'];
+	public function addLinkIcon(AfterLinkIsGeneratedEvent $event): void {
+		$linkResult = $event->getLinkResult();
+		$tagAttributes = $linkResult->getAttributes();
 
 		if (empty($tagAttributes['class'])) {
 			return;
@@ -23,32 +24,33 @@ class TypolinkIcons {
 		}
 
 		if (in_array('external-link-new-window', $classes)) {
-			$tagAttributes['target'] = '_blank';
+			$linkResult = $linkResult->withAttribute('target', '_blank');
 			$rel = GeneralUtility::trimExplode(' ', $tagAttributes['rel'], true);
 			$rel[] = 'noopener';
-			$tagAttributes['rel'] = implode(' ', $rel);
+			$linkResult = $linkResult->withAttribute('rel', implode(' ', $rel));
 		}
 
 		$firstWord = $remaining = '';
-		if ($params['linktxt']) {
-			if (preg_match('/^(\s*\w.*?)(\b.*)$/u', $params['linktxt'], $matches)) {
+		$linkText = $linkResult->getLinkText();
+		if ($linkText) {
+			if (preg_match('/^(\s*\w.*?)(\b.*)$/u', $linkText, $matches)) {
 				$firstWord = $matches[1];
 				$remaining = $matches[2];
 			}
 		}
 
+		$cObj = $event->getContentObjectRenderer();
 		foreach ($svgMapping as $class => $svg) {
 			if (in_array($class, $classes)) {
 				$svg = str_replace(["\n", "\r"], '', $cObj->cObjGetSingle('SVG', [
 					'src' => $svg,
 				]));
-				$params['linktxt'] = $firstWord ? ('<span class="text-nowrap">' . $svg . $firstWord . '</span>' . $remaining) : $svg . $params['linktxt'];
+				$linkText = $firstWord ? '<span class="text-nowrap">' . $svg . $firstWord . '</span>' . $remaining : $svg . $linkText;
+				$linkResult = $linkResult->withLinkText($linkText);
 				break;
 			}
 		}
-
-		$finalTagAttributes = array_merge($tagAttributes, GeneralUtility::get_tag_attributes($params['finalTagParts']['aTagParams']));
-		$params['finalTag'] = '<a ' . GeneralUtility::implodeAttributes($finalTagAttributes) . '>';
+		$event->setLinkResult($linkResult);
 	}
 
 }
