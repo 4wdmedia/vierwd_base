@@ -46,6 +46,7 @@ services:
   Vierwd\VierwdBase\Frontend\TypolinkIcons:
     tags:
       - name: event.listener
+        identifier: 'vierwdTypolinkIcons'
         event: TYPO3\CMS\Frontend\Event\AfterLinkIsGeneratedEvent
         method: 'addLinkIcon'
   Vierwd\VierwdBase\Frontend\PostProcessHTML:
