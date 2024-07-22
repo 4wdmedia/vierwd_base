@@ -61,7 +61,7 @@ class Utility {
 		}
 
 		$typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
-		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($params['meta.']);
+		$metaTags = $typoScriptService->convertTypoScriptArrayToPlainArray($metaTags);
 		foreach ($metaTags as $key => $data) {
 			$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
 			$required = !empty($data['required']);
