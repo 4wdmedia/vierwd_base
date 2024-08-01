@@ -53,6 +53,13 @@ if (!empty($_SERVER['VIERWD_CONFIG'])) {
 			'typo3/cms-frontend/output-compression',
 		],
 	];
+
+	$vierwdMiddlewares['frontend']['vierwd/base/disable-cache'] = [
+		'target' => \Vierwd\VierwdBase\Frontend\Middleware\DisableCache::class,
+		'before' => [
+			'typo3/cms-frontend/page-argument-validator',
+		],
+	];
 }
 
 return $vierwdMiddlewares;

@@ -166,14 +166,6 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Frontend\Page\
 
 if (!empty($_SERVER['VIERWD_CONFIG'])) {
 	// **************
-	// Allow Shift-Reload even without admin login in local context
-	if (!empty($_SERVER['HTTP_CACHE_CONTROL']) && strtolower($_SERVER['HTTP_CACHE_CONTROL']) === 'no-cache') {
-		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['headerNoCache'][] = function(array $params): void {
-			$params['disableAcquireCacheData'] = true;
-		};
-	}
-
-	// **************
 	// Force case-sensitive file systems
 	$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\StorageRepository::class] = [
 		'className' => \Vierwd\VierwdBase\XClass\Core\Resource\StorageRepository::class,
