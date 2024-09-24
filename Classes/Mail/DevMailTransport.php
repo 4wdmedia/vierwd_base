@@ -69,7 +69,7 @@ class DevMailTransport extends AbstractTransport {
 			$headers->remove('Cc');
 			$headers->remove('Bcc');
 			$sender = new Address(self::SENDER_ADDRESS, $senderName);
-			$headers->addHeader('From', [$sender]);
+			$headers->addMailboxListHeader('From', [$sender]);
 		}
 		return parent::send($message, $envelope);
 	}
