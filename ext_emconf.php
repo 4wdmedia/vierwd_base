@@ -25,14 +25,13 @@ $EM_CONF[$_EXTKEY] = [
 	'uploadfolder' => 0,
 	'createDirs' => '',
 	'modify_tables' => '',
-	'clearCacheOnLoad' => 1,
 	'lockType' => '',
-	'version' => '2.3.1',
+	'version' => '13.0.0',
 	'constraints' => [
 		'depends' => [],
 		'conflicts' => [],
 		'suggests' => [
-			'gridelements' => '*',
+			'container' => '*',
 		],
 	],
 ];
