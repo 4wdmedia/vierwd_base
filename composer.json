@@ -23,7 +23,7 @@
 		"masterminds/html5": "^2.6",
 		"thecodingmachine/safe": "^2.5",
 		"vierwd/svg-inliner": "^1.0",
-		"vierwd/typo3-smarty": "^12.x-dev"
+		"vierwd/typo3-smarty": "^12.4.x-dev"
 	},
 	"require-dev": {
 		"b13/container": "^2.3",
