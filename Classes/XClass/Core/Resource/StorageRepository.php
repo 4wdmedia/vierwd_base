@@ -14,7 +14,7 @@ class StorageRepository extends \TYPO3\CMS\Core\Resource\StorageRepository {
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function testCaseSensitivity($absolutePath) {
+	protected function testCaseSensitivity($absolutePath): bool {
 		return true;
 	}
 

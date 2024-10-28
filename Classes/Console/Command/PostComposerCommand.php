@@ -72,7 +72,6 @@ class PostComposerCommand extends Command {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
 		try {
-			$connection->connect();
 			return count($connection->createSchemaManager()->listTableNames()) > 0;
 		} catch (ConnectionException $e) {
 			return false;

@@ -19,17 +19,24 @@ class ImageUtility {
 	 * @return array{'x': int, 'y': int, 'width': int, 'height': int}
 	 */
 	public static function getCrop(FileInterface $image, string $cropAreaName = 'default'): array {
+		$width = $image->getProperty('width');
+		$height = $image->getProperty('height');
+		assert(is_int($width));
+		assert(is_int($height));
+
 		$emptyCrop = [
 			'x' => 0,
 			'y' => 0,
-			'width' => (int)$image->getProperty('width'),
-			'height' => (int)$image->getProperty('height'),
+			'width' => $width,
+			'height' => $height,
 		];
 
 		$crop = $image->getProperty('crop');
 		if (!$crop) {
 			return $emptyCrop;
 		}
+
+		assert(is_string($crop));
 
 		$cropVariantCollection = CropVariantCollection::create($crop);
 		$cropArea = $cropVariantCollection->getCropArea($cropAreaName);
@@ -56,7 +63,13 @@ class ImageUtility {
 		if ($cropValues === null) {
 			return null;
 		}
-		if ($cropValues['x'] === 0 && $cropValues['y'] === 0 && $cropValues['width'] === (int)$image->getProperty('width') && $cropValues['height'] === (int)$image->getProperty('height')) {
+
+		$width = $image->getProperty('width');
+		$height = $image->getProperty('height');
+		assert(is_int($width));
+		assert(is_int($height));
+
+		if ($cropValues['x'] === 0 && $cropValues['y'] === 0 && $cropValues['width'] === $width && $cropValues['height'] === $height) {
 			// If the crop is the full image, it's faster to use "no crop".
 			return null;
 		}
@@ -99,6 +112,7 @@ class ImageUtility {
 	public static function getHotspot(FileInterface $image): array {
 		$hotspot = $image->getProperty('hotspot');
 		if ($hotspot) {
+			assert(is_string($hotspot));
 			$hotspot = json_decode($hotspot, true);
 		}
 

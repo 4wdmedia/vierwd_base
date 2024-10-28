@@ -21,7 +21,7 @@ class FilterFilesTest extends UnitTestCase {
 		self::assertEquals($expected, FilterFiles::filterFilesCallback($itemName, $itemIdentifier, dirname($itemIdentifier), [], $driverInstance));
 	}
 
-	public function getSanitizeFileNameTestData(): array {
+	public static function getSanitizeFileNameTestData(): array {
 		return [
 			[-1, '.svn', '/.svn/'],
 			[-1, '.git', '/.git/'],

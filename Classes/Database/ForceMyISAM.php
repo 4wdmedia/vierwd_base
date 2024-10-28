@@ -38,8 +38,8 @@ class ForceMyISAM extends SqlReader {
 		$platform = $connectionPool->getConnectionByName('Default')->getDatabasePlatform();
 
 		$statements = array_map(function(string $statement) use ($platform) {
-			$parser = GeneralUtility::makeInstance(Parser::class, $statement);
-			$tables = $parser->parse();
+			$parser = GeneralUtility::makeInstance(Parser::class);
+			$tables = $parser->parse($statement);
 			$table = $tables[0];
 			$forceMyISAM = in_array($table->getName(), self::$MyISAMTables);
 			foreach (self::$tablePrefixes as $tablePrefix) {

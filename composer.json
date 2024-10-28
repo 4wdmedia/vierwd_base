@@ -18,6 +18,7 @@
 	}],
 	"require": {
 		"php": "^8.2.0",
+		"helhum/typo3-console": "^8.0.0",
 		"linkorb/jsmin-php": "^1.0",
 		"masterminds/html5": "^2.6",
 		"thecodingmachine/safe": "^2.5",
@@ -39,6 +40,7 @@
 		"phpunit/phpunit": "^11.0",
 		"saschaegerer/phpstan-typo3": "^1.1.0",
 		"typo3/cms-core": "^13.4",
+		"typo3/cms-extensionmanager": "^13.4",
 		"typo3/cms-fluid": "^13.4",
 		"typo3/cms-frontend": "^13.4",
 		"typo3/cms-impexp": "^13.4",

@@ -5,9 +5,9 @@ namespace Vierwd\VierwdBase\Utility;
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\LinkHandling\LinkService;
+use TYPO3\CMS\Core\LinkHandling\TypoLinkCodecService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Frontend\Service\TypoLinkCodecService;
 
 use function Safe\parse_url;
 

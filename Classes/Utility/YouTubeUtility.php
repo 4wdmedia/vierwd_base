@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Utility;
 
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Resource\DuplicationBehavior;
+use TYPO3\CMS\Core\Resource\Enum\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ProcessedFile;

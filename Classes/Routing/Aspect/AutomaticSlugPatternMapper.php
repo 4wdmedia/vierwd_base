@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Routing\Aspect;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Routing\Aspect\PersistedPatternMapper;
@@ -96,7 +97,7 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 
 		$constraints = [];
 		foreach ($this->settings['matchFields'] as $fieldName) {
-			$constraints[] = $queryBuilder->expr()->eq($fieldName, $queryBuilder->createNamedParameter($values[$fieldName], \PDO::PARAM_STR));
+			$constraints[] = $queryBuilder->expr()->eq($fieldName, $queryBuilder->createNamedParameter($values[$fieldName], ParameterType::STRING));
 		}
 
 		return $constraints;

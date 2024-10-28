@@ -22,7 +22,7 @@ class LocalDriverTest extends UnitTestCase {
 		self::assertEquals($expected, $subject->sanitizeFileName($fileName));
 	}
 
-	public function getSanitizeFileNameTestData(): array {
+	public static function getSanitizeFileNameTestData(): array {
 		return [
 			['Test.txt', 'Test.txt'],
 			['test.txt', 'test.txt'],

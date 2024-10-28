@@ -16,11 +16,7 @@ use Vierwd\VierwdSmarty\View\StandaloneSmartyView;
 
 class HotspotEditorElement extends AbstractNode {
 
-	/**
-	 * @return array As defined in initializeResultArray() of AbstractNode
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
-	 */
-	public function render() {
+	public function render(): array {
 		$html = $this->getHtml();
 
 		$result = $this->initializeResultArray();
@@ -62,7 +58,7 @@ class HotspotEditorElement extends AbstractNode {
 		}
 
 		$view = GeneralUtility::makeInstance(StandaloneSmartyView::class);
-		$view->setTemplateRootPaths(['EXT:vierwd_base/Resources/Private/Templates/']);
+		$view->getRenderingContext()->getTemplatePaths()->setTemplateRootPaths(['EXT:vierwd_base/Resources/Private/Templates/']);
 
 		$view->assignMultiple([
 			'cropVariants' => $cropVariants,

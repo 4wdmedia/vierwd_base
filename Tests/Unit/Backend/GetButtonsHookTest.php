@@ -29,8 +29,9 @@ class GetButtonsHookTest extends UnitTestCase {
 
 		$iconMock = $this->prophesize(Icon::class);
 
-		$iconFactoryMock = $this->prophesize(IconFactory::class);
-		$iconFactoryMock->getIcon(Argument::any(), Argument::any())->willReturn($iconMock->reveal());
+		$iconFactoryMock = $this->createMock(IconFactory::class);
+		$iconFactoryMock->method('getIcon')->willReturn($iconMock->reveal());
+		// $iconFactoryMock->getIcon(Argument::any(), Argument::any())->willReturn($iconMock->reveal());
 		$this->iconMock = $iconMock->reveal();
 
 		$languageServiceMock = $this->prophesize(LanguageService::class);
@@ -39,11 +40,12 @@ class GetButtonsHookTest extends UnitTestCase {
 		$languageServiceFactoryMock = $this->prophesize(LanguageServiceFactory::class);
 		$languageServiceFactoryMock->createFromUserPreferences(Argument::any())->willReturn($languageServiceMock->reveal());
 
-		$this->subject = new GetButtonsHook($iconFactoryMock->reveal(), $languageServiceFactoryMock->reveal());
+		$this->subject = new GetButtonsHook($iconFactoryMock, $languageServiceFactoryMock->reveal());
 	}
 
 	public function testAdjustSaveAndCloseWithoutLeftButtons(): void {
 		$arrayWithoutLeftButtons = ['right' => 'ignore'];
+		// @phpstan-ignore-next-line
 		$event = new ModifyButtonBarEvent($arrayWithoutLeftButtons, $this->prophesize(ButtonBar::class)->reveal());
 		call_user_func($this->subject, $event);
 		self::assertEquals($arrayWithoutLeftButtons, $event->getButtons());
@@ -57,6 +59,7 @@ class GetButtonsHookTest extends UnitTestCase {
 				'group' => [$saveButtonMock->reveal()],
 			],
 		];
+		// @phpstan-ignore-next-line
 		$event = new ModifyButtonBarEvent($buttons, $this->prophesize(ButtonBar::class)->reveal());
 		call_user_func($this->subject, $event);
 		self::assertEquals($buttons, $event->getButtons());

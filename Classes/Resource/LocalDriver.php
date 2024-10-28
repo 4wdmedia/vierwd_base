@@ -8,7 +8,7 @@ class LocalDriver extends \TYPO3\CMS\Core\Resource\Driver\LocalDriver {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function sanitizeFileName($fileName, $charset = 'utf-8') {
+	public function sanitizeFileName(string $fileName, string $charset = 'utf-8'): string {
 		$fileName = parent::sanitizeFileName($fileName, $charset);
 
 		$pathinfo = pathinfo($fileName);

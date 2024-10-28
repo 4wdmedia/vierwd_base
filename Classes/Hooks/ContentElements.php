@@ -300,6 +300,7 @@ class ContentElements implements SingletonInterface {
 
 		if ($pageTS) {
 			// FOR USE IN ext_localconf.php FILES
+			// @phpstan-ignore-next-line addPageTSConfig is deprecated. This needs to be fixed before TYPO3 v13. Use ModifyLoadedPageTsConfigEvent instead
 			ExtensionManagementUtility::addPageTSConfig($pageTS);
 		}
 	}
