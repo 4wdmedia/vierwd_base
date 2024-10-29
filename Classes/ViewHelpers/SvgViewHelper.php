@@ -5,9 +5,7 @@ namespace Vierwd\VierwdBase\ViewHelpers;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject;
 
@@ -20,8 +18,6 @@ use Vierwd\VierwdBase\Frontend\ContentObject\ScalableVectorGraphicsContentObject
  * </code>
  */
 class SvgViewHelper extends AbstractViewHelper {
-
-	use CompileWithRenderStatic;
 
 	/**
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
@@ -43,10 +39,10 @@ class SvgViewHelper extends AbstractViewHelper {
 	 *
 	 * {@inheritdoc}
 	 */
-	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+	public function render() {
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$svgObject = GeneralUtility::makeInstance(ScalableVectorGraphicsContentObject::class, $cObj);
-		return $svgObject->render($arguments);
+		return $svgObject->render($this->arguments);
 	}
 
 }
