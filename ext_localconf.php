@@ -196,12 +196,3 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['StaticMapper'] = \Vier
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_smarty']['pluginDirs'][] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('vierwd_base', 'Resources/Private/Smarty');
 
 unset($extConf);
-
-// Add custom Icons
-$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
-$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Public/Icons/');
-foreach (new \GlobIterator($path . '*.svg') as $icon) {
-	$iconRegistry->registerIcon('vierwd-' . $icon->getBasename('.svg'), \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class, [
-		'source' => 'EXT:vierwd_base/Resources/Public/Icons/' . $icon->getFilename(),
-	]);
-}
