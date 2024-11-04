@@ -95,9 +95,9 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['proc
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = \Vierwd\VierwdBase\Hooks\CheckBackendGroups::class;
 
 // Database connection with correct utf8mb4 charset
-$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['tableoptions'] = [
+$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['defaultTableOptions'] = [
 	'charset' => 'utf8mb4',
-	'collate' => 'utf8mb4_unicode_ci',
+	'collation' => 'utf8mb4_unicode_ci',
 ];
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\RichtextConfiguration::class] = [
@@ -196,12 +196,3 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['StaticMapper'] = \Vier
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_smarty']['pluginDirs'][] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('vierwd_base', 'Resources/Private/Smarty');
 
 unset($extConf);
-
-// Add custom Icons
-$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
-$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Public/Icons/');
-foreach (new \GlobIterator($path . '*.svg') as $icon) {
-	$iconRegistry->registerIcon('vierwd-' . $icon->getBasename('.svg'), \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class, [
-		'source' => 'EXT:vierwd_base/Resources/Public/Icons/' . $icon->getFilename(),
-	]);
-}

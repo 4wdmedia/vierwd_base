@@ -21,6 +21,7 @@ class ContentElements implements SingletonInterface {
 	protected static array $groupNames = ['vierwd' => 'FORWARD MEDIA'];
 
 	protected static array $fceConfiguration = [];
+	public static array $pageTS = [];
 
 	protected static array $usedUids = [];
 
@@ -300,8 +301,7 @@ class ContentElements implements SingletonInterface {
 
 		if ($pageTS) {
 			// FOR USE IN ext_localconf.php FILES
-			// @phpstan-ignore-next-line addPageTSConfig is deprecated. This needs to be fixed before TYPO3 v13. Use ModifyLoadedPageTsConfigEvent instead
-			ExtensionManagementUtility::addPageTSConfig($pageTS);
+			self::$pageTS[$extensionKey] = $pageTS;
 		}
 	}
 
