@@ -16,7 +16,8 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
  */
 class RteText {
 
-	private static ?ContentObjectRenderer $cObj = null;
+	/** @var ?ContentObjectRenderer */
+	private static $cObj = null;
 
 	public static function transformText(?string $content): string {
 		if (!$content) {

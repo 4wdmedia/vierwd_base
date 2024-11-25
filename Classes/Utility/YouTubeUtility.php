@@ -21,7 +21,8 @@ use function Safe\sprintf;
 
 class YouTubeUtility {
 
-	protected static ?SvgInliner $svgInliner = null;
+	/** @var ?SvgInliner */
+	protected static $svgInliner = null;
 
 	public static function generatePreview(string $videoId, array $arguments = []): string {
 		$previewImage = self::getPreviewImage($videoId);
