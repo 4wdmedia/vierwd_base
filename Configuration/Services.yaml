@@ -12,6 +12,11 @@ services:
       - name: event.listener
         identifier: 'vierwdModifyGroups'
         event: TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent
+  Vierwd\VierwdBase\ContentElements\PageTsConfig:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdCustomContentElementsPageTs'
+        event: TYPO3\CMS\Core\TypoScript\IncludeTree\Event\ModifyLoadedPageTsConfigEvent
 
   Vierwd\VierwdBase\Controller\:
     resource: '../Classes/Controller/*'
