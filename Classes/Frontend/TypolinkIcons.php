@@ -16,12 +16,14 @@ class TypolinkIcons {
 			return;
 		}
 
-		$classes = GeneralUtility::trimExplode(' ', $tagAttributes['class'], true);
-
-		$svgMapping = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_vierwdbase.']['linkIcons.'];
+		$request = $event->getContentObjectRenderer()->getRequest();
+		$typoScript = $request->getAttribute('frontend.typoscript')->getSetupArray();
+		$svgMapping = $typoScript['plugin.']['tx_vierwdbase.']['linkIcons.'] ?? null;
 		if (!$svgMapping) {
 			return;
 		}
+
+		$classes = GeneralUtility::trimExplode(' ', $tagAttributes['class'], true);
 
 		if (in_array('external-link-new-window', $classes)) {
 			$linkResult = $linkResult->withAttribute('target', '_blank');
