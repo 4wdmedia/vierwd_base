@@ -35,7 +35,7 @@ class YouTubeUtility {
 		$embedLink = 'https://www.youtube-nocookie.com/embed/' . $videoId . '?' . ltrim(GeneralUtility::implodeArrayForUrl('', $arguments), '&');
 
 		$attributes = [
-			'class' => 'youtube-preview youtube-preview',
+			'class' => 'youtube-preview',
 			'data-youtube-url' => htmlspecialchars($embedLink),
 		];
 
