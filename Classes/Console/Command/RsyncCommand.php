@@ -23,13 +23,13 @@ class RsyncCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		$dryRun = $input->getOption('dry-run');
-
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 		if (!$config || !$config['ssh']) {
 			$output->writeln('<error>No SSH config found</error>');
 			return 1;
 		}
+
+		$dryRun = $input->getOption('dry-run');
 
 		if ($config['ssh']['serverPath'] === '~/kundenbereich/') {
 			// serverPath still has default value
@@ -49,9 +49,20 @@ class RsyncCommand extends Command {
 			$excludeFrom = '--exclude-from=rsync-excludes.txt';
 		}
 
+		$sshArguments = $config['ssh']['arguments'] ?? '';
+		if ($sshArguments) {
+			$sshArguments = [
+				'-e',
+				'ssh ' . $sshArguments,
+			];
+		} else {
+			$sshArguments = [];
+		}
+
 		$command = array_filter(array_merge([
 			'rsync',
 			($dryRun ? '--dry-run' : ''),
+		], $sshArguments, [
 			'--exclude', '_processed_',
 			$excludeFrom,
 			'--times',
