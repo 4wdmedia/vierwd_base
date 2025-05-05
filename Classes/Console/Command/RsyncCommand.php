@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Service\FlexFormService;
@@ -27,6 +28,12 @@ class RsyncCommand extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
+		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+		if (!$config || !$config['ssh']) {
+			$output->writeln('<error>No SSH config found</error>');
+			return 1;
+		}
+
 		$dryRun = $input->getOption('dry-run');
 
 		try {
@@ -48,9 +55,20 @@ class RsyncCommand extends Command {
 			$excludeFrom = '--exclude-from=rsync-excludes.txt';
 		}
 
+		$sshArguments = $config['ssh']['arguments'] ?? '';
+		if ($sshArguments) {
+			$sshArguments = [
+				'-e',
+				'ssh ' . $sshArguments,
+			];
+		} else {
+			$sshArguments = [];
+		}
+
 		$command = array_filter(array_merge([
 			'rsync',
 			($dryRun ? '--dry-run' : ''),
+		], $sshArguments, [
 			'--exclude', '_processed_',
 			$excludeFrom,
 			'--times',
