@@ -133,10 +133,15 @@ abstract class BaseDatabaseCommand extends Command {
 		$tables = $schemaManager->listTableNames();
 
 		$ignoreTables = [
-			'sys_log',
 			'sys_file_processedfile',
-			'tx_extensionmanager_domain_model_extension',
+			'sys_history',
+			'sys_log',
+			'sys_refindex',
 			'tx_crawler_queue',
+			'tx_extensionmanager_domain_model_extension',
+			'tx_l10nmgr_index',
+			'tx_powermail_domain_model_answer',
+			'tx_powermail_domain_model_mail',
 		];
 		if (isset($config['additionalIgnoredTables']) && is_array($config['additionalIgnoredTables'])) {
 			// set additional ignored tables in ext_localconf with `$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['vierwd_base']['additionalIgnoredTables']`
