@@ -130,8 +130,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1536673649] = [
 	'class' => \Vierwd\VierwdBase\Form\Element\HotspotEditorElement::class,
 ];
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:vierwd_base/Configuration/PageTSconfig/page.ts">');
-
 // Add gridelement types to PageTsConfig (tt_content.gridtypes.container.section_frame.addItems...)
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('gridelements')) {
 	$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\Vierwd\VierwdBase\Form\FormDataProvider\GridelementsContainerTypeValue::class] = [
