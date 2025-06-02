@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\View;
 
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -16,9 +17,8 @@ class UtilityTest extends UnitTestCase {
 
 	/**
 	 * test adding meta tags to page
-	 *
-	 * @test
 	 */
+	#[Test]
 	public function testMetaTags(): void {
 		$this->markTestIncomplete();
 

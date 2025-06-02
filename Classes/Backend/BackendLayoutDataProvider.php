@@ -46,7 +46,9 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection): void {
 		foreach ($this->backendLayouts as $data) {
 			$backendLayout = $this->createBackendLayout($data);
-			$backendLayoutCollection->add($backendLayout);
+			if ($backendLayout) {
+				$backendLayoutCollection->add($backendLayout);
+			}
 		}
 	}
 
@@ -66,7 +68,10 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 	 *
 	 * @param array<string, mixed> $data
 	 */
-	protected function createBackendLayout(array $data): BackendLayout {
+	protected function createBackendLayout(array $data): ?BackendLayout {
+		if (!isset($data['identifier'], $data['title'], $data['config'])) {
+			return null;
+		}
 		assert(is_string($data['identifier']));
 		assert(is_string($data['title']));
 		assert(is_string($data['config']) || is_array($data['config']));

@@ -5,10 +5,12 @@ namespace Vierwd\VierwdBase\Tests\Unit\Backend;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayoutCollection;
 use TYPO3\CMS\Backend\View\BackendLayout\DataProviderContext;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
+use TYPO3\CMS\Core\TypoScript\AST\AstBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -24,14 +26,15 @@ class BackendLayoutDataProviderTest extends UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->markTestIncomplete();
-
 		// TimeTracker is used by TypoScriptParser, when an error occurs during parsing
-		// @phpstan-ignore-next-line markTestIncomplete finishes code execution
 		$mockTimeTracker = $this->getMockBuilder(TimeTracker::class)
 			->disableOriginalConstructor()
 			->getMock();
 		GeneralUtility::setSingletonInstance(TimeTracker::class, $mockTimeTracker);
+
+		$eventDispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
+		$astBuilder = new AstBuilder($eventDispatcherMock);
+		GeneralUtility::addInstance(AstBuilder::class, $astBuilder);
 
 		$standardLayout = <<<EOT
 			title = Standard
@@ -91,9 +94,7 @@ EOT;
 	public function testAddBackendLayouts(): void {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'] = [vfsStream::url('root/singleBackendLayout')];
 
-		$dataProviderContextMock = $this->getMockBuilder(DataProviderContext::class)
-			->disableOriginalConstructor()
-			->getMock();
+		$dataProviderContext = new DataProviderContext();
 
 		$backendLayoutCollectionMock = $this->getMockBuilder(BackendLayoutCollection::class)
 			->onlyMethods(['add'])
@@ -110,15 +111,13 @@ EOT;
 			->getMock();
 		$testSubject->expects(self::once())->method('createBackendLayout')->willReturn($backendLayoutMock);
 
-		$testSubject->addBackendLayouts($dataProviderContextMock, $backendLayoutCollectionMock);
+		$testSubject->addBackendLayouts($dataProviderContext, $backendLayoutCollectionMock);
 	}
 
 	public function testAddMultipleBackendLayouts(): void {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['paths'] = [vfsStream::url('root/multipleBackendLayouts')];
 
-		$dataProviderContextMock = $this->getMockBuilder(DataProviderContext::class)
-			->disableOriginalConstructor()
-			->getMock();
+		$dataProviderContext = new DataProviderContext();
 
 		$backendLayoutCollectionMock = $this->getMockBuilder(BackendLayoutCollection::class)
 			->onlyMethods(['add'])
@@ -135,7 +134,7 @@ EOT;
 			->getMock();
 		$testSubject->expects(self::exactly(2))->method('createBackendLayout')->willReturn($backendLayoutMock);
 
-		$testSubject->addBackendLayouts($dataProviderContextMock, $backendLayoutCollectionMock);
+		$testSubject->addBackendLayouts($dataProviderContext, $backendLayoutCollectionMock);
 	}
 
 

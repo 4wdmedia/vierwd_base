@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Functional\Frontend;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -12,17 +13,16 @@ class PostProcessHTMLTest extends UnitTestCase {
 
 	/**
 	 * test for html processing
-	 *
-	 * @test
 	 */
+	#[Test]
 	public function testProcessHtml(): void {
 		/** @var PostProcessHTML&MockObject $utility */
 		$utility = $this->getMockBuilder(PostProcessHTML::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
-		$utility->method('getHyphenationWords')->will(self::returnCallback(function(): array {
+		$utility->method('getHyphenationWords')->willReturnCallback(function(): array {
 			return ['con•sec•tetur', 'adi#pi#sicing'];
-		}));
+		});
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
 		$TSFE = $this->setupTsfeMock();
@@ -40,17 +40,16 @@ class PostProcessHTMLTest extends UnitTestCase {
 
 	/**
 	 * when script tags get too long, regular expressions might throw an error
-	 *
-	 * @test
 	 */
+	#[Test]
 	public function testProcessHtmlWithLongScript(): void {
 		/** @var PostProcessHTML&MockObject $utility */
 		$utility = $this->getMockBuilder(PostProcessHTML::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
-		$utility->method('getHyphenationWords')->will(self::returnCallback(function(): array {
+		$utility->method('getHyphenationWords')->willReturnCallback(function(): array {
 			return [];
-		}));
+		});
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
 		$TSFE = $this->setupTsfeMock();
@@ -63,8 +62,9 @@ class PostProcessHTMLTest extends UnitTestCase {
 		self::assertEquals($expectedContent, $actualContent);
 	}
 
+	// @phpstan-ignore-next-line TypoScriptFrontendController is deprecated. Ignore for now.
 	protected function setupTsfeMock(): TypoScriptFrontendController&MockObject {
-		/** @var TypoScriptFrontendController&MockObject $tsfe */
+		// @phpstan-ignore-next-line TypoScriptFrontendController is deprecated. Ignore for now.
 		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
 			->getMock();

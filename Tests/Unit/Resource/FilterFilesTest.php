@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Unit\Backend;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
@@ -10,9 +11,7 @@ use Vierwd\VierwdBase\Resource\FilterFiles;
 
 class FilterFilesTest extends UnitTestCase {
 
-	/**
-	 * @dataProvider getSanitizeFileNameTestData
-	 */
+	#[DataProvider('getFilterFilesTestData')]
 	public function testFilterFilesCallback(bool|int $expected, string $itemName, string $itemIdentifier): void {
 		/** @var DriverInterface $driverInstance */
 		$driverInstance = $this->getMockBuilder(DriverInterface::class)
@@ -21,7 +20,7 @@ class FilterFilesTest extends UnitTestCase {
 		self::assertEquals($expected, FilterFiles::filterFilesCallback($itemName, $itemIdentifier, dirname($itemIdentifier), [], $driverInstance));
 	}
 
-	public static function getSanitizeFileNameTestData(): array {
+	public static function getFilterFilesTestData(): array {
 		return [
 			[-1, '.svn', '/.svn/'],
 			[-1, '.git', '/.git/'],

@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Tests\Functional\Frontend\ContentObject;
 
+use PHPUnit\Framework\Attributes\Test;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectFactory;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
@@ -18,8 +21,6 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->markTestIncomplete();
-		// @phpstan-ignore-next-line markTestIncomplete finishes code execution
 		$GLOBALS['TYPO3_CONF_VARS']['FE']['ContentObjects']['SVG'] = ScalableVectorGraphicsContentObject::class;
 	}
 
@@ -31,19 +32,39 @@ class ScalableVectorGraphicsContentObjectTest extends UnitTestCase {
 
 	/**
 	 * inlining an svg
-	 *
-	 * @test
 	 */
+	#[Test]
 	public function testSvg(): void {
+		$testObject = new ScalableVectorGraphicsContentObject();
+
+		$contentObjectFactoryMock = $this->getMockBuilder(ContentObjectFactory::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['getContentObject'])
+			->getMock();
+		$contentObjectFactoryMock->method('getContentObject')->willReturn($testObject);
+		GeneralUtility::addInstance(ContentObjectFactory::class, $contentObjectFactoryMock);
+
+		$eventDispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
+		GeneralUtility::addInstance(EventDispatcherInterface::class, $eventDispatcherMock);
+
+		// @phpstan-ignore-next-line TypoScriptFrontendController is deprecated. Ignore for now.
 		$TSFE = $this->getMockBuilder(TypoScriptFrontendController::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class, $TSFE);
+		$cObj->stdWrapOrder = [
+			'stdWrap' => 'stdWrap',
+			'stdWrap.' => 'array',
+			'wrap' => 'wrap',
+			'wrap.' => 'array',
+		];
 		$requestMock = $this->getMockBuilder(ServerRequestInterface::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$cObj->setRequest($requestMock);
+		$testObject->setRequest($requestMock);
+		$testObject->setContentObjectRenderer($cObj);
 
 		$svg = $cObj->cObjGetSingle('SVG', [
 			'value' => '<svg xmlns="http://www.w3.org/2000/svg"></svg>',
