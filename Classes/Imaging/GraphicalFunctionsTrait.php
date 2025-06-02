@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Imaging;
 
 use TYPO3\CMS\Core\Imaging\ImageMagickFile;
+use TYPO3\CMS\Core\Imaging\ImageProcessingResult;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -23,46 +24,37 @@ trait GraphicalFunctionsTrait {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {
-		// Note: mustCreate has another default value
+	public function resize(string $sourceFile, string $targetFileExtension, int|string $width = '', int|string $height = '', string $additionalParameters = '', array $options = [], bool $forceCreation = true): ?ImageProcessingResult {
+		// Note: forceCreation has another default value
 
-		$ext = $newExt ?: strtolower(pathinfo($imagefile, PATHINFO_EXTENSION));
-		$params = (string)$params;
+		$ext = $targetFileExtension ?: strtolower(pathinfo($sourceFile, PATHINFO_EXTENSION));
 		if (in_array($ext, ['jpeg', 'jpg'])) {
 			$append = '';
-			if (preg_match('/\s-font\s*$/', $params, $matches)) {
+			if (preg_match('/\s-font\s*$/', $additionalParameters, $matches)) {
 				// TYPO3 always prepends the parameters before the filename. For some imagemagick commands,
 				// the order is important and the filename needs to be infront of the parameters. As it is
 				// not possible to remove the filename, we use a hack to ignore the filename: We use -font
 				// as last part in the params, so the command looks like this:
 				// $file PARAMS -font $file $outputFile
-				// If we detect -font as last part of $params, we add quality and interlace before -font.
+				// If we detect -font as last part of $additionalParameters, we add quality and interlace before -font.
 				$append = $matches[0];
-				$params = substr($params, 0, -strlen($append));
+				$additionalParameters = substr($additionalParameters, 0, -strlen($append));
 			}
-			// check if interlace plane and quality is set
-			if (strpos($params, '-quality') === false) {
-				$params .= ' -quality ' . $this->jpegQuality;
-			}
-
-			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($params, '-interlace') === false) {
-				$params .= ' -interlace Plane';
+			// check if interlace plane is set
+			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($additionalParameters, '-interlace') === false) {
+				$additionalParameters .= ' -interlace Plane';
 			}
 
-			$params .= $append;
+			$additionalParameters .= $append;
 		}
 		if ($ext === 'webp') {
-			// check if interlace plane and quality is set
-			if (strpos($params, '-quality') === false) {
-				$params .= ' -quality 85';
-			}
-
-			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($params, '-interlace') === false) {
-				$params .= ' -interlace Plane';
+			// check if interlace plane is set
+			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($additionalParameters, '-interlace') === false) {
+				$additionalParameters .= ' -interlace Plane';
 			}
 		}
 
-		return parent::imageMagickConvert($imagefile, $newExt, $w, $h, $params, $frame, $options, $mustCreate);
+		return parent::resize($sourceFile, $targetFileExtension, $width, $height, $additionalParameters, $options);
 	}
 
 	/**
