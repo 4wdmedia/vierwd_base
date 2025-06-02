@@ -17,7 +17,9 @@ class TypolinkIcons {
 		}
 
 		$request = $event->getContentObjectRenderer()->getRequest();
-		$typoScript = $request->getAttribute('frontend.typoscript')->getSetupArray();
+		$typoScript = $request->getAttribute('frontend.typoscript');
+		assert($typoScript !== null);
+		$typoScript = $typoScript->getSetupArray();
 		$svgMapping = $typoScript['plugin.']['tx_vierwdbase.']['linkIcons.'] ?? null;
 		if (!$svgMapping) {
 			return;

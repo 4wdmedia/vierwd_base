@@ -57,6 +57,9 @@ class PostProcessHTML implements MiddlewareInterface {
 		$TSFE->content = $this->postProcessHTML($TSFE->content, $TSFE);
 	}
 
+	/**
+	 * @phpstan-ignore-next-line TypoScriptFrontendController is deprecated, but we still use it
+	 */
 	public function postProcessHTML(string $content, TypoScriptFrontendController $TSFE): string {
 		if (!$content) {
 			return '';
@@ -105,6 +108,9 @@ class PostProcessHTML implements MiddlewareInterface {
 		return $words;
 	}
 
+	/**
+	 * @phpstan-ignore-next-line TypoScriptFrontendController is deprecated, but we still use it
+	 */
 	private function addHyphenation(DOMDocument $document, TypoScriptFrontendController $TSFE): void {
 		// @phpstan-ignore-next-line
 		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['hyphenation']) && !$TSFE->config['config.']['tx_vierwd.']['hyphenation']) {
@@ -149,6 +155,7 @@ class PostProcessHTML implements MiddlewareInterface {
 	 * add rel=noopener to all external links.
 	 *
 	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
+	 * @phpstan-ignore-next-line TypoScriptFrontendController is deprecated, but we still use it
 	 */
 	private function addNoopener(DOMDocument $document, TypoScriptFrontendController $TSFE): void {
 		// @phpstan-ignore-next-line
