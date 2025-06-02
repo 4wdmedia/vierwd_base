@@ -14,8 +14,10 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\FluidViewAdapter;
+use TYPO3\CMS\Core\View\ViewInterface;
+use TYPO3Fluid\Fluid\View\ViewInterface as FluidStandaloneViewInterface;
 use Vierwd\VierwdSmarty\Controller\SmartyController;
+use Vierwd\VierwdSmarty\View\SmartyView;
 
 class TranslationStatusController extends SmartyController {
 
@@ -27,6 +29,20 @@ class TranslationStatusController extends SmartyController {
 		protected readonly FlashMessageService $flashMessageService,
 		protected readonly ExtensionConfiguration $extensionConfiguration,
 	) {
+	}
+
+	protected function resolveView(): FluidStandaloneViewInterface|ViewInterface {
+		$view = parent::resolveView();
+
+		if ($view instanceof SmartyView) {
+			$templatePaths = $view->getRenderingContext()->getTemplatePaths();
+			$templatePaths->setFormat('tpl');
+			$templatePaths->setTemplateRootPaths([
+				GeneralUtility::getFileAbsFileName('EXT:vierwd_base/Resources/Private/Templates/'),
+			]);
+		}
+
+		return $view;
 	}
 
 	/**
@@ -93,7 +109,6 @@ class TranslationStatusController extends SmartyController {
 
 		$translations = [];
 
-		/** @var array $data */
 		$data = $localizationFactory->getParsedData($fileReference, 'default');
 		// get the source label
 		$data = array_map(function(array $row) {
@@ -104,7 +119,6 @@ class TranslationStatusController extends SmartyController {
 		$availableLanguages = $this->getAvailableLanguages($fileReference);
 
 		foreach ($availableLanguages as $languageKey) {
-			/** @var array $data */
 			$data = $localizationFactory->getParsedData($fileReference, $languageKey);
 			$data = $data[$languageKey];
 
@@ -165,6 +179,7 @@ class TranslationStatusController extends SmartyController {
 			$this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
 		}
 
+		assert($this->view instanceof ViewInterface);
 		$moduleTemplate = new ModuleTemplate(
 			$this->pageRenderer,
 			$this->iconFactory,
@@ -172,18 +187,17 @@ class TranslationStatusController extends SmartyController {
 			$this->moduleProvider,
 			$this->flashMessageService,
 			$this->extensionConfiguration,
-			// @phpstan-ignore-next-line
-			new FluidViewAdapter($this->view),
+			$this->view,
 			$this->request
 		);
 
-		return $this->htmlResponse($moduleTemplate->render());
+		return $this->htmlResponse($moduleTemplate->render('TranslationStatus/Index.tpl'));
 	}
 
-	public function exportAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false, string $search = '', array $languages = []): void {
+	public function exportAction(string $extensionName = '', string $fileName = '', bool $showAllLabels = false, string $search = '', array $languages = []): ResponseInterface {
 		$labels = $this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
 		if (!$labels) {
-			$this->redirect('index');
+			return $this->redirect('index');
 		}
 
 		$translationKeys = $labels['translationKeys'];
