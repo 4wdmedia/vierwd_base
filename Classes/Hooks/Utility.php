@@ -27,7 +27,7 @@ class Utility {
 	 * 10.stdWrap.wrap = <style id="css-vars">|</style>
 	 */
 	public function outputFile(?string $content, array $params): string {
-		$file = $params['file'];
+		$file = $params['file'] ?? '';
 		if (isset($params['file.'])) {
 			$file = $this->cObj->stdWrap($file, $params['file.']);
 		}
