@@ -454,7 +454,7 @@ class ContentElements implements SingletonInterface {
 	 * but this would interfere with :first-child pseudo elements
 	 */
 	public function elementUid(string $content): string {
-		if (!$content || $content[0] != '<' || $this->cObj === null || !$this->cObj->data['uid']) {
+		if (!$content || $content[0] != '<' || $this->cObj === null || empty($this->cObj->data['uid'])) {
 			return $content;
 		}
 
