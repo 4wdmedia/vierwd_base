@@ -73,6 +73,9 @@ class LinkUtility {
 			$link = self::$cObj->typoLink_URL(['parameter' => $typolink]);
 
 			if ($isPagelink) {
+				if ($linkData['pageuid'] === 'current') {
+					$linkData['pageuid'] = (int)$GLOBALS['TSFE']->id;
+				}
 				$targetPage = $GLOBALS['TSFE']->sys_page->getPage($linkData['pageuid']);
 				if ($targetPage && $targetPage['doktype'] === PageRepository::DOKTYPE_LINK && $targetPage['url']) {
 					$isPagelink = false;
