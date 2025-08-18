@@ -35,7 +35,7 @@ class GridelementsMergeTsConfig implements FormDataProviderInterface {
 		}
 
 		$mergedTCEForm = $result['pageTsConfig']['TCEFORM.']['tt_content.'];
-		$type = $result['customData']['vierwd_base']['gridelementType'];
+		$type = $result['customData']['vierwd_base']['gridelementType'] ?? '';
 
 		// Merge TCEFORM.tt_content.vierwd_gridtypes.[type].[field] over TCEFORM.tt_content.[field]
 		if (!empty($mergedTCEForm['vierwd_gridtypes.'][$type . '.'])
