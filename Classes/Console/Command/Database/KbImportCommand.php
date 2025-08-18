@@ -62,7 +62,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		if ($noData) {
 			$commandLine = $this->getExportStructureTablesCommand($server, $serverPath, true) . ' 2>/dev/null';
 		} else {
-			$commandLine = $this->getExportDataTablesCommand($server, $serverPath, $contentOnly) . ' 2>/dev/null; ' . $this->getExportStructureTablesCommand($server, $serverPath) . ' 2>/dev/null';
+			$commandLine = $this->getExportDataTablesCommand($server, $serverPath, $contentOnly) . ' 2>/dev/null | grep --invert-match \'^\\/\\*\' | grep --invert-match \'^-\'; ' . $this->getExportStructureTablesCommand($server, $serverPath) . ' 2>/dev/null | grep --invert-match \'^\\/\\*\' | grep --invert-match \'^-\'';
 		}
 		$remoteMysqlProcess = Process::fromShellCommandline($commandLine);
 
