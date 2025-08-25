@@ -129,16 +129,12 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 	}
 
 	protected function resolveOverlay(?array $record): ?array {
-		$record = parent::resolveOverlay($record);
-		if (!$record) {
-			return $record;
+		$overlay = parent::resolveOverlay($record);
+		if ($overlay) {
+			return $overlay;
 		}
 
 		$currentLanguageId = $this->siteLanguage->getLanguageId();
-		if (isset($record['sys_language_uid']) && $record['sys_language_uid'] === $currentLanguageId) {
-			return $record;
-		}
-
 		$fallbackLanguages = $this->resolveAllRelevantLanguageIds();
 		$pageRepository = $this->createPageRepository();
 		foreach ($fallbackLanguages as $languageId) {
