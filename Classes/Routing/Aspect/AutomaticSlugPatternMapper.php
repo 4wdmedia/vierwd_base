@@ -129,6 +129,10 @@ class AutomaticSlugPatternMapper extends PersistedPatternMapper {
 	}
 
 	protected function resolveOverlay(?array $record): ?array {
+		if (!$record) {
+			return $record;
+		}
+
 		$overlay = parent::resolveOverlay($record);
 		if ($overlay) {
 			return $overlay;
