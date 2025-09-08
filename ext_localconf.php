@@ -68,9 +68,6 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('indexed_search
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Imaging\GraphicalFunctions::class] = [
 	'className' => \Vierwd\VierwdBase\Imaging\GraphicalFunctions::class,
 ];
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Frontend\Imaging\GifBuilder::class] = [
-	'className' => \Vierwd\VierwdBase\Imaging\GifBuilder::class,
-];
 
 // ****************
 // X-Class for SVGContentObject
