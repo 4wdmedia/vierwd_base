@@ -54,7 +54,7 @@ class GetButtonsHookTest extends UnitTestCase {
 		$saveButtonMock->getName()->willReturn('_savebutton');
 		$buttons = [
 			'left' => [
-				'group' => [$saveButtonMock->reveal()],
+				1 => [$saveButtonMock->reveal()],
 			],
 		];
 		$event = new ModifyButtonBarEvent($buttons, $this->prophesize(ButtonBar::class)->reveal());
@@ -67,7 +67,7 @@ class GetButtonsHookTest extends UnitTestCase {
 		$saveButtonMock->setName('_savedok');
 		$buttons = [
 			'left' => [
-				'group' => [
+				1 => [
 					'button1' => $saveButtonMock,
 				],
 			],
@@ -75,7 +75,8 @@ class GetButtonsHookTest extends UnitTestCase {
 		$event = new ModifyButtonBarEvent($buttons, $this->prophesize(ButtonBar::class)->reveal());
 		call_user_func($this->subject, $event);
 		$buttons = $event->getButtons();
-		$lastButton = array_pop($buttons['left']['group']);
+		$lastButton = array_pop($buttons[ButtonBar::BUTTON_POSITION_LEFT][1]);
+		self::assertInstanceOf(InputButton::class, $lastButton);
 		self::assertEquals('_saveandclosedok', $lastButton->getName());
 		self::assertEquals('1', $lastButton->getValue());
 		self::assertEquals(false, $lastButton->getShowLabelText());
