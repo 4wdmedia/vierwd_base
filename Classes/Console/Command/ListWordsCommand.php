@@ -113,8 +113,7 @@ class ListWordsCommand extends Command {
 		echo implode("\n", $words);
 		echo "\n";
 
-		// everything ok
-		return 0;
+		return Command::SUCCESS;
 	}
 
 	protected function getHyphenationWords(): array {

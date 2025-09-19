@@ -34,7 +34,7 @@ class RsyncCommand extends Command {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 		if (!$config || !$config['ssh']) {
 			$output->writeln('<error>No SSH config found</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		$dryRun = $input->getOption('dry-run');
@@ -43,13 +43,13 @@ class RsyncCommand extends Command {
 			$serverPath = $this->getConfiguredServerPath($input);
 		} catch (\Throwable $e) {
 			$output->writeln('<error>' . $e->getMessage() . '</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		$folders = $this->getRsyncFolders();
 		if (!$folders) {
 			$output->writeln('<error>No folders configured for rsync</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 		$folders = $this->transformFolders($folders, $serverPath);
 
@@ -91,11 +91,12 @@ class RsyncCommand extends Command {
 
 		if ($importProcess->getExitCode()) {
 			$output->writeln('<error>Import failed</error>');
+			return Command::FAILURE;
 		} else if (!$dryRun) {
 			$output->writeln('<info>Import complete</info>');
 		}
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 	protected function getRsyncFolders(): array {

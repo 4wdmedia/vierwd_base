@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,12 +35,12 @@ class ExportCommand extends BaseDatabaseCommand {
 		$file = $input->getOption('file');
 		if (!is_string($file)) {
 			$output->writeln('<error>Please enter a single file name</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		if ($this->isDbEmpty()) {
 			$output->writeln('<error>Database is empty</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		$this->ensureMysqlConfigExists();
@@ -94,7 +95,7 @@ class ExportCommand extends BaseDatabaseCommand {
 		// Clear cache
 		$this->commandDispatcher->executeCommand('cache:flush');
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 }

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,7 +35,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 		if (!$config || !is_array($config) || !$config['ssh']) {
 			$output->writeln('<error>No SSH config found</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		try {
@@ -43,7 +44,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 			assert(is_string($server));
 		} catch (\Throwable $e) {
 			$output->writeln('<error>' . $e->getMessage() . '</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 		[$host, $serverPath] = explode(':', $serverPath);
 
@@ -83,13 +84,19 @@ class KbImportCommand extends BaseDatabaseCommand {
 
 		$importProcess = Process::fromShellCommandline($importProcess->getCommandLine() . ' | ' . $localMysqlProcess->getCommandLine());
 		$importProcess->setTimeout(0.0);
-		$importProcess->run($this->buildStreamOutput());
+		$exitCode = $importProcess->run($this->buildStreamOutput());
+		if ($exitCode) {
+			$output->writeln('<error>Could not import database</error>');
+			$output->writeln('<error>' . $importProcess->getErrorOutput() . '</error>');
+			return $exitCode;
+		}
+
 		$output->writeln('<info>Import complete</info>');
 
 		// Clear cache
 		$this->commandDispatcher->executeCommand('cache:flush');
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 }
