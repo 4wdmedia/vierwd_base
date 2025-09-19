@@ -63,6 +63,7 @@ class ImportCommand extends BaseDatabaseCommand {
 		$commandLine = 'gzip -c -d ' . escapeshellarg($importPath) . ' | ' . $mysqlProcess->getCommandLine();
 
 		$process = Process::fromShellCommandline($commandLine);
+		$output->writeln('<comment>' . $process->getCommandLine() . '</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
 		$process->setTimeout(0.0);
 		$exitCode = $process->run($this->buildStreamOutput());
 		if ($exitCode) {
