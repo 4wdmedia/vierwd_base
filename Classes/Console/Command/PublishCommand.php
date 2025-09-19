@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,12 +14,15 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+#[AsCommand(
+	name: 'vierwd:publish',
+	description: 'Upload JavaScript and CSS to server with no need to commit it to git.',
+)]
 class PublishCommand extends Command {
 
 	use ServerTrait;
 
 	protected function configure(): void {
-		$this->setDescription('Upload JavaScript and CSS to server with no need to commit it to git.');
 		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
 		$servers = $this->getConfiguredServers();
 		$this->addArgument('server', InputArgument::REQUIRED, 'To which server do you want to publish? ' . implode(', ', array_keys($servers)));

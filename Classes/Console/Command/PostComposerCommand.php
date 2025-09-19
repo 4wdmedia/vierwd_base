@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Console\Command;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,10 +13,13 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsCommand(
+	name: 'vierwd:post-composer',
+	description: 'Tasks to run after composer install/update',
+)]
 class PostComposerCommand extends Command {
 
 	protected function configure(): void {
-		$this->setDescription('Tasks to run after composer install/update');
 		$this->setHelp('Ensure some folders exist after composer installation');
 	}
 

@@ -3,16 +3,20 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsCommand(
+	name: 'vierwd:database:last-change',
+	description: 'Show the last changed timestamps for all tables.',
+)]
 class LastChangeCommand extends Command {
 
 	protected function configure(): void {
-		$this->setDescription('Show the last changed timestamps for all tables.');
 		$this->setHelp('This only works for tables which have the default TYPO3 tstamp or crdate fields');
 	}
 

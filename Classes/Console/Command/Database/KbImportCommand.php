@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,12 +13,15 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Vierwd\VierwdBase\Console\Command\ServerTrait;
 
+#[AsCommand(
+	name: 'vierwd:database:kb-import',
+	description: 'Import database from the current ServiceArea or Live-Server.',
+)]
 class KbImportCommand extends BaseDatabaseCommand {
 
 	use ServerTrait;
 
 	protected function configure(): void {
-		$this->setDescription('Import database from the current ServiceArea or Live-Server.');
 		$this->addOption('no-backup', null, InputOption::VALUE_NONE, 'Do not create a backup before import');
 		$this->addOption('no-data', null, InputOption::VALUE_NONE, 'Only create tables. Do not import data');
 		$this->addOption('content-only', null, InputOption::VALUE_NONE, 'Only import content tables (tt_content, pages and sys_file_reference)');

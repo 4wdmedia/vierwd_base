@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,10 +11,13 @@ use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsCommand(
+	name: 'vierwd:database:import',
+	description: 'Import database from a file.',
+)]
 class ImportCommand extends BaseDatabaseCommand {
 
 	protected function configure(): void {
-		$this->setDescription('Import database from a file.');
 		$this->addOption('file', null, InputOption::VALUE_OPTIONAL, 'Filename for import', 'backup.sql.gz');
 		$this->addOption('no-backup', null, InputOption::VALUE_NONE, 'Do not create a backup before import');
 		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');

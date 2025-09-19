@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,10 +11,13 @@ use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsCommand(
+	name: 'vierwd:database:export',
+	description: 'Export database',
+)]
 class ExportCommand extends BaseDatabaseCommand {
 
 	protected function configure(): void {
-		$this->setDescription('Export database');
 		$this->addOption('file', null, InputOption::VALUE_OPTIONAL, 'Filename for export', 'backup.sql.gz');
 		$this->setHelp(implode("\n", [
 			'Export the database (all tables) directly to a file.',
