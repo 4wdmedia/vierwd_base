@@ -49,7 +49,7 @@ class LastChangeCommand extends Command {
 			$output->writeln(date('Y-m-d H:i', $time) . ' ' . $table->getName());
 		}
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 }

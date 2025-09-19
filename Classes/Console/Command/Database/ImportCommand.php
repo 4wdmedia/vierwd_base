@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,7 +28,7 @@ class ImportCommand extends BaseDatabaseCommand {
 		$file = $input->getOption('file');
 		if (!is_string($file)) {
 			$output->writeln('<error>Please enter a single file name</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		$importFile = $file ? basename($file) : 'backup.sql.gz';
@@ -35,7 +36,7 @@ class ImportCommand extends BaseDatabaseCommand {
 		$importPath = $databaseFolder . '/' . $importFile;
 		if (!file_exists($importPath)) {
 			$output->writeln(sprintf('<error>Import file %s not found</error>', $importFile));
-			return 1;
+			return Command::FAILURE;
 		}
 
 		$this->ensureMysqlConfigExists();
@@ -63,14 +64,19 @@ class ImportCommand extends BaseDatabaseCommand {
 
 		$process = Process::fromShellCommandline($commandLine);
 		$process->setTimeout(0.0);
-		$process->run($this->buildStreamOutput());
-		$output->writeln('<info>Import complete</info>');
+		$exitCode = $process->run($this->buildStreamOutput());
+		if ($exitCode) {
+			$output->writeln('<error>Could not import database</error>');
+			$output->writeln('<error>' . $process->getErrorOutput() . '</error>');
+			return $exitCode;
+		}
 
+		$output->writeln('<info>Import complete</info>');
 
 		// Clear cache
 		$output->writeln($this->commandDispatcher->executeCommand('cache:flush'));
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 }

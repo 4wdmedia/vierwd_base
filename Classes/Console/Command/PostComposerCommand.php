@@ -65,7 +65,7 @@ class PostComposerCommand extends Command {
 			$commandDispatcher->executeCommand('cache:flush', ['--group', 'di']);
 		}
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 	protected function hasValidDatabaseConnection(): bool {

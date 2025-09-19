@@ -36,7 +36,7 @@ class PublishCommand extends Command {
 			$basePath = rtrim($basePath, '/');
 		} catch (\Throwable $e) {
 			$output->writeln('<error>' . $e->getMessage() . '</error>');
-			return 1;
+			return Command::FAILURE;
 		}
 
 		$extensionName = $this->getExtensionName();
@@ -81,11 +81,12 @@ class PublishCommand extends Command {
 
 		if ($importProcess->getExitCode()) {
 			$output->writeln('<error>Publish failed</error>');
+			return Command::FAILURE;
 		} else if (!$dryRun) {
 			$output->writeln('<info>Publish complete</info>');
 		}
 
-		return 0;
+		return Command::SUCCESS;
 	}
 
 	protected function getExtensionName(): string {
