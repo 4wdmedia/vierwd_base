@@ -86,6 +86,7 @@ class RsyncCommand extends Command {
 		]));
 
 		$importProcess = new Process($command);
+		$output->writeln('<comment>' . $importProcess->getCommandLine() . '</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
 		$importProcess->setTimeout(0.0);
 		$importProcess->run($this->buildStreamOutput($output));
 

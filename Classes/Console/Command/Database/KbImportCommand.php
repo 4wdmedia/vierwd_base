@@ -83,6 +83,7 @@ class KbImportCommand extends BaseDatabaseCommand {
 		$importProcess = new Process(array_filter($command));
 
 		$importProcess = Process::fromShellCommandline($importProcess->getCommandLine() . ' | ' . $localMysqlProcess->getCommandLine());
+		$output->writeln('<comment>' . $importProcess->getCommandLine() . '</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
 		$importProcess->setTimeout(0.0);
 		$exitCode = $importProcess->run($this->buildStreamOutput());
 		if ($exitCode) {

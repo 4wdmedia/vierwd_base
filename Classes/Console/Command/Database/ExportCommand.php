@@ -61,6 +61,7 @@ class ExportCommand extends BaseDatabaseCommand {
 		}
 
 		$process1 = Process::fromShellCommandline($command1 . '> ' . escapeshellarg($exportPath));
+		$output->writeln('<comment>' . $process1->getCommandLine() . '</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
 		$process1->setTimeout(0.0);
 		$exitCode = $process1->run();
 		if ($exitCode) {
@@ -70,6 +71,7 @@ class ExportCommand extends BaseDatabaseCommand {
 		}
 
 		$process2 = Process::fromShellCommandline($command2 . '>> ' . escapeshellarg($exportPath));
+		$output->writeln('<comment>' . $process2->getCommandLine() . '</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
 		$process2->setTimeout(0.0);
 		$exitCode = $process2->run();
 		if ($exitCode) {
@@ -79,6 +81,7 @@ class ExportCommand extends BaseDatabaseCommand {
 		}
 
 		$process3 = new Process(['gzip', $exportPath]);
+		$output->writeln('<comment>' . $process3->getCommandLine() . '</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
 		$process3->setTimeout(0.0);
 		$exitCode = $process3->run();
 		if ($exitCode) {
