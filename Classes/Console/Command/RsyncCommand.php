@@ -32,7 +32,7 @@ class RsyncCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
-		if (!$config || !$config['ssh']) {
+		if (!is_array($config) || !$config['ssh']) {
 			$output->writeln('<error>No SSH config found</error>');
 			return Command::FAILURE;
 		}
