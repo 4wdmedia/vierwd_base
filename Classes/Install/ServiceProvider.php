@@ -34,7 +34,7 @@ class ServiceProvider extends AbstractServiceProvider {
 	}
 
 	public static function configureCommands(ContainerInterface $container, CommandRegistry $commandRegistry): CommandRegistry {
-		$commandRegistry->addLazyCommand('vierwd:post-composer', PostComposerCommand::class);
+		$commandRegistry->addLazyCommand('vierwd:post-composer', PostComposerCommand::class, 'Tasks to run after composer install/update');
 		return $commandRegistry;
 	}
 

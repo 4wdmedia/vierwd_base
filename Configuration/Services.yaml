@@ -7,6 +7,9 @@ services:
   Vierwd\VierwdBase\Backend\:
     resource: '../Classes/Backend/*'
 
+  Vierwd\VierwdBase\Console\:
+    resource: '../Classes/Console/*'
+
   Vierwd\VierwdBase\ContentElements\ModifyUserGroups:
     tags:
       - name: event.listener
@@ -59,48 +62,28 @@ services:
   Vierwd\VierwdBase\Console\Command\PostComposerCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:post-composer'
         schedulable: false
-        # unfortunately runLevel is not supported anymore
-        # runLevel: Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE
   Vierwd\VierwdBase\Console\Command\Database\ExportCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:database:export'
         schedulable: false
-        # unfortunately runLevel is not supported anymore
-        # runLevel: Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL
   Vierwd\VierwdBase\Console\Command\Database\ImportCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:database:import'
         schedulable: false
-        # unfortunately runLevel is not supported anymore
-        # runLevel: Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_COMPILE
   Vierwd\VierwdBase\Console\Command\Database\KbImportCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:database:kb-import'
         schedulable: false
-        # unfortunately runLevel is not supported anymore
-        # runLevel: Helhum\Typo3Console\Core\Booting\RunLevel::LEVEL_MINIMAL
   Vierwd\VierwdBase\Console\Command\Database\LastChangeCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:database:last-change'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\ListWordsCommand:
-    tags:
-      - name: 'console.command'
-        command: 'vierwd:list-words'
         schedulable: false
   Vierwd\VierwdBase\Console\Command\RsyncCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:rsync:down'
         schedulable: false
   Vierwd\VierwdBase\Console\Command\PublishCommand:
     tags:
       - name: 'console.command'
-        command: 'vierwd:publish'
         schedulable: false

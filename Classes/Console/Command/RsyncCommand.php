@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,13 +16,15 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsCommand(
+	name: 'vierwd:rsync:down',
+	description: 'Copy all file storage from server to local dev environment.',
+)]
 class RsyncCommand extends Command {
 
 	use ServerTrait;
 
 	protected function configure(): void {
-		$this->setDescription('Import database from the current ServiceArea or Live-Server');
-		$this->setHelp('This completly overwrites the current DB. As a security measure, we export the DB before importing a new one');
 		$this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Perform a trial run with no changes made');
 		$servers = $this->getConfiguredServers();
 		$this->addArgument('server', InputArgument::OPTIONAL, 'From which server do you want to sync? ' . implode(', ', array_keys($servers)), 'live');

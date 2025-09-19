@@ -3,17 +3,18 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+#[AsCommand(
+	name: 'vierwd:list-words',
+	description: 'List all words used on the website',
+)]
 class ListWordsCommand extends Command {
-
-	protected function configure(): void {
-		$this->setDescription('List all words used on the website');
-	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
