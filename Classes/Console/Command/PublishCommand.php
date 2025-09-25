@@ -10,9 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 #[AsCommand(
 	name: 'vierwd:publish',
@@ -46,9 +48,21 @@ class PublishCommand extends Command {
 		$prettyServerPath = preg_replace('/^([^:]*@[^:]*:)(.*)$/', '$1<options=bold>$2</>', $basePath) . '/packages/' . $extensionName . '/Resources/';
 		$output->writeln(sprintf('<info>Publishing to %s</info>', $prettyServerPath));
 
-		$command = array_filter([
+		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+		$sshArguments = $config['ssh']['arguments'] ?? '';
+		if ($sshArguments) {
+			$sshArguments = [
+				'-e',
+				'ssh ' . $sshArguments,
+			];
+		} else {
+			$sshArguments = [];
+		}
+
+		$command = array_filter(array_merge([
 			'rsync',
 			($dryRun ? '--dry-run' : ''),
+		], $sshArguments, [
 			'--include', '*.css',
 			'--include', '*.js',
 			'--include', '*.json',
@@ -73,7 +87,7 @@ class PublishCommand extends Command {
 			'--delete',
 			$localPath,
 			$serverPath,
-		]);
+		]));
 
 		$importProcess = new Process($command);
 		$importProcess->setTimeout(0.0);
