@@ -49,6 +49,7 @@ class PublishCommand extends Command {
 		$output->writeln(sprintf('<info>Publishing to %s</info>', $prettyServerPath));
 
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
+		assert(is_array($config));
 		$sshArguments = $config['ssh']['arguments'] ?? '';
 		if ($sshArguments) {
 			$sshArguments = [
