@@ -69,7 +69,7 @@ class LinkUtility {
 			$isPagelink = $linkData['type'] === 'page';
 			$isDownload = $linkData['type'] === 'file';
 
-			$link = self::$cObj->typoLink_URL(['parameter' => $typolink]);
+			$link = self::$cObj->typoLink_URL(['returnLast' => 'url', 'parameter' => $typolink]);
 
 			if ($isPagelink) {
 				$externalURL = $GLOBALS['TSFE']->sys_page->getExtURL($GLOBALS['TSFE']->sys_page->getPage($linkData['pageuid']));
