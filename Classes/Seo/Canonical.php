@@ -42,6 +42,7 @@ class Canonical implements SingletonInterface {
 		if (!empty($GLOBALS['TSFE']->page['canonical_link'])) {
 			$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 			$url = $cObj->typoLink_URL([
+				'returnLast' => 'url',
 				'forceAbsoluteUrl' => true,
 				'parameter' => $GLOBALS['TSFE']->page['canonical_link'],
 			]);
@@ -98,12 +99,14 @@ class Canonical implements SingletonInterface {
 			if (!$query) {
 				// there are more parameters beside L and id. Regenerate including cHash
 				$url = $cObj->typoLink_URL([
+					'returnLast' => 'url',
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 				]);
 			} else {
 				// only L and id left. generate without cHash
 				$url = $cObj->typoLink_URL([
+					'returnLast' => 'url',
 					'forceAbsoluteUrl' => true,
 					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 					'additionalParams' => GeneralUtility::implodeArrayForUrl('', $query),
@@ -111,6 +114,7 @@ class Canonical implements SingletonInterface {
 			}
 		} else {
 			$url = $cObj->typoLink_URL([
+				'returnLast' => 'url',
 				'forceAbsoluteUrl' => true,
 				'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 			]);

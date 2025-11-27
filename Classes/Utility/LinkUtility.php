@@ -70,7 +70,7 @@ class LinkUtility {
 			$isPagelink = $linkData['type'] === 'page';
 			$isDownload = $linkData['type'] === 'file';
 
-			$link = self::$cObj->typoLink_URL(['parameter' => $typolink]);
+			$link = self::$cObj->typoLink_URL(['returnLast' => 'url', 'parameter' => $typolink]);
 
 			if ($isPagelink) {
 				if ($linkData['pageuid'] === 'current') {
