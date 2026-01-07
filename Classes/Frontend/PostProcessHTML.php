@@ -21,7 +21,6 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent;
 
 class PostProcessHTML implements MiddlewareInterface {
@@ -35,12 +34,13 @@ class PostProcessHTML implements MiddlewareInterface {
 			return $response;
 		}
 
-		$TSFE = $request->getAttribute('frontend.controller');
-		if (!$TSFE) {
+		$typoScript = $request->getAttribute('frontend.typoscript')?->getConfigArray();
+
+		if (!$typoScript) {
 			return $response;
 		}
 		$content = (string)$response->getBody();
-		$content = $this->postProcessHTML($content, $TSFE);
+		$content = $this->postProcessHTML($content, $typoScript);
 		$body = new Stream('php://temp', 'wb+');
 		$body->write($content);
 		$body->rewind();
@@ -53,20 +53,19 @@ class PostProcessHTML implements MiddlewareInterface {
 		if (!($extConf['cachedPostprocessing'] ?? true)) {
 			return;
 		}
+		$typoScriptArray = $event->getRequest()->getAttribute('frontend.typoscript')?->getConfigArray() ?? [];
 		$TSFE = $event->getController();
-		$TSFE->content = $this->postProcessHTML($TSFE->content, $TSFE);
+		// @phpstan-ignore-next-line TSFE is deprecated but still in use
+		$TSFE->content = $this->postProcessHTML($TSFE->content, $typoScriptArray);
 	}
 
-	/**
-	 * @phpstan-ignore-next-line TypoScriptFrontendController is deprecated, but we still use it
-	 */
-	public function postProcessHTML(string $content, TypoScriptFrontendController $TSFE): string {
+	public function postProcessHTML(string $content, array $typoScriptArray): string {
 		if (!$content) {
 			return '';
 		}
 
 		try {
-			$disableAllHeaderCode = ArrayUtility::getValueByPath($TSFE->config, 'config/disableAllHeaderCode');
+			$disableAllHeaderCode = ArrayUtility::getValueByPath($typoScriptArray, 'disableAllHeaderCode');
 			if ($disableAllHeaderCode) {
 				return $content;
 			}
@@ -75,7 +74,7 @@ class PostProcessHTML implements MiddlewareInterface {
 		}
 
 		try {
-			$postProcessHTML = ArrayUtility::getValueByPath($TSFE->config, 'config/tx_vierwd./postProcessHTML');
+			$postProcessHTML = ArrayUtility::getValueByPath($typoScriptArray, 'tx_vierwd./postProcessHTML');
 			if (!$postProcessHTML) {
 				return $content;
 			}
@@ -86,8 +85,8 @@ class PostProcessHTML implements MiddlewareInterface {
 		$html5 = new HTML5(['disable_html_ns' => true]);
 		$document = $html5->loadHTML($content);
 
-		$this->addHyphenation($document, $TSFE);
-		$this->addNoopener($document, $TSFE);
+		$this->addHyphenation($document, $typoScriptArray);
+		$this->addNoopener($document, $typoScriptArray);
 
 		return $html5->saveHTML($document);
 	}
@@ -108,17 +107,13 @@ class PostProcessHTML implements MiddlewareInterface {
 		return $words;
 	}
 
-	/**
-	 * @phpstan-ignore-next-line TypoScriptFrontendController is deprecated, but we still use it
-	 */
-	private function addHyphenation(DOMDocument $document, TypoScriptFrontendController $TSFE): void {
-		// @phpstan-ignore-next-line
-		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['hyphenation']) && !$TSFE->config['config.']['tx_vierwd.']['hyphenation']) {
+	private function addHyphenation(DOMDocument $document, array $typoScriptArray): void {
+		if (isset($typoScriptArray['tx_vierwd.'], $typoScriptArray['tx_vierwd.']['hyphenation']) && !$typoScriptArray['tx_vierwd.']['hyphenation']) {
 			return;
 		}
 
 		$hyphenationWords = $this->getHyphenationWords();
-		if ($hyphenationWords && $TSFE->content) {
+		if ($hyphenationWords) {
 			$replacements = [];
 			$shy          = html_entity_decode('&shy;', 0, 'UTF-8');
 			foreach ($hyphenationWords as $word) {
@@ -155,11 +150,9 @@ class PostProcessHTML implements MiddlewareInterface {
 	 * add rel=noopener to all external links.
 	 *
 	 * @see https://developers.google.com/web/tools/lighthouse/audits/noopener
-	 * @phpstan-ignore-next-line TypoScriptFrontendController is deprecated, but we still use it
 	 */
-	private function addNoopener(DOMDocument $document, TypoScriptFrontendController $TSFE): void {
-		// @phpstan-ignore-next-line
-		if (isset($TSFE->config['config']['tx_vierwd.'], $TSFE->config['config']['tx_vierwd.']['noopener']) && !$TSFE->config['config.']['tx_vierwd.']['noopener']) {
+	private function addNoopener(DOMDocument $document, array $typoScriptArray): void {
+		if (isset($typoScriptArray['tx_vierwd.'], $typoScriptArray['tx_vierwd.']['noopener']) && !$typoScriptArray['tx_vierwd.']['noopener']) {
 			return;
 		}
 

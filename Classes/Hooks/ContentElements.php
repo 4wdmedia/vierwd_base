@@ -87,7 +87,6 @@ class ContentElements implements SingletonInterface {
 				continue;
 			}
 			$config += $defaults;
-			assert(is_array($config));
 			$config['filename'] = $fceConfigFile->getFilename();
 
 			if (empty($config['group'])) {

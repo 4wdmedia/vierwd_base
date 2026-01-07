@@ -40,7 +40,7 @@ class PostComposerCommand extends Command {
 					$target = '_assets/' . md5('/vendor/' . $composerInfo['extra']['vierwd/typo3-base']['composerName'] . '/') . '/static';
 					$target = escapeshellarg($target);
 					$staticResources = escapeshellarg($staticResources);
-					`ln -s $target $staticResources`;
+					shell_exec("ln -s $target $staticResources");
 					$output->writeln('<info>Added Link for static-resources.</info>');
 				}
 			}

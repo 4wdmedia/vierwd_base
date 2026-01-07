@@ -5,7 +5,6 @@ namespace Vierwd\VierwdBase\Tests\Functional\Frontend;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Vierwd\VierwdBase\Frontend\PostProcessHTML;
 
@@ -25,9 +24,8 @@ class PostProcessHTMLTest extends UnitTestCase {
 		});
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
-		$TSFE = $this->setupTsfeMock();
-		$TSFE->content = $baseContent;
-		$actualContent = $utility->postProcessHTML($baseContent, $TSFE);
+		$typoScriptArray = $this->getTypoScriptArray();
+		$actualContent = $utility->postProcessHTML($baseContent, $typoScriptArray);
 
 		$expectedContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/HyphenationExpected.html');
 		$expectedContent = str_replace('%SHY%', html_entity_decode('&shy;', 0, 'UTF-8'), $expectedContent);
@@ -52,9 +50,8 @@ class PostProcessHTMLTest extends UnitTestCase {
 		});
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
-		$TSFE = $this->setupTsfeMock();
-		$TSFE->content = $baseContent;
-		$actualContent = $utility->postProcessHTML($baseContent, $TSFE);
+		$typoScriptArray = $this->getTypoScriptArray();
+		$actualContent = $utility->postProcessHTML($baseContent, $typoScriptArray);
 
 		$expectedContent = str_replace("\n", '', trim($baseContent));
 		$actualContent = str_replace("\n", '', trim($actualContent));
@@ -62,23 +59,11 @@ class PostProcessHTMLTest extends UnitTestCase {
 		self::assertEquals($expectedContent, $actualContent);
 	}
 
-	// @phpstan-ignore-next-line TypoScriptFrontendController is deprecated. Ignore for now.
-	protected function setupTsfeMock(): TypoScriptFrontendController&MockObject {
-		// @phpstan-ignore-next-line TypoScriptFrontendController is deprecated. Ignore for now.
-		$tsfe = $this->getMockBuilder(TypoScriptFrontendController::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$tsfe->content = '';
-		$config = [
-			'config' => [
-				'tx_vierwd.' => [
-				],
+	protected function getTypoScriptArray(): array {
+		return [
+			'tx_vierwd.' => [
 			],
 		];
-		$tsfe->config = $config;
-		$GLOBALS['TSFE'] = $tsfe;
-
-		return $tsfe;
 	}
 
 }

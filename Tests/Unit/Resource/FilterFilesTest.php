@@ -13,7 +13,6 @@ class FilterFilesTest extends UnitTestCase {
 
 	#[DataProvider('getFilterFilesTestData')]
 	public function testFilterFilesCallback(bool|int $expected, string $itemName, string $itemIdentifier): void {
-		/** @var DriverInterface $driverInstance */
 		$driverInstance = $this->getMockBuilder(DriverInterface::class)
 			->disableOriginalConstructor()
 			->getMock();

@@ -1,5 +1,5 @@
 parameters:
-    level: max
+    level: 8
 
     bootstrapFiles:
         - phpstan.bootstrap.php
@@ -25,12 +25,3 @@ parameters:
             message: '#Parameter \#1 \$callback of function array_map expects \(callable\(string\|false\): mixed\)\|null, ''trim'' given\.#'
             paths:
                 - Classes
-        -
-            message: '#Parameter \#2 \$callback of function array_walk expects callable\(mixed, int\): mixed, Closure.* given.#'
-            paths:
-                - Classes
-        -
-            message: '#^Call to deprecated function Safe\\sprintf\(\)#'
-            paths:
-                - Classes
-            reportUnmatched: false

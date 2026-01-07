@@ -12,21 +12,19 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class BrowserSync implements MiddlewareInterface {
 
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
 		$response = $handler->handle($request);
+		$typoScript = $request->getAttribute('frontend.typoscript');
 
-		if (($response instanceof NullResponse) || !($GLOBALS['TSFE'] instanceof TypoScriptFrontendController)) {
+		if (($response instanceof NullResponse) || !$typoScript) {
 			return $response;
 		}
 
-		$TSFE = $GLOBALS['TSFE'];
-
 		try {
-			$browserSync = ArrayUtility::getValueByPath($TSFE->config, 'config/tx_vierwd./browserSync');
+			$browserSync = ArrayUtility::getValueByPath($typoScript->getConfigArray(), 'tx_vierwd./browserSync');
 			if (!$browserSync) {
 				return $response;
 			}
