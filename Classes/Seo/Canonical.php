@@ -69,6 +69,18 @@ class Canonical implements SingletonInterface {
 		}
 
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+
+		$removeParameters = $GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'] ?? [];
+		$removeParameters = array_filter($removeParameters);
+
+		$linkVars = '';
+		if ($GLOBALS['TSFE']->linkVars) {
+			$linkVars = $GLOBALS['TSFE']->linkVars;
+			$linkVarsArray = GeneralUtility::explodeUrl2Array($GLOBALS['TSFE']->linkVars);
+			$linkVarsArray = array_diff_key($linkVarsArray, array_flip($removeParameters));
+			$GLOBALS['TSFE']->linkVars = GeneralUtility::implodeArrayForUrl('', $linkVarsArray);
+		}
+
 		$query = $request->getQueryParams();
 		if ($query && is_array($query)) {
 			$query['id'] = $GLOBALS['TSFE']->id;
@@ -76,8 +88,6 @@ class Canonical implements SingletonInterface {
 			unset($query['encryptionKey']);
 			unset($query['cHash']);
 
-			$removeParameters = $GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'] ?? [];
-			$removeParameters = array_filter($removeParameters);
 			foreach ($removeParameters as $parameter) {
 				if (ArrayUtility::isValidPath($query, $parameter, '|')) {
 					$query = ArrayUtility::removeByPath($query, $parameter, '|');
@@ -119,6 +129,8 @@ class Canonical implements SingletonInterface {
 				'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
 			]);
 		}
+
+		$GLOBALS['TSFE']->linkVars = $linkVars;
 
 		return $url;
 	}
