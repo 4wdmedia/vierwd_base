@@ -64,6 +64,9 @@
 		"vierwd/typo3_base": "self.version"
 	},
 	"config": {
+		"audit": {
+			"block-insecure": false
+		},
 		"vendor-dir": ".Build/vendor",
 		"bin-dir": ".Build/bin",
 		"sort-packages": true,
