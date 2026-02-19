@@ -13,7 +13,9 @@ use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 class Canonical implements SingletonInterface {
 
 	public function getTag(?string $content, array $params = []): string {
-		if (!empty($GLOBALS['TSFE']->no_cache) || !empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
+		$request = $GLOBALS['TYPO3_REQUEST'];
+		$cacheInstruction = $request->getAttribute('frontend.cache.instruction');
+		if (!$cacheInstruction->isCachingAllowed() || !empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
 			return '';
 		}
 
@@ -35,23 +37,28 @@ class Canonical implements SingletonInterface {
 	}
 
 	static public function calculateUrl(): string {
-		if (!empty($GLOBALS['TSFE']->no_cache)) {
+		$request = $GLOBALS['TYPO3_REQUEST'];
+		$cacheInstruction = $request->getAttribute('frontend.cache.instruction');
+		if (!$cacheInstruction->isCachingAllowed()) {
 			return '';
 		}
 
-		if (!empty($GLOBALS['TSFE']->page['canonical_link'])) {
+		$page = $request->getAttribute('frontend.page.information')->getPageRecord();
+
+		if (!empty($page['canonical_link'])) {
 			$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 			$url = $cObj->typoLink_URL([
 				'returnLast' => 'url',
 				'forceAbsoluteUrl' => true,
-				'parameter' => $GLOBALS['TSFE']->page['canonical_link'],
+				'parameter' => $page['canonical_link'],
 			]);
 			if ($url) {
 				return $url;
 			}
 		}
 
-		$request = $GLOBALS['TYPO3_REQUEST'];
+		$pageUid = $request->getAttribute('frontend.page.information')->getId();
+
 		$pageArguments = $request->getAttribute('routing', null);
 		if ($pageArguments instanceof PageArguments) {
 			$queryParams = $pageArguments->getDynamicArguments();
@@ -62,7 +69,7 @@ class Canonical implements SingletonInterface {
 
 		$cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
 		if (!$pageArguments['cHash'] && $queryParams) {
-			$queryParams['id'] = $GLOBALS['TSFE']->id;
+			$queryParams['id'] = $pageUid;
 			if ($cacheHashCalculator->getRelevantParameters(GeneralUtility::implodeArrayForUrl('', $queryParams))) {
 				return '';
 			}
@@ -70,20 +77,13 @@ class Canonical implements SingletonInterface {
 
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 
-		$removeParameters = $GLOBALS['TSFE']->config['config']['tx_vierwd.']['removeCanonicalUrlParameters.'] ?? [];
+		$typoScript = $request->getAttribute('frontend.typoscript')->getConfigArray();
+		$removeParameters = $typoScript['config']['tx_vierwd.']['removeCanonicalUrlParameters.'] ?? [];
 		$removeParameters = array_filter($removeParameters);
-
-		$linkVars = '';
-		if ($GLOBALS['TSFE']->linkVars) {
-			$linkVars = $GLOBALS['TSFE']->linkVars;
-			$linkVarsArray = GeneralUtility::explodeUrl2Array($GLOBALS['TSFE']->linkVars);
-			$linkVarsArray = array_diff_key($linkVarsArray, array_flip($removeParameters));
-			$GLOBALS['TSFE']->linkVars = GeneralUtility::implodeArrayForUrl('', $linkVarsArray);
-		}
 
 		$query = $request->getQueryParams();
 		if ($query && is_array($query)) {
-			$query['id'] = $GLOBALS['TSFE']->id;
+			$query['id'] = $pageUid;
 			$query = $cacheHashCalculator->getRelevantParameters(GeneralUtility::implodeArrayForUrl('', $query));
 			unset($query['encryptionKey']);
 			unset($query['cHash']);
@@ -111,14 +111,14 @@ class Canonical implements SingletonInterface {
 				$url = $cObj->typoLink_URL([
 					'returnLast' => 'url',
 					'forceAbsoluteUrl' => true,
-					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
+					'parameter' => 't3://page?uid=' . $pageUid,
 				]);
 			} else {
 				// only L and id left. generate without cHash
 				$url = $cObj->typoLink_URL([
 					'returnLast' => 'url',
 					'forceAbsoluteUrl' => true,
-					'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
+					'parameter' => 't3://page?uid=' . $pageUid,
 					'additionalParams' => GeneralUtility::implodeArrayForUrl('', $query),
 				]);
 			}
@@ -126,11 +126,9 @@ class Canonical implements SingletonInterface {
 			$url = $cObj->typoLink_URL([
 				'returnLast' => 'url',
 				'forceAbsoluteUrl' => true,
-				'parameter' => 't3://page?uid=' . $GLOBALS['TSFE']->id,
+				'parameter' => 't3://page?uid=' . $pageUid,
 			]);
 		}
-
-		$GLOBALS['TSFE']->linkVars = $linkVars;
 
 		return $url;
 	}
