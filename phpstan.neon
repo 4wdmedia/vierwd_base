@@ -8,10 +8,6 @@ parameters:
         - Classes
         - Tests
 
-    # Exclude XClasses for ExtensionBuilder until it has TYPO3 v11 support
-    excludePaths:
-        - Classes/ExtensionBuilder/
-
     checkDynamicProperties: true
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true

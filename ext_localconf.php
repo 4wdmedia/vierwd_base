@@ -5,18 +5,6 @@ $extConf = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base'] = ['paths' => [], 'servers' => []];
 
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\FileGenerator::class] = [
-	'className' => \Vierwd\VierwdBase\ExtensionBuilder\Service\FileGenerator::class,
-];
-
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\LocalizationService::class] = [
-	'className' => Vierwd\VierwdBase\ExtensionBuilder\Service\LocalizationService::class,
-];
-
-$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\EBT\ExtensionBuilder\Service\Printer::class] = [
-	'className' => Vierwd\VierwdBase\ExtensionBuilder\Service\Printer::class,
-];
-
 // ***************
 // shorten some paths to static files via the /static/ redirect in .htaccess
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-postProcess'][] = \Vierwd\VierwdBase\Frontend\RenderPostProcess::class . '->renderPostProcess';
