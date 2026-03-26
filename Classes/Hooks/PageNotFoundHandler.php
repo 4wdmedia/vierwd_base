@@ -29,7 +29,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 	}
 
 	public function handlePageError(ServerRequestInterface $request, string $message, array $reasons = []): ResponseInterface {
-		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
+		if (!empty($request->getHeaderLine('X-PageNotFound'))) {
 			$response = new HtmlResponse('404 Loop', 404);
 			return $response;
 		}
@@ -42,7 +42,9 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		if ($reasons && in_array($reasons['code'], ['access.page', 'access.subsection'])) {
-			$requestUri = GeneralUtility::getIndpEnv('REQUEST_URI');
+			$normalizedParams = $request->getAttribute('normalizedParams');
+			assert($normalizedParams !== null);
+			$requestUri = $normalizedParams->getRequestUri();
 			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode($requestUri);
 			$statusCode = 403;
 		} else {
@@ -51,7 +53,7 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		try {
-			$response = $this->load404Page($uri);
+			$response = $this->load404Page($request, $uri);
 
 			$pageContent = (string)$response->getBody();
 			if ($GLOBALS['BE_USER']) {
@@ -71,20 +73,20 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		return $response;
 	}
 
-	protected function load404Page(string $uri): ResponseInterface {
-		if (!empty($_SERVER['HTTP_X_PAGENOTFOUND'])) {
+	protected function load404Page(ServerRequestInterface $request, string $uri): ResponseInterface {
+		if (!empty($request->getHeaderLine('X-PageNotFound'))) {
 			throw new \Exception('404 Loop', 1618222390);
 		}
 
 		$headers = [
 			'X-PageNotFound' => '1',
-			'User-Agent' => GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
+			'User-Agent' => $request->getServerParams()['HTTP_USER_AGENT'] ?? '',
 		];
-		if (!empty($_SERVER['Authorization'])) {
-			$headers['Authorization'] = $_SERVER['Authorization'];
-		} else if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_USER'] && $_SERVER['PHP_AUTH_PW']) {
-			$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
-		} else if (($_SERVER['AUTH_TYPE'] ?? null) == 'Basic') {
+		if (!empty($request->getHeaderLine('Authorization'))) {
+			$headers['Authorization'] = $request->getHeaderLine('Authorization');
+		} else if (isset($request->getServerParams()['PHP_AUTH_USER'], $request->getServerParams()['PHP_AUTH_PW']) && $request->getServerParams()['PHP_AUTH_USER'] && $request->getServerParams()['PHP_AUTH_PW']) {
+			$headers['Authorization'] = 'Basic ' . base64_encode($request->getServerParams()['PHP_AUTH_USER'] . ':' . $request->getServerParams()['PHP_AUTH_PW']);
+		} else if (($request->getServerParams()['AUTH_TYPE'] ?? null) == 'Basic') {
 			// Kundenbereich
 			$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 			if (is_array($extConf) && isset($extConf['serviceUsername'], $extConf['servicePassword'])) {
@@ -93,8 +95,8 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 		}
 
 		$cookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
-		if (isset($_COOKIE[$cookieName])) {
-			$headers['Cookie'] = $cookieName . '=' . $_COOKIE[$cookieName];
+		if (isset($request->getCookieParams()[$cookieName])) {
+			$headers['Cookie'] = $cookieName . '=' . $request->getCookieParams()[$cookieName];
 		}
 
 		$requestFactory = GeneralUtility::makeInstance(RequestFactory::class);

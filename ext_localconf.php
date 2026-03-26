@@ -19,10 +19,6 @@ $GLOBALS['TYPO3_CONF_VARS']['FE']['pageNotFound_handling'] = 'USER_FUNCTION:' . 
 // Disable lockIP, if the server is requesting the 404-page
 $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'] = !empty($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] == \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR') ? false : $GLOBALS['TYPO3_CONF_VARS']['FE']['lockIP'];
 
-// ***************
-// BackendLayoutDataProvider
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['BackendLayoutDataProvider']['vierwd_base'] = \Vierwd\VierwdBase\Backend\BackendLayoutDataProvider::class;
-
 // disable html_errors, if this is an ajax request
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 	ini_set('html_errors', 'off');

@@ -43,6 +43,10 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 		}
 	}
 
+	public function getIdentifier(): string {
+		return 'vierwd_base';
+	}
+
 	public function addBackendLayouts(DataProviderContext $dataProviderContext, BackendLayoutCollection $backendLayoutCollection): void {
 		foreach ($this->backendLayouts as $data) {
 			$backendLayout = $this->createBackendLayout($data);

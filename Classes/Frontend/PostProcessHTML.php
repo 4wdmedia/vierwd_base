@@ -54,9 +54,9 @@ class PostProcessHTML implements MiddlewareInterface {
 			return;
 		}
 		$typoScriptArray = $event->getRequest()->getAttribute('frontend.typoscript')?->getConfigArray() ?? [];
-		$TSFE = $event->getController();
-		// @phpstan-ignore-next-line TSFE is deprecated but still in use
-		$TSFE->content = $this->postProcessHTML($TSFE->content, $typoScriptArray);
+		$content = $event->getContent();
+		$content = $this->postProcessHTML($content, $typoScriptArray);
+		$event->setContent($content);
 	}
 
 	public function postProcessHTML(string $content, array $typoScriptArray): string {

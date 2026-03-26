@@ -6,6 +6,7 @@ namespace Vierwd\VierwdBase\Controller;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -15,7 +16,6 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewInterface;
-use TYPO3Fluid\Fluid\View\ViewInterface as FluidStandaloneViewInterface;
 use Vierwd\VierwdSmarty\Controller\SmartyController;
 use Vierwd\VierwdSmarty\View\SmartyView;
 
@@ -28,10 +28,11 @@ class TranslationStatusController extends SmartyController {
 		protected readonly ModuleProvider $moduleProvider,
 		protected readonly FlashMessageService $flashMessageService,
 		protected readonly ExtensionConfiguration $extensionConfiguration,
+		protected readonly ComponentFactory $componentFactory,
 	) {
 	}
 
-	protected function resolveView(): FluidStandaloneViewInterface|ViewInterface {
+	protected function resolveView(): ViewInterface {
 		$view = parent::resolveView();
 
 		if ($view instanceof SmartyView) {
@@ -109,22 +110,13 @@ class TranslationStatusController extends SmartyController {
 
 		$translations = [];
 
-		$data = $localizationFactory->getParsedData($fileReference, 'default');
-		// get the source label
-		$data = array_map(function(array $row) {
-			return $row[0]['source'];
-		}, $data['default']);
-		$translations['default'] = $data;
+		$translations['default'] = $localizationFactory->getParsedData($fileReference, 'en');
 
 		$availableLanguages = $this->getAvailableLanguages($fileReference);
 
 		foreach ($availableLanguages as $languageKey) {
+			// TODO v14: The parsed data is incorrect
 			$data = $localizationFactory->getParsedData($fileReference, $languageKey);
-			$data = $data[$languageKey];
-
-			$data = array_map(function($row) {
-				return $row[0]['target'];
-			}, $data);
 
 			if ($data) {
 				$translations[$languageKey] = $data;
@@ -179,7 +171,6 @@ class TranslationStatusController extends SmartyController {
 			$this->loadLanguageComparison($extensionName, $fileName, $showAllLabels);
 		}
 
-		assert($this->view instanceof ViewInterface);
 		$moduleTemplate = new ModuleTemplate(
 			$this->pageRenderer,
 			$this->iconFactory,
@@ -188,6 +179,7 @@ class TranslationStatusController extends SmartyController {
 			$this->flashMessageService,
 			$this->extensionConfiguration,
 			$this->view,
+			$this->componentFactory,
 			$this->request
 		);
 

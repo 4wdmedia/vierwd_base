@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Seo;
 
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -12,6 +13,7 @@ use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 
 class Canonical implements SingletonInterface {
 
+	#[AsAllowedCallable]
 	public function getTag(?string $content, array $params = []): string {
 		$request = $GLOBALS['TYPO3_REQUEST'];
 		$cacheInstruction = $request->getAttribute('frontend.cache.instruction');
@@ -28,6 +30,7 @@ class Canonical implements SingletonInterface {
 		return $url;
 	}
 
+	#[AsAllowedCallable]
 	static public function getUrl(): string {
 		static $url = null;
 		if ($url === null) {

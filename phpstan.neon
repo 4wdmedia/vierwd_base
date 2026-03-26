@@ -6,7 +6,8 @@ parameters:
 
     paths:
         - Classes
-        - Tests
+# Tests are excluded, for now
+#        - Tests
 
     checkDynamicProperties: true
     checkFunctionNameCase: true

@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Http\NullResponse;
 use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class BrowserSync implements MiddlewareInterface {
 
@@ -39,7 +38,9 @@ class BrowserSync implements MiddlewareInterface {
 			return $response;
 		}
 
-		$browserSync = '<script async src="http' . (GeneralUtility::getIndpEnv('TYPO3_SSL') ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync/browser-sync-client.js"></script>';
+		$normalizedParams = $request->getAttribute('normalizedParams');
+		assert($normalizedParams !== null);
+		$browserSync = '<script async src="http' . ($normalizedParams->isHttps() ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . ':3000/browser-sync/browser-sync-client.js"></script>';
 
 		$body = $response->getBody();
 		$body->rewind();

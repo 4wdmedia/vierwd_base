@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Hooks;
 
 use B13\Container\Tca\ContainerConfiguration;
 use B13\Container\Tca\Registry as ContainerRegistry;
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -351,20 +352,17 @@ class ContentElements implements SingletonInterface {
 				if (is_array($group)) {
 					$group = current($group);
 				}
-				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $group], 'CType', $extensionKey);
+				if ($config['flexform']) {
+					if (substr($config['flexform'], 0, 5) !== 'FILE:') {
+						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
+					}
+				}
+				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $group], $config['flexform'] ?? '');
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
 				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
 					$last['adminOnly'] = true;
 					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
-				}
-
-				if ($config['flexform']) {
-					if (substr($config['flexform'], 0, 5) !== 'FILE:') {
-						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
-					}
-					// FOR USE IN files in Configuration/TCA/Overrides/*.php
-					ExtensionManagementUtility::addPiFlexFormValue('*', $config['flexform'], $config['CType']);
 				}
 
 				self::validateTCA($tca);
@@ -453,6 +451,7 @@ class ContentElements implements SingletonInterface {
 	 * Normally TYPO3 would add those links with a link (<a id="cXX"></a>) or in the default wrapper,
 	 * but this would interfere with :first-child pseudo elements
 	 */
+	#[AsAllowedCallable]
 	public function elementUid(string $content): string {
 		if (!$content || $content[0] != '<' || $this->cObj === null || empty($this->cObj->data['uid'])) {
 			return $content;

@@ -24,7 +24,7 @@
 				<div class="btn-toolbar">
 					{$iconFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class)}
 					<button class="btn btn-default btn-sm" form="exportForm">
-						{$iconFactory->getIcon('actions-document-export-csv', \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL) nofilter}
+						{$iconFactory->getIcon('actions-document-export-csv', \TYPO3\CMS\Core\Imaging\IconSize::SMALL) nofilter}
 					</button>
 				</div>
 			</div>

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Hooks;
 
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -45,6 +46,7 @@ class Utility {
 	 * TYPO3 adds meta-tags with the name-attribute and not with the property-attribute.
 	 * OpenGraph needs the property-attribute.
 	 */
+	#[AsAllowedCallable]
 	public function addMetaTags(?string $content, array $params): ?string {
 		if (empty($params['meta.']) && empty($params['link.'])) {
 			return $content;
