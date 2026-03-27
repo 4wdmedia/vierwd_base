@@ -8,8 +8,8 @@ use TYPO3\CMS\Core\Resource\Enum\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\ProcessedFile;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
+use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -81,8 +81,8 @@ class YouTubeUtility {
 	}
 
 	public static function getPreviewImage(string $videoId): ?FileInterface {
-		$resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
-		$storage = $resourceFactory->getDefaultStorage();
+		$storageRepository = GeneralUtility::makeInstance(StorageRepository::class);
+		$storage = $storageRepository->getDefaultStorage();
 		assert($storage instanceof ResourceStorage);
 
 		if (!$storage->hasFolder('/YouTube-Preview')) {
