@@ -6,6 +6,7 @@ namespace Vierwd\VierwdBase\Log\Writer;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
+use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -103,7 +104,8 @@ class MailWriter extends AbstractWriter {
 		$message->subject($subject);
 		$message->text(implode("\n", $this->buffer));
 
-		$message->send();
+		$mailer = GeneralUtility::makeInstance(MailerInterface::class);
+		$mailer->send($message);
 	}
 
 }
