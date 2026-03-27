@@ -56,7 +56,7 @@ class DevMailTransport extends AbstractTransport {
 		throw new \Exception('Could not find default mail receiver address', 1653980884);
 	}
 
-	public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage {
+	public function send(RawMessage $message, ?Envelope $envelope = null): ?SentMessage {
 		if ($message instanceof Message) {
 			// Update from header
 			$headers = $message->getHeaders();
