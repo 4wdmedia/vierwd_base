@@ -11,8 +11,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php'][
 
 // ***************
 // minify JS hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'][] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsMinify';
-$GLOBALS['TYPO3_CONF_VARS']['FE']['jsCompressHandler'] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsCompressHandler';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess']['vierwdMinifyJs'] = \Vierwd\VierwdBase\Hooks\JavascriptOptimization::class . '->jsPreProcess';
 
 // ***************
 // 404-PageNotFoundHandling

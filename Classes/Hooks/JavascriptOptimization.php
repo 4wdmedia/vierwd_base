@@ -5,11 +5,10 @@ namespace Vierwd\VierwdBase\Hooks;
 
 use JSMin;
 
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Resource\ResourceCompressor;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\Http\ApplicationType;
+
+use function Safe\file_get_contents;
+use function Safe\filesize;
 
 /**
  * Class which handles JavascriptOptimizations.
@@ -20,103 +19,24 @@ use TYPO3\CMS\Core\Utility\PathUtility;
  */
 class JavascriptOptimization {
 
-	// Copied from PageRenderer, because it was changed to protected
-	protected const PART_FOOTER = 2;
-
-	protected ?ResourceCompressor $compressor = null;
-
-	/**
-	 * since TYPO3 6.0 minifyJs does not work.
-	 * Funny story: jsMinify has a non-free license because it includes
-	 * "The Software shall be used for Good, not Evil."
-	 *
-	 * Solution: Use jsmin included via composer
-	 *
-	 * @see http://forge.typo3.org/issues/31832
-	 * @see http://wonko.com/post/jsmin-isnt-welcome-on-google-code
-	 */
-	public function jsMinify(array $params): string {
-		if (empty($params['script'])) {
-			return '';
+	public function jsPreProcess(array &$params): void {
+		if (!($GLOBALS['TYPO3_REQUEST'] ?? null)) {
+			return;
 		}
-		// autoloaded via composer
-		return JSMin::minify($params['script']);
+		if (!ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend()) {
+			return;
+		}
+
+		$this->inlineSmallFiles($params, 'jsFiles', 'jsInline');
+		$this->inlineSmallFiles($params, 'jsFooterFiles', 'jsFooterInline');
+
+		$params['jsInline'] = $this->minifyInlineJS($params['jsInline']);
+		$params['jsFooterInline'] = $this->minifyInlineJS($params['jsFooterInline']);
 	}
 
-	public function minifyJsFiles(array $jsFiles): array {
-		$filesAfterMinification = [];
-		foreach ($jsFiles as $fileName => $fileOptions) {
-			// If compression is enabled
-			if ($fileOptions['compress']) {
-				$compressedFilename = $this->minifyJsFile($fileOptions['file']);
-				$fileOptions['compress'] = false;
-				$fileOptions['file'] = $compressedFilename;
-				$filesAfterMinification[$compressedFilename] = $fileOptions;
-			} else {
-				$filesAfterMinification[$fileName] = $fileOptions;
-			}
-		}
-		return $filesAfterMinification;
-	}
-
-	/**
-	 * Compresses a javascript file
-	 *
-	 * @param string $filename Source filename, relative to requested page
-	 * @return string Filename of the compressed file, relative to requested page
-	 */
-	public function minifyJsFile(string $filename): string {
-		// generate the unique name of the file
-		$filenameAbsolute = Environment::getPublicPath() . '/' . $filename;
-		$unique = $filenameAbsolute . '-min';
-		if (@file_exists($filenameAbsolute)) {
-			$fileStatus = stat($filenameAbsolute);
-			if ($fileStatus !== false) {
-				$unique = $filenameAbsolute . $fileStatus['mtime'] . $fileStatus['size'] . '-min';
-			}
-		}
-		/** @var array $pathinfo */
-		$pathinfo = PathUtility::pathinfo($filename);
-		$targetFile = 'typo3temp/assets/compressor/' . $pathinfo['filename'] . '-' . md5($unique) . '.js';
-		// only create it, if it doesn't exist, yet
-		if (!file_exists(Environment::getPublicPath() . '/' . $targetFile)) {
-			$contents = GeneralUtility::getUrl($filenameAbsolute);
-			if (!is_string($contents)) {
-				$contents = '';
-			}
-			$contents = GeneralUtility::makeInstance(ResourceCompressor::class)->compressJavaScriptSource($contents);
-			// make sure the folder exists
-			if (!is_dir(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/')) {
-				GeneralUtility::mkdir_deep(Environment::getPublicPath() . '/' . 'typo3temp/assets/compressor/');
-			}
-			GeneralUtility::writeFile(Environment::getPublicPath() . '/' . $targetFile, $contents);
-		}
-		return $targetFile;
-	}
-
-	/**
-	 * inline JS which is smaller than 2000 bytes (meaning smaller than one request)
-	 */
-	public function jsCompressHandler(array $params, PageRenderer $pageRenderer): void {
-		// Traverse the arrays, compress files
-		if (count($params['jsInline'])) {
-			foreach ($params['jsInline'] as $name => $properties) {
-				if ($properties['compress']) {
-					$params['jsInline'][$name]['code'] = GeneralUtility::makeInstance(ResourceCompressor::class)->compressJavaScriptSource($properties['code']);
-				}
-			}
-		}
-		$params['jsLibs'] = $this->minifyJsFiles($params['jsLibs']);
-		$params['jsFiles'] = $this->minifyJsFiles($params['jsFiles']);
-		$params['jsFooterFiles'] = $this->minifyJsFiles($params['jsFooterFiles']);
-
-		$params['jsLibs'] = $this->getCompressor()->compressJsFiles($params['jsLibs']);
-		$params['jsFiles'] = $this->getCompressor()->compressJsFiles($params['jsFiles']);
-		$params['jsFooterFiles'] = $this->getCompressor()->compressJsFiles($params['jsFooterFiles']);
-
-		foreach ($params['jsFiles'] as $key => $properties) {
-			// do not use $properties. it may contain a gzipped file
-			$file = $key;
+	private function inlineSmallFiles(array &$params, string $fileKey, string $inlineKey): void {
+		foreach ($params[$fileKey] as $key => $properties) {
+			[$file] = explode('?', $properties['file']);
 			if (!file_exists($file)) {
 				continue;
 			}
@@ -126,38 +46,27 @@ class JavascriptOptimization {
 				continue;
 			}
 			// the file is smaller than 2000 byte. inline it for better performance (will use one less request)
-			unset($params['jsFiles'][$key]);
+			unset($params[$fileKey][$key]);
 
-			$content = (string)file_get_contents($file);
-			if (substr($file, -5) === '.gzip') {
-				$content = (string)gzdecode($content);
-			}
+			$content = file_get_contents($file);
 
-			if (preg_match('-\n//# sourceMappingURL=([^\n]*)$-s', $content, $matches)) {
-				// adjust sourceMappingURL, if present
-				$map = dirname($file) . '/' . $matches[1];
-				if (file_exists($map)) {
-					$replace = substr($matches[0], 0, -strlen($matches[1])) . $map;
-				} else {
-					$replace = '';
-				}
-
-				$content = (string)preg_replace('-\n//# sourceMappingURL=([^\n]*)$-s', $replace, $content);
-			}
-
-			if ($properties['section'] == self::PART_FOOTER) {
-				$pageRenderer->addJsFooterInlineCode($file, $content, false, false, true);
-			} else {
-				$pageRenderer->addJsInlineCode($file, $content, false, false, true);
-			}
+			$params[$inlineKey][$key] = [
+				'code' => $content,
+				'compress' => false,
+				'section' => $properties['section'],
+				'forceOnTop' => $properties['forceOnTop'] ?? false,
+				'useNonce' => true,
+			];
 		}
 	}
 
-	protected function getCompressor(): ResourceCompressor {
-		if ($this->compressor === null) {
-			$this->compressor = GeneralUtility::makeInstance(ResourceCompressor::class);
-		}
-		return $this->compressor;
+	private function minifyInlineJS(array $inlineJS): array {
+		return array_map(function(array $properties): array {
+			if ($properties['compress'] ?? false) {
+				$properties['code'] = JSMin::minify($properties['code'] ?? '');
+			}
+			return $properties;
+		}, $inlineJS);
 	}
 
 }
