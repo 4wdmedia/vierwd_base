@@ -49,6 +49,10 @@
 		"typo3/testing-framework": "^9.0.0",
 		"vierwd/coding-standard": "dev-master"
 	},
+	"suggest": {
+		"b13/container": "Used for \"gridelements\"-like functionality in the backend",
+		"ssch/typo3-encore": "Used for Webpack Encore integration"
+	},
 	"autoload": {
 		"psr-4": {
 			"Vierwd\\VierwdBase\\": "Classes"
