@@ -44,14 +44,15 @@ class RichtextConfiguration implements FormDataProviderInterface {
 			}
 
 			// replace contentsCss with cache-busted URL
-			if ($rteConfiguration['editor']['config']['contentsCss']) {
-				$contentsCss = $rteConfiguration['editor']['config']['contentsCss'];
-				if (is_string($contentsCss) && substr($contentsCss, 0, 4) === 'EXT:') {
-					$contentsCss = GeneralUtility::getFileAbsFileName($contentsCss);
-					$contentsCss = rtrim((string)PathUtility::getRelativePathTo($contentsCss), '/');
-					$contentsCss = GeneralUtility::createVersionNumberedFilename($contentsCss);
-					$contentsCss = PathUtility::getAbsoluteWebPath($contentsCss);
-				}
+			if (is_array($rteConfiguration['editor']['config']['contentsCss'] ?? null)) {
+				$contentsCss = array_map(function ($cssFile) {
+					if (is_string($cssFile) && str_starts_with($cssFile, 'EXT:')) {
+						$cssFile = GeneralUtility::getFileAbsFileName($cssFile);
+						$webPath = PathUtility::getAbsoluteWebPath($cssFile);
+						return $webPath . '?' . filemtime($cssFile);
+					}
+					return $cssFile;
+				}, $rteConfiguration['editor']['config']['contentsCss']);
 				$result['processedTca']['columns'][$fieldName]['config']['richtextConfiguration']['editor']['config']['contentsCss'] = $contentsCss;
 			}
 		}
