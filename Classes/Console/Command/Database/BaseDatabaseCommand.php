@@ -103,7 +103,9 @@ abstract class BaseDatabaseCommand extends Command {
 
 		if (!$allTables) {
 			foreach ($this->getIgnoredTables(false) as $table) {
-				$additionalArguments[] = $table;
+				if (!str_starts_with($table, 'zzz_deleted_')) {
+					$additionalArguments[] = $table;
+				}
 			}
 		}
 
