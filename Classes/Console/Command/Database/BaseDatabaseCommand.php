@@ -104,7 +104,7 @@ abstract class BaseDatabaseCommand extends Command {
 		];
 
 		if (!$allTables) {
-			foreach ($this->getIgnoredTables() as $table) {
+			foreach ($this->getIgnoredTables(false) as $table) {
 				$additionalArguments[] = $table;
 			}
 		}
@@ -123,7 +123,7 @@ abstract class BaseDatabaseCommand extends Command {
 		return !$tables;
 	}
 
-	protected function getIgnoredTables(): array {
+	protected function getIgnoredTables(bool $withKeepTables = true): array {
 		$config = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('vierwd_base');
 		assert(is_array($config));
 
@@ -149,6 +149,12 @@ abstract class BaseDatabaseCommand extends Command {
 			// set additional ignored tables in ext_localconf with `$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['vierwd_base']['additionalIgnoredTables']`
 			$ignoreTables = array_merge($ignoreTables, $config['additionalIgnoredTables']);
 		}
+		if ($withKeepTables) {
+			$keepTables = $config['keepTables'] ?? [];
+			$ignoreTables = array_merge($ignoreTables, $keepTables);
+		}
+
+		// Only keep tables currently in the database
 		$ignoreTables = array_intersect($ignoreTables, $tables);
 		$prefixes = ['cf_', 'zzz_deleted_', 'cache_', 'index_', 'tx_realurl_'];
 		foreach ($tables as $table) {
