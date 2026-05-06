@@ -8,6 +8,8 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 
+use function Safe\filemtime;
+
 /**
  * Add FORWARD MEDIA richtext settings.
  * - Transform RTE PageTS configuration to stylesSet for CKEditor

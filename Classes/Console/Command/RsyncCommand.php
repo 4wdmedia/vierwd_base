@@ -16,6 +16,8 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\preg_replace;
+
 #[AsCommand(
 	name: 'vierwd:rsync:down',
 	description: 'Copy all file storage from server to local dev environment.',

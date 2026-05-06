@@ -7,6 +7,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use function Safe\preg_replace_callback;
+
 /**
  * Replacement for old Bodytext.tpl.
  * Can be used in Template as follows:
@@ -44,12 +46,10 @@ class RteText {
 				'</p>',
 			]);
 		}, $content);
-		assert(is_string($content));
 
 		$content = preg_replace_callback('/(?:<p>)?%VIDEO%(?<videoID>[^%]*)%(<?:\/p>)?/', function($matches): string {
 			return YouTubeUtility::generatePreview($matches['videoID']);
 		}, $content);
-		assert(is_string($content));
 
 		return $content;
 	}

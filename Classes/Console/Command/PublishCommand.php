@@ -16,6 +16,10 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\file_get_contents;
+use function Safe\json_decode;
+use function Safe\preg_replace;
+
 #[AsCommand(
 	name: 'vierwd:publish',
 	description: 'Upload JavaScript and CSS to server with no need to commit it to git.',
@@ -115,9 +119,6 @@ class PublishCommand extends Command {
 		}
 
 		$composerContents = file_get_contents($composerFile);
-		if ($composerContents === false) {
-			throw new \Exception('Could not read composer.json', 1602247133);
-		}
 
 		$composerConfig = json_decode($composerContents, true);
 		if (!is_array($composerConfig)) {

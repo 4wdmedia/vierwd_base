@@ -12,6 +12,9 @@ use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\filesize;
+use function Safe\unlink;
+
 #[AsCommand(
 	name: 'vierwd:database:export',
 	description: 'Export database',
@@ -91,7 +94,7 @@ class ExportCommand extends BaseDatabaseCommand {
 			return $exitCode;
 		}
 
-		$bytes = (int)filesize($exportPath . '.gz');
+		$bytes = filesize($exportPath . '.gz');
 		$size = GeneralUtility::formatSize($bytes, 'B|Kb|Mb|Gb|Tb|Pb', 1024);
 		$output->writeln(sprintf('<info>Export complete (%s)</info>', $size));
 

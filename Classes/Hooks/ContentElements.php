@@ -14,6 +14,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use function Safe\preg_match;
+use function Safe\preg_replace;
+
 class ContentElements implements SingletonInterface {
 
 	protected ?ContentObjectRenderer $cObj = null;
@@ -502,7 +505,6 @@ class ContentElements implements SingletonInterface {
 			return $additionalIdTag . '<a' . $idAttr . '></a>' . $content;
 		}
 
-		/** @var string $content */
 		$content = preg_replace('/<(?!\\/)([^\s>!]+)/', '<$1' . $idAttr, $content, 1);
 		return $additionalIdTag . $content;
 	}

@@ -39,6 +39,7 @@
 		"phpstan/phpstan-phpunit": "^2.0.10",
 		"phpunit/phpunit": "^11.0",
 		"saschaegerer/phpstan-typo3": "^3.0.1",
+		"thecodingmachine/phpstan-safe-rule": "^1.4",
 		"typo3/cms-core": "^14.0.0",
 		"typo3/cms-extensionmanager": "^14.0.0",
 		"typo3/cms-fluid": "^14.0.0",

@@ -10,6 +10,8 @@ use TYPO3\CMS\Core\Routing\Aspect\PersistedPatternMapper;
 // use TYPO3\CMS\Core\Site\SiteLanguageAwareTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\preg_replace;
+
 /**
  * Example:
  *   routeEnhancers:

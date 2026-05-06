@@ -11,6 +11,8 @@ use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\fopen;
+
 /**
  * Echo writer - just echo everything, if used on console
  */

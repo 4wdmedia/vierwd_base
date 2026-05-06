@@ -10,6 +10,8 @@ use TYPO3\CMS\Core\Mail\MailerInterface;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\json_encode;
+
 /**
  * Mail writer, capture all LogRecords starting with an ErrorLevel, but only send an
  * email, if at least one Record is larger than `$minErrorLevel`.

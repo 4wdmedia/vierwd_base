@@ -7,6 +7,8 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use function Safe\preg_replace;
+
 class SocialMediaUtility {
 
 	static public function getSocialMediaPages(int $folderUid): array {

@@ -12,6 +12,10 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Information\Typo3Version as VersionInformation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\fopen;
+use function Safe\fwrite;
+use function Safe\rewind;
+
 class Typo3Version implements MiddlewareInterface {
 
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
@@ -19,8 +23,9 @@ class Typo3Version implements MiddlewareInterface {
 			return $handler->handle($request);
 		}
 
-		$stream = fopen('php://memory', 'r+');
-		if ($stream === false) {
+		try {
+			$stream = fopen('php://memory', 'r+');
+		} catch (\Throwable) {
 			return GeneralUtility::makeInstance(Response::class, '', 500);
 		}
 		fwrite($stream, (new VersionInformation())->getVersion());

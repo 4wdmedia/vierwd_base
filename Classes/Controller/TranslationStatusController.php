@@ -19,6 +19,12 @@ use TYPO3\CMS\Core\View\ViewInterface;
 use Vierwd\VierwdSmarty\Controller\SmartyController;
 use Vierwd\VierwdSmarty\View\SmartyView;
 
+use function Safe\fclose;
+use function Safe\fopen;
+use function Safe\fputcsv;
+use function Safe\glob;
+use function Safe\ob_end_clean;
+
 class TranslationStatusController extends SmartyController {
 
 	public function __construct(
@@ -221,14 +227,16 @@ class TranslationStatusController extends SmartyController {
 		header('Content-Type: text/csv;charset=utf-8');
 		header('Content-Disposition: attachment;filename=' . $exportFileName);
 
-		$out = fopen('php://output', 'w');
-		if ($out === false) {
+		try {
+			$out = fopen('php://output', 'w');
+
+			foreach ($table as $row) {
+				fputcsv($out, $row);
+			}
+			fclose($out);
+		} catch (\Throwable) {
 			$this->redirect('index');
 		}
-		foreach ($table as $row) {
-			fputcsv($out, $row);
-		}
-		fclose($out);
 		exit;
 	}
 

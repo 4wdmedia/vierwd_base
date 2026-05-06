@@ -6,6 +6,8 @@ namespace Vierwd\VierwdBase\Frontend;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Event\AfterLinkIsGeneratedEvent;
 
+use function Safe\preg_match;
+
 class TypolinkIcons {
 
 	public function addLinkIcon(AfterLinkIsGeneratedEvent $event): void {

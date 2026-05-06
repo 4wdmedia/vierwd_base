@@ -12,6 +12,8 @@ use Symfony\Component\Process\Process;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\filesize;
+
 #[AsCommand(
 	name: 'vierwd:database:import',
 	description: 'Import database from a file.',
@@ -42,7 +44,7 @@ class ImportCommand extends BaseDatabaseCommand {
 		$this->ensureMysqlConfigExists();
 
 		// Show info about import
-		$bytes = (int)filesize($importPath);
+		$bytes = filesize($importPath);
 		$size = GeneralUtility::formatSize($bytes, 'B|Kb|Mb|Gb|Tb|Pb', 1024);
 		$output->writeln(sprintf('DB Import of %s (%s)', $importFile, $size));
 

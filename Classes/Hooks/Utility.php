@@ -9,6 +9,8 @@ use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
+use function Safe\file_get_contents;
+
 class Utility {
 
 	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */

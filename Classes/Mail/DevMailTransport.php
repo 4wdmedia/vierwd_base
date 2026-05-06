@@ -12,6 +12,8 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\RawMessage;
 
+use function Safe\ini_get;
+
 class DevMailTransport extends AbstractTransport {
 
 	private const SENDER_ADDRESS = 'clients@4wdmedia.de';

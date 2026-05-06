@@ -8,6 +8,8 @@ use TYPO3\CMS\Core\Imaging\ImageProcessingResult;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\preg_match;
+
 /**
  * Overwrite GraphicalFunctions to force progressive jpegs
  */

@@ -10,6 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\preg_replace;
+use function Safe\preg_split;
+
 #[AsCommand(
 	name: 'vierwd:list-words',
 	description: 'List all words used on the website',
@@ -88,7 +91,6 @@ class ListWordsCommand extends Command {
 			$text = strip_tags($text);
 			$text = html_entity_decode($text);
 			$text = preg_replace('/\s+/u', ' ', $text);
-			assert(is_string($text));
 			$textWords = array_map('trim', (array)preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
 				$words[$word] = mb_strlen((string)$word);

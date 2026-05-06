@@ -9,6 +9,8 @@ use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
 
+use function Safe\json_encode;
+
 /**
  * Filter deprecations and use terminal notifier to show them
  */

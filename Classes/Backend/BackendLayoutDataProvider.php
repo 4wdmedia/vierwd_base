@@ -12,6 +12,8 @@ use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
 use TYPO3\CMS\Core\TypoScript\Tokenizer\LossyTokenizer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\file_get_contents;
+
 class BackendLayoutDataProvider implements DataProviderInterface {
 
 	/** @var array<array> */

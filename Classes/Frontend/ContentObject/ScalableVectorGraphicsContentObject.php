@@ -8,6 +8,9 @@ use TYPO3\CMS\Frontend\ContentObject\AbstractContentObject;
 
 use Vierwd\SvgInliner\SvgInliner;
 
+use function Safe\file_get_contents;
+use function Safe\glob;
+
 /**
  * Output svg as inline html
  */

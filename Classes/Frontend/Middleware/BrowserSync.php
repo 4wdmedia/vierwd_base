@@ -12,6 +12,8 @@ use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\Exception\MissingArrayPathException;
 
+use function Safe\shell_exec;
+
 class BrowserSync implements MiddlewareInterface {
 
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
