@@ -159,11 +159,14 @@ abstract class BaseDatabaseCommand extends Command {
 		$prefixes = ['cf_', 'zzz_deleted_', 'cache_', 'index_', 'tx_realurl_'];
 		foreach ($tables as $table) {
 			foreach ($prefixes as $prefix) {
-				if (substr($table, 0, strlen($prefix)) === $prefix) {
+				if (str_starts_with($table, $prefix)) {
 					$ignoreTables[] = $table;
 				}
 			}
 		}
+
+		$ignoreTables = array_unique($ignoreTables);
+		sort($ignoreTables);
 
 		return $ignoreTables;
 	}
