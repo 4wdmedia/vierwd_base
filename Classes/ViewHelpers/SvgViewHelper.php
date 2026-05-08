@@ -39,7 +39,7 @@ class SvgViewHelper extends AbstractViewHelper {
 	 *
 	 * {@inheritdoc}
 	 */
-	public function render() {
+	public function render(): string {
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$svgObject = GeneralUtility::makeInstance(ScalableVectorGraphicsContentObject::class, $cObj);
 		return $svgObject->render($this->arguments);
