@@ -471,7 +471,7 @@ class ContentElements implements SingletonInterface {
 		if ($useAdditionalId) {
 			$additionalId = 'c' . $this->cObj->data['_LOCALIZED_UID'];
 			$additionalIdAttr = ' id="' . $additionalId . '"';
-			if (strpos($content, $additionalIdAttr) === false && $typoScriptSetup['config']['tx_vierwd.']['enableL10nAnchor']) {
+			if (strpos($content, $additionalIdAttr) === false && ($typoScriptSetup['config']['tx_vierwd.']['enableL10nAnchor'] ?? false)) {
 				self::$usedUids[$additionalId] = true;
 				$additionalIdTag = '<a' . $additionalIdAttr . '></a>';
 			} else {
