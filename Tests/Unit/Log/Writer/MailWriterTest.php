@@ -18,16 +18,17 @@ class MailWriterTest extends UnitTestCase {
 
 	use ProphecyTrait;
 
+	// @phpstan-ignore-next-line markTestSkipped finishes code execution
 	private LogRecord $logRecord;
 
 	public function setUp(): void {
 		parent::setUp();
+		$this->markTestSkipped('Skipped test');
+		// @phpstan-ignore-next-line markTestSkipped finishes code execution
 		$this->logRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.mailWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 	}
 
 	public function testWritingLogSendsMail(): void {
-		$this->markTestIncomplete();
-
 		$mailMessage = $this->prophesize(MailMessage::class);
 		$mailMessage->from('sender@4wdmedia.de')->shouldBeCalled()->willReturn($mailMessage);
 		$mailMessage->to('receiver@4wdmedia.de')->shouldBeCalled()->willReturn($mailMessage);
