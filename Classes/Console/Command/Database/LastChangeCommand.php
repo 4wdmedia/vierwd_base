@@ -23,8 +23,9 @@ class LastChangeCommand extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
+		$platform = $connection->getDatabasePlatform();
 		$schemaManager = $connection->createSchemaManager();
-		$tables = $schemaManager->listTables();
+		$tables = $schemaManager->introspectTables();
 		foreach ($tables as $table) {
 			$hasTstamp = $table->hasColumn('tstamp');
 			$hasCrdate = $table->hasColumn('crdate');
@@ -38,7 +39,7 @@ class LastChangeCommand extends Command {
 			} else {
 				continue;
 			}
-			$result = $connection->executeQuery('SELECT ' . $select . ' FROM `' . $table->getName() . '`');
+			$result = $connection->executeQuery('SELECT ' . $select . ' FROM ' . $table->getObjectName()->toSQL($platform) . '');
 
 			$time = $result->fetchOne();
 			if (!$time) {
@@ -46,7 +47,7 @@ class LastChangeCommand extends Command {
 				continue;
 			}
 			assert(is_int($time));
-			$output->writeln(date('Y-m-d H:i', $time) . ' ' . $table->getName());
+			$output->writeln(date('Y-m-d H:i', $time) . ' ' . $table->getObjectName()->getUnqualifiedName()->getValue());
 		}
 
 		return Command::SUCCESS;

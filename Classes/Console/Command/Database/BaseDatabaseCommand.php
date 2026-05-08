@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
+use Doctrine\DBAL\Schema\Name\OptionallyQualifiedName;
 use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Symfony\Component\Console\Command\Command;
@@ -120,7 +121,7 @@ abstract class BaseDatabaseCommand extends Command {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
 		$schemaManager = $connection->createSchemaManager();
-		$tables = $schemaManager->listTableNames();
+		$tables = $schemaManager->introspectTableNames();
 
 		return !$tables;
 	}
@@ -136,7 +137,8 @@ abstract class BaseDatabaseCommand extends Command {
 			return true;
 		});
 		$schemaManager = $connection->createSchemaManager();
-		$tables = $schemaManager->listTableNames();
+		$tables = $schemaManager->introspectTableNames();
+		$tables = array_map(fn (OptionallyQualifiedName $table) => $table->getUnqualifiedName()->getValue(), $tables);
 
 		$ignoreTables = [
 			'sys_file_processedfile',

@@ -13,6 +13,9 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\file_get_contents;
+use function Safe\file_put_contents;
+
 #[AsCommand(
 	name: 'vierwd:post-composer',
 	description: 'Tasks to run after composer install/update',
@@ -45,12 +48,12 @@ class PostComposerCommand extends Command {
 				}
 			}
 
-			// create AdditionalConfiguration.php if it does not exist
-			$additionalConfiguration = Environment::getConfigPath() . '/AdditionalConfiguration.php';
-			$sampleAdditionalConfiguration = Environment::getConfigPath() . '/AdditionalConfiguration.sample.php';
+			// create additional.php if it does not exist
+			$additionalConfiguration = Environment::getConfigPath() . '/system/additional.php';
+			$sampleAdditionalConfiguration = Environment::getConfigPath() . '/system/additional.sample.php';
 			if (!file_exists($additionalConfiguration) && file_exists($sampleAdditionalConfiguration)) {
 				file_put_contents($additionalConfiguration, file_get_contents($sampleAdditionalConfiguration));
-				$output->writeln('<info>Added AdditionalConfiguration.php.</info>');
+				$output->writeln('<info>Added additional.php.</info>');
 			}
 		}
 
@@ -69,14 +72,14 @@ class PostComposerCommand extends Command {
 	}
 
 	protected function hasValidDatabaseConnection(): bool {
-		if (!file_exists(Environment::getConfigPath() . '/PackageStates.php') || !file_exists(Environment::getConfigPath() . '/LocalConfiguration.php')) {
+		if (!file_exists(Environment::getConfigPath() . '/system/settings.php')) {
 			return false;
 		}
 
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
 		try {
-			return count($connection->createSchemaManager()->listTableNames()) > 0;
+			return count($connection->createSchemaManager()->introspectTableNames()) > 0;
 		} catch (ConnectionException $e) {
 			return false;
 		}
