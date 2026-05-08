@@ -61,6 +61,8 @@ class LinkUtility {
 		$pathData = [];
 
 		if ($typolink) {
+			$currentPageUid = $GLOBALS['TYPO3_REQUEST']?->getAttribute('routing')?->getPageId();
+
 			$urlData = self::$typolinkCodecService->decode($typolink);
 			$linkData = self::$linkService->resolve($urlData['url']);
 
@@ -74,10 +76,11 @@ class LinkUtility {
 			$link = self::$cObj->typoLink_URL(['returnLast' => 'url', 'parameter' => $typolink]);
 
 			if ($isPagelink) {
-				if ($linkData['pageuid'] === 'current') {
-					$linkData['pageuid'] = (int)$GLOBALS['TSFE']->id;
+				if ($linkData['pageuid'] === 'current' && $currentPageUid) {
+					$linkData['pageuid'] = $currentPageUid;
 				}
-				$targetPage = $GLOBALS['TSFE']->sys_page->getPage($linkData['pageuid']);
+				$pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+				$targetPage = $pageRepository->getPage($linkData['pageuid']);
 				if ($targetPage && $targetPage['doktype'] === PageRepository::DOKTYPE_LINK && $targetPage['url']) {
 					$isPagelink = false;
 					$link = $targetPage['url'];
@@ -104,7 +107,7 @@ class LinkUtility {
 
 			$isExternal = !$isVideo && !$isPhonelink && (!empty($pathData['host']) || !empty($urlData['target']));
 
-			$isAnchor = !empty($pathData['fragment']) && ($linkData['pageuid'] ?? false) == $GLOBALS['TSFE']->id;
+			$isAnchor = !empty($pathData['fragment']) && ($linkData['pageuid'] ?? false) == $currentPageUid;
 
 			if (!$urlData['class']) {
 				if ($isDownload) {

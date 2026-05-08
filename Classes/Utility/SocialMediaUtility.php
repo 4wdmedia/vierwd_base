@@ -14,7 +14,8 @@ class SocialMediaUtility {
 	static public function getSocialMediaPages(int $folderUid): array {
 		$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 
-		$socialMediaPages = $GLOBALS['TSFE']->sys_page->getMenu($folderUid, '*', 'sorting', 'AND hidden=0');
+		$pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+		$socialMediaPages = $pageRepository->getMenu($folderUid, '*', 'sorting', 'AND hidden=0');
 		foreach ($socialMediaPages as $uid => $socialMediaPage) {
 			if ($socialMediaPage['doktype'] == PageRepository::DOKTYPE_LINK && $socialMediaPage['url']) {
 				$href = $socialMediaPage['url'];

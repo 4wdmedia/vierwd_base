@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Hooks;
 
 use B13\Container\Tca\ContainerConfiguration;
 use B13\Container\Tca\Registry as ContainerRegistry;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -455,12 +456,13 @@ class ContentElements implements SingletonInterface {
 	 * but this would interfere with :first-child pseudo elements
 	 */
 	#[AsAllowedCallable]
-	public function elementUid(string $content): string {
+	public function elementUid(string $content, array $params, ServerRequestInterface $request): string {
 		if (!$content || $content[0] != '<' || $this->cObj === null || empty($this->cObj->data['uid'])) {
 			return $content;
 		}
 
-		if (!empty($GLOBALS['TSFE']->config['config']['tx_vierwd.']['disableElementId'])) {
+		$typoScriptSetup = $request->getAttribute('frontend.typoscript')?->getSetupArray();
+		if (!empty($typoScriptSetup['config']['tx_vierwd.']['disableElementId'])) {
 			return $content;
 		}
 
@@ -469,7 +471,7 @@ class ContentElements implements SingletonInterface {
 		if ($useAdditionalId) {
 			$additionalId = 'c' . $this->cObj->data['_LOCALIZED_UID'];
 			$additionalIdAttr = ' id="' . $additionalId . '"';
-			if (strpos($content, $additionalIdAttr) === false && $GLOBALS['TSFE']->config['config']['tx_vierwd.']['enableL10nAnchor']) {
+			if (strpos($content, $additionalIdAttr) === false && $typoScriptSetup['config']['tx_vierwd.']['enableL10nAnchor']) {
 				self::$usedUids[$additionalId] = true;
 				$additionalIdTag = '<a' . $additionalIdAttr . '></a>';
 			} else {

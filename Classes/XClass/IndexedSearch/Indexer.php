@@ -11,15 +11,15 @@ use TYPO3\CMS\IndexedSearch\Indexer as ParentIndexer;
 class Indexer extends ParentIndexer {
 
 	public function indexTypo3PageContent(): void {
-		if ($GLOBALS['TSFE']->config && $GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst']) {
-			$this->conf['content'] = str_replace($GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst'], '@', $this->conf['content']);
+		$typoScriptConfig = $GLOBALS['TYPO3_REQUEST']?->getAttribute('frontend.typoscript')?->getConfigArray();
+		if ($typoScriptConfig['spamProtectEmailAddresses_atSubst'] ?? false) {
+			$this->conf['content'] = str_replace($typoScriptConfig['spamProtectEmailAddresses_atSubst'], '@', $this->conf['content']);
 		}
 
 		// remove Soft-Hyphens from content.
 		$this->conf['content'] = str_replace(html_entity_decode('&shy;'), '', $this->conf['content']);
 
 		$context = GeneralUtility::makeInstance(Context::class);
-		/** @var \TYPO3\CMS\Core\Context\LanguageAspect $languageAspect */
 		$languageAspect = $context->getAspect('language');
 
 		$oldLanguageAspect = $languageAspect;
