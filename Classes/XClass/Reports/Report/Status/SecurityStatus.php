@@ -12,7 +12,7 @@ use TYPO3\CMS\Reports\Report\Status\SecurityStatus as ParentSecurityStatus;
  */
 class SecurityStatus extends ParentSecurityStatus {
 
-	public function getStatus(ServerRequestInterface $request = null): array {
+	public function getStatus(?ServerRequestInterface $request = null): array {
 		$statuses = parent::getStatus($request);
 
 		unset($statuses['encryptedConnectionStatus']);

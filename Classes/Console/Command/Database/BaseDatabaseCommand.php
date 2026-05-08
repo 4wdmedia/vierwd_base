@@ -32,7 +32,7 @@ abstract class BaseDatabaseCommand extends Command {
 	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
 	protected CommandDispatcher $commandDispatcher;
 
-	public function __construct(string $name = null, ConnectionConfiguration $connectionConfiguration = null) {
+	public function __construct(?string $name = null, ?ConnectionConfiguration $connectionConfiguration = null) {
 		parent::__construct($name);
 		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
 	}
