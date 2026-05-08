@@ -6,9 +6,7 @@ return [
 		'label' => 'hyphenation',
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
-		'dividers2tabs' => true,
-		'searchFields' => 'hyphenation',
-		'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/mimetypes/mimetypes-x-sys_note.svg',
+		'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/mimetypes/mimetypes-x-sys_note.svg',
 		'security' => [
 			'ignorePageTypeRestriction' => true,
 		],
