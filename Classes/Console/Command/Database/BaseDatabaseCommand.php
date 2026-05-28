@@ -149,10 +149,13 @@ abstract class BaseDatabaseCommand extends Command {
 			// set additional ignored tables in ext_localconf with `$GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['vierwd_base']['additionalIgnoredTables']`
 			$ignoreTables = array_merge($ignoreTables, $config['additionalIgnoredTables']);
 		}
+		$keepTables = $config['keepTables'] ?? [];
 		if ($withKeepTables) {
-			$keepTables = $config['keepTables'] ?? [];
 			$ignoreTables = array_merge($ignoreTables, $keepTables);
+		} else {
+			$ignoreTables = array_diff($ignoreTables, $keepTables);
 		}
+		$ignoreTables = array_unique($ignoreTables);
 
 		// Only keep tables currently in the database
 		$ignoreTables = array_intersect($ignoreTables, $tables);
