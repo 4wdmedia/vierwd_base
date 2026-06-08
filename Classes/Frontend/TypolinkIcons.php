@@ -18,7 +18,7 @@ class TypolinkIcons {
 
 		$classes = GeneralUtility::trimExplode(' ', $tagAttributes['class'], true);
 
-		$svgMapping = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_vierwdbase.']['linkIcons.'];
+		$svgMapping = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_vierwdbase.']['linkIcons.'] ?? null;
 		if (!$svgMapping) {
 			return;
 		}
