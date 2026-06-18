@@ -23,8 +23,10 @@ trait GraphicalFunctionsTrait {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = true) {
-		// Note: mustCreate has another default value
+	public function imageMagickConvert($imagefile, $newExt = '', $w = '', $h = '', $params = '', $frame = '', $options = [], $mustCreate = false) {
+		// Always convert the images. This enforces that our parameters are set
+		// Otherwise TYPO3 might not convert images, if the target image is the same format and size as the source.
+		$mustCreate = true;
 
 		$ext = $newExt ?: strtolower(pathinfo($imagefile, PATHINFO_EXTENSION));
 		$params = (string)$params;
