@@ -520,7 +520,7 @@ class ContentElements implements SingletonInterface {
 					continue;
 				}
 
-				$allowValue = 'tt_content:CType:' . $config['CType'] . ':ALLOW';
+				$allowValue = 'tt_content:CType:' . $config['CType'];
 				if (!in_array($allowValue, $allowDenyValues, true)) {
 					$allowDenyValues[] = $allowValue;
 				}
