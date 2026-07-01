@@ -1,11 +1,15 @@
 <?php
 declare(strict_types = 1);
 
-namespace Vierwd\VierwdBase\Hooks;
+namespace Vierwd\VierwdBase\Backend;
 
+use TYPO3\CMS\Backend\Controller\Event\ModifyGenericBackendMessagesEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -15,38 +19,43 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * If a content element should be only available for admins, you need to configure this behaviour in
  * the extension configuration
  */
-class CheckBackendGroups {
+final class CheckBackendGroups {
 
-	public function displayWarningMessages_postProcess(array &$warnings): void {
-		if (!$GLOBALS['BE_USER'] || (!str_ends_with($GLOBALS['BE_USER']->user['email'], '@4wdmedia.de') && !str_ends_with($GLOBALS['BE_USER']->user['email'], '@nou-digital.de'))) {
+	#[AsEventListener]
+	public function __invoke(ModifyGenericBackendMessagesEvent $event): void {
+		$beUser = $this->getBackendUser();
+		$beUserEmail = $beUser->user['email'] ?? '';
+		if (!str_ends_with($beUserEmail, '@4wdmedia.de') && !str_ends_with($beUserEmail, '@nou-digital.de')) {
 			return;
 		}
 
 		$backendGroups = $this->getBackendGroups();
-		$this->checkContentElements($warnings, $backendGroups);
+		$this->checkContentElements($event, $backendGroups);
 
-		$this->checkDatabaseTables($warnings, $backendGroups);
+		$this->checkDatabaseTables($event, $backendGroups);
 	}
 
-	private function checkContentElements(array &$warnings, array $backendGroups): void {
-		if ($GLOBALS['TYPO3_CONF_VARS']['BE']['explicitADmode'] != 'explicitAllow') {
-			return;
-		}
+	private function getBackendUser(): BackendUserAuthentication {
+		return $GLOBALS['BE_USER'];
+	}
 
+	private function getLanguageService(): LanguageService {
+		return $GLOBALS['LANG'];
+	}
+
+	private function checkContentElements(ModifyGenericBackendMessagesEvent $event, array $backendGroups): void {
 		$contentElements = $this->getContentElements();
 
 		foreach ($backendGroups as $backendGroup) {
-			$allowDeny = GeneralUtility::trimExplode(',', $backendGroup['explicit_allowdeny']);
+			$allowDeny = GeneralUtility::trimExplode(',', $backendGroup['explicit_allowdeny'], true);
 			foreach ($allowDeny as $field) {
-				if (substr($field, 0, 17) !== 'tt_content:CType:') {
+				if (!str_starts_with($field, 'tt_content:CType:')) {
 					continue;
 				}
 
 				$allow = GeneralUtility::trimExplode(':', $field);
-				if ($allow[3] === 'ALLOW') {
-					// $allow[2] is the CType
-					unset($contentElements[$allow[2]]);
-				}
+				// $allow[2] is the CType
+				unset($contentElements[$allow[2]]);
 			}
 		}
 
@@ -64,11 +73,12 @@ class CheckBackendGroups {
 			$contentElements = implode(', ', array_map(function($name, $CType) {
 				return htmlspecialchars($name . ' (' . $CType . ')');
 			}, $contentElements, array_keys($contentElements)));
-			$warnings[] = 'No backend group has access to edit the following content elements: <strong>' . $contentElements . '</strong>. If this is intentional, configure adminElements in vierwd_base extension configuration.';
+
+			$event->addMessage(new FlashMessage('No backend group has access to edit the following content elements: <strong>' . $contentElements . '</strong>. If this is intentional, configure adminElements in vierwd_base extension configuration.'));
 		}
 	}
 
-	private function checkDatabaseTables(array &$warnings, array $backendGroups): void {
+	private function checkDatabaseTables(ModifyGenericBackendMessagesEvent $event, array $backendGroups): void {
 		$allAllowedTables = [];
 		foreach ($backendGroups as $backendGroup) {
 			$tables = GeneralUtility::trimExplode(',', $backendGroup['tables_modify'], true);
@@ -88,7 +98,7 @@ class CheckBackendGroups {
 
 		// Only check FORWARD MEDIA Tables
 		$tables = array_filter($tables, function($table) {
-			return substr($table, 0, 9) === 'tx_vierwd';
+			return str_starts_with($table, 'tx_vierwd');
 		});
 
 		// $tables contains all tables for which no backend group has access
@@ -100,35 +110,31 @@ class CheckBackendGroups {
 				$name = $GLOBALS['LANG']->sL($name);
 				return htmlspecialchars($name . ' (' . $table . ')');
 			}, $tables));
-			$warnings[] = 'No backend group has access to edit the following tables: <strong>' . $tables . '</strong>.<br>If this is intentional, set adminOnly for those tables.';
+			$event->addMessage(new FlashMessage('No backend group has access to edit the following tables: <strong>' . $tables . '</strong>.<br>If this is intentional, set adminOnly for those tables.'));
 		}
 	}
 
-	protected function getBackendGroups(): array {
+	private function getBackendGroups(): array {
 		$queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('be_groups');
 		$queryBuilder->select('*')->from('be_groups');
 		return $queryBuilder->executeQuery()->fetchAllAssociative();
 	}
 
-	protected function getLanguageService(): LanguageService {
-		return $GLOBALS['LANG'];
-	}
-
 	/**
 	 * Returns an array with all content element CTypes
 	 */
-	protected function getContentElements(): array {
-		$languageService = static::getLanguageService();
+	private function getContentElements(): array {
+		$languageService = $this->getLanguageService();
 		$contentElements = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'];
 		$contentElements = array_filter($contentElements, function($contentElement) {
-			return $contentElement[1] !== '--div--' && empty($contentElement['adminOnly']);
+			return empty($contentElement['adminOnly']);
 		});
 
 		$elementKeys = array_map(function($contentElement) {
-			return $contentElement[1];
+			return $contentElement['value'];
 		}, $contentElements);
 		$elementNames = array_map(function($contentElement) use ($languageService) {
-			return $languageService->sL($contentElement[0]);
+			return $languageService->sL($contentElement['label']);
 		}, $contentElements);
 
 		$contentElements = (array)array_combine($elementKeys, $elementNames);
