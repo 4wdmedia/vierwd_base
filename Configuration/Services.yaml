@@ -10,6 +10,12 @@ services:
   Vierwd\VierwdBase\Console\:
     resource: '../Classes/Console/*'
 
+  Vierwd\VierwdBase\Backend\CheckBackendGroups:
+    tags:
+      - name: event.listener
+        identifier: 'vierwdCheckBackendGroups'
+        event: TYPO3\CMS\Backend\Controller\Event\ModifyGenericBackendMessagesEvent
+
   Vierwd\VierwdBase\ContentElements\ModifyUserGroups:
     tags:
       - name: event.listener

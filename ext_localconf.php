@@ -90,10 +90,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Core\Resource\Driver\Lo
 // Fix incorrect umlauts during editing of data
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = \Vierwd\VierwdBase\Hooks\DataHandler::class;
 
-// *****************
-// Warn when no editor has access to edit some content elements
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_befunc.php']['displayWarningMessages'][] = \Vierwd\VierwdBase\Hooks\CheckBackendGroups::class;
-
 // Database connection with correct utf8mb4 charset
 if (!isset($GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['defaultTableOptions']['charset'])) {
 	$GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['defaultTableOptions']['charset'] = 'utf8mb4';
