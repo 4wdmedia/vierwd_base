@@ -7,6 +7,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -14,6 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 	name: 'vierwd:database:last-change',
 	description: 'Show the last changed timestamps for all tables.',
 )]
+#[AsNonSchedulableCommand]
 class LastChangeCommand extends Command {
 
 	protected function configure(): void {

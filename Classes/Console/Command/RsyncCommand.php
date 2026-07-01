@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -22,6 +23,7 @@ use function Safe\preg_replace;
 	name: 'vierwd:rsync:down',
 	description: 'Copy all file storage from server to local dev environment.',
 )]
+#[AsNonSchedulableCommand]
 class RsyncCommand extends Command {
 
 	use ServerTrait;

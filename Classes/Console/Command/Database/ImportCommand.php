@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -18,6 +19,7 @@ use function Safe\filesize;
 	name: 'vierwd:database:import',
 	description: 'Import database from a file.',
 )]
+#[AsNonSchedulableCommand]
 class ImportCommand extends BaseDatabaseCommand {
 
 	protected function configure(): void {

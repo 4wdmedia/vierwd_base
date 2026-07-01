@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\ContentElements;
 
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -10,6 +11,7 @@ use Vierwd\VierwdBase\Hooks\ContentElements;
 
 class ModifyUserGroups {
 
+	#[AsEventListener('vierwdModifyGroups')]
 	public function __invoke(AfterGroupsResolvedEvent $event): void {
 		$groups = $event->getGroups();
 		foreach ($groups as &$group) {

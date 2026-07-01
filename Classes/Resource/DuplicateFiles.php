@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Resource;
 
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -19,6 +20,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class DuplicateFiles {
 
+	#[AsEventListener('vierwdResourceDuplicateFiles')]
 	public function __invoke(AfterFileAddedEvent $event): void {
 		$file = $event->getFile();
 

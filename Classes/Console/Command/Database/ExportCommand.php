@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -19,6 +20,7 @@ use function Safe\unlink;
 	name: 'vierwd:database:export',
 	description: 'Export database',
 )]
+#[AsNonSchedulableCommand]
 class ExportCommand extends BaseDatabaseCommand {
 
 	protected function configure(): void {

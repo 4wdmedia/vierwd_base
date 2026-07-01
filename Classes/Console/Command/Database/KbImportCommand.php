@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Vierwd\VierwdBase\Console\Command\ServerTrait;
@@ -18,6 +19,7 @@ use Vierwd\VierwdBase\Console\Command\ServerTrait;
 	name: 'vierwd:database:kb-import',
 	description: 'Import database from the current ServiceArea or Live-Server.',
 )]
+#[AsNonSchedulableCommand]
 class KbImportCommand extends BaseDatabaseCommand {
 
 	use ServerTrait;

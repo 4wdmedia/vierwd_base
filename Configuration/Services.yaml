@@ -10,46 +10,24 @@ services:
   Vierwd\VierwdBase\Console\:
     resource: '../Classes/Console/*'
 
-  Vierwd\VierwdBase\ContentElements\ModifyUserGroups:
-    tags:
-      - name: event.listener
-        identifier: 'vierwdModifyGroups'
-        event: TYPO3\CMS\Core\Authentication\Event\AfterGroupsResolvedEvent
-  Vierwd\VierwdBase\ContentElements\PageTsConfig:
-    tags:
-      - name: event.listener
-        identifier: 'vierwdCustomContentElementsPageTs'
-        event: TYPO3\CMS\Core\TypoScript\IncludeTree\Event\ModifyLoadedPageTsConfigEvent
+  Vierwd\VierwdBase\ContentElements\:
+    resource: '../Classes/ContentElements/*'
 
   Vierwd\VierwdBase\Controller\:
     resource: '../Classes/Controller/*'
 
-  Vierwd\VierwdBase\Backend\GetButtonsHook:
-    tags:
-      - name: event.listener
-        identifier: 'vierwdSaveAndClose'
-        event: TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent
+  Vierwd\VierwdBase\Controller\:
+    resource: '../Classes/Resource/{IndexFilesAfterImport}.php'
 
-  Vierwd\VierwdBase\Resource\CacheBuster:
-    tags:
-      - name: event.listener
-        identifier: 'vierwdResourceCacheBuster'
-        event: TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent
-  Vierwd\VierwdBase\Resource\DuplicateFiles:
-    tags:
-      - name: event.listener
-        identifier: 'vierwdResourceDuplicateFiles'
-        event: TYPO3\CMS\Core\Resource\Event\AfterFileAddedEvent
+  Vierwd\VierwdBase\Resource\:
+    resource: '../Classes/Resource/{CacheBuster,DuplicateFiles}.php'
+
   Vierwd\VierwdBase\Hooks\ContentElements:
     tags:
       - name: event.listener
         identifier: 'vierwdCustomContentElements'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
-  Vierwd\VierwdBase\Hooks\IndexFilesAfterImport:
-    tags:
-      - name: event.listener
-        identifier: 'vierwdIndexFilesAfterImport'
-        event: TYPO3\CMS\Core\Package\Event\PackageInitializationEvent
+
   # Add Link Icons https://trello.com/c/V7FscJkV/
   Vierwd\VierwdBase\Frontend\TypolinkIcons:
     tags:
@@ -63,32 +41,3 @@ services:
         identifier: 'vierwdPostProcessHTML'
         method: processCached
         event: TYPO3\CMS\Frontend\Event\AfterCacheableContentIsGeneratedEvent
-
-  Vierwd\VierwdBase\Console\Command\PostComposerCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\Database\ExportCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\Database\ImportCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\Database\KbImportCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\Database\LastChangeCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\RsyncCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false
-  Vierwd\VierwdBase\Console\Command\PublishCommand:
-    tags:
-      - name: 'console.command'
-        schedulable: false

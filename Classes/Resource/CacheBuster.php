@@ -3,12 +3,14 @@ declare(strict_types = 1);
 
 namespace Vierwd\VierwdBase\Resource;
 
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Resource;
 
 use TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent;
 
 class CacheBuster {
 
+	#[AsEventListener('vierwdResourceCacheBuster')]
 	public function __invoke(GeneratePublicUrlForResourceEvent $event): void {
 		$storage = $event->getStorage();
 		$resource = $event->getResource();

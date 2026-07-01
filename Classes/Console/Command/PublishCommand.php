@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -24,6 +25,7 @@ use function Safe\preg_replace;
 	name: 'vierwd:publish',
 	description: 'Upload JavaScript and CSS to server with no need to commit it to git.',
 )]
+#[AsNonSchedulableCommand]
 class PublishCommand extends Command {
 
 	use ServerTrait;

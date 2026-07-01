@@ -9,6 +9,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TYPO3\CMS\Core\Attribute\AsNonSchedulableCommand;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -22,6 +23,7 @@ use function Safe\shell_exec;
 	name: 'vierwd:post-composer',
 	description: 'Tasks to run after composer install/update',
 )]
+#[AsNonSchedulableCommand]
 class PostComposerCommand extends Command {
 
 	protected function configure(): void {

@@ -5,6 +5,7 @@ namespace Vierwd\VierwdBase\Backend;
 
 use TYPO3\CMS\Backend\Template\Components\Buttons\InputButton;
 use TYPO3\CMS\Backend\Template\Components\ModifyButtonBarEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -29,6 +30,7 @@ class GetButtonsHook {
 		$this->pageRenderer = $pageRenderer;
 	}
 
+	#[AsEventListener('vierwdSaveAndClose')]
 	public function __invoke(ModifyButtonBarEvent $event): void {
 		$buttonBars = $event->getButtons();
 
