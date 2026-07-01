@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Log\LogRecord;
 use TYPO3\CMS\Core\Log\Writer\AbstractWriter;
 
 use function Safe\json_encode;
+use function Safe\preg_match;
 
 /**
  * Filter deprecations and use terminal notifier to show them
@@ -17,6 +18,11 @@ use function Safe\json_encode;
 class DeprecationWriter extends AbstractWriter {
 
 	private ?ApplicationType $applicationType = null;
+
+	/** @var string[] */
+	private array $ignoredMessages = [
+		'/symfony\/property-info .*::getTypes/',
+	];
 
 	protected array $messages = [];
 
@@ -32,12 +38,8 @@ class DeprecationWriter extends AbstractWriter {
 	 * @return \TYPO3\CMS\Core\Log\Writer\WriterInterface $this
 	 */
 	public function writeLog(LogRecord $record) {
-		if (!$this->applicationType || !$this->applicationType->isFrontend() || !$this->checkTrace()) {
+		if (!$this->applicationType || !$this->applicationType->isFrontend() || !$this->checkTrace() || $this->isIgnored($record)) {
 			return $this;
-		}
-
-		if (!$this->messages) {
-			$this->registerShutdownFunction();
 		}
 
 		$message = $record->getMessage();
@@ -53,6 +55,10 @@ class DeprecationWriter extends AbstractWriter {
 		$message = str_replace(Environment::getPublicPath(), '', $message);
 		$message = str_replace(Environment::getProjectPath(), '', $message);
 		$message = str_replace('Core: Error handler (FE): TYPO3 Deprecation Notice: ', '', $message);
+
+		if (!$this->messages) {
+			$this->registerShutdownFunction();
+		}
 
 		$this->messages[] = $message;
 
@@ -78,6 +84,16 @@ class DeprecationWriter extends AbstractWriter {
 		}
 
 		return true;
+	}
+
+	private function isIgnored(LogRecord $record): bool {
+		$message = $record->getMessage();
+		foreach ($this->ignoredMessages as $regex) {
+			if (preg_match($regex, $message)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected function getVierwdClass(): ?array {
