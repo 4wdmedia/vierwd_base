@@ -1,3 +1,4 @@
+
 services:
   _defaults:
     autowire: true
@@ -16,11 +17,8 @@ services:
   Vierwd\VierwdBase\Controller\:
     resource: '../Classes/Controller/*'
 
-  Vierwd\VierwdBase\Controller\:
-    resource: '../Classes/Resource/{IndexFilesAfterImport}.php'
-
   Vierwd\VierwdBase\Resource\:
-    resource: '../Classes/Resource/{CacheBuster,DuplicateFiles}.php'
+    resource: '../Classes/Resource/{CacheBuster,DuplicateFiles,IndexFilesAfterImport}.php'
 
   Vierwd\VierwdBase\Hooks\ContentElements:
     tags:
