@@ -361,12 +361,16 @@ class ContentElements implements SingletonInterface {
 						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
 					}
 				}
-				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $group], $config['flexform'] ?? '');
+				ExtensionManagementUtility::addPlugin([$name, $config['CType'], $config['iconIdentifier'], $group]);
 				$GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes'][$config['CType']] = $config['iconIdentifier'];
 				if ($config['adminOnly'] && is_array($GLOBALS['TCA']['tt_content']['columns'])) {
 					$last = array_pop($GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items']);
 					$last['adminOnly'] = true;
 					$GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'][] = $last;
+				}
+
+				if ($config['flexform']) {
+					$GLOBALS['TCA']['tt_content']['types'][$config['CType']]['columnsOverrides']['pi_flexform']['config']['ds'] = $config['flexform'];
 				}
 
 				self::validateTCA($tca);
