@@ -40,7 +40,9 @@ class ForwardRTE extends Plugin {
 
 			// Listen for content changes
 			editor.model.document.on('change', () => {
-				this.updateStatusBar(statusBar);
+				requestAnimationFrame(() => {
+					this.updateStatusBar(statusBar);
+				});
 			});
 		});
 	}
