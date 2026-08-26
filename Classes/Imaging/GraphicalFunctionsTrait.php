@@ -83,6 +83,10 @@ trait GraphicalFunctionsTrait {
 		}
 
 		$cmd = CommandUtility::imageMagickCommand('convert', $params);
+		// Ignore error output by redirecting stderr to /dev/null
+		// ImageMagick generates errors for convert command, but `magick` is not a direct replacement for `convert`:
+		// WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+		$cmd .= ' 2>/dev/null';
 		$this->IM_commands[] = [$output, $cmd];
 		$ret = CommandUtility::exec($cmd);
 		// Change the permissions of the file
