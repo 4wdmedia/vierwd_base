@@ -20,7 +20,7 @@ use function Safe\file_put_contents;
 
 abstract class BaseDatabaseCommand extends Command {
 
-	private ConnectionConfiguration $connectionConfiguration;
+	private readonly ConnectionConfiguration $connectionConfiguration;
 
 	private array $dbConfig = [];
 
@@ -133,9 +133,7 @@ abstract class BaseDatabaseCommand extends Command {
 		$connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
 		$connection = $connectionPool->getConnectionByName('Default');
 		// Get all tables (even the filtered tables)
-		$connection->getConfiguration()->setSchemaAssetsFilter(function (): bool {
-			return true;
-		});
+		$connection->getConfiguration()->setSchemaAssetsFilter(fn (): bool => true);
 		$schemaManager = $connection->createSchemaManager();
 		$tables = $schemaManager->introspectTableNames();
 		$tables = array_map(fn (OptionallyQualifiedName $table) => $table->getUnqualifiedName()->getValue(), $tables);

@@ -24,9 +24,9 @@ class PageNotFoundBeforeSiteRedirect implements MiddlewareInterface {
 	 * Generate 404 instead of redirecting to language default page
 	 */
 	public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
-		$site = $request->getAttribute('site', null);
-		$language = $request->getAttribute('language', null);
-		$routeResult = $request->getAttribute('routing', null);
+		$site = $request->getAttribute('site');
+		$language = $request->getAttribute('language');
+		$routeResult = $request->getAttribute('routing');
 
 		// Usually called when "https://www.example.com" was entered, but all sites have "https://www.example.com/lang-key/"
 		// So a redirect to the first possible language is done.

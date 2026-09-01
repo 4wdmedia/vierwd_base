@@ -76,9 +76,7 @@ class DeprecationWriter extends AbstractWriter {
 	protected function checkTrace(): bool {
 		$trace = $this->getTrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
-		$classes = array_filter($trace, function(array $traceEntry): bool {
-			return !empty($traceEntry['class']) && str_starts_with($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class;
-		});
+		$classes = array_filter($trace, fn (array $traceEntry): bool => !empty($traceEntry['class']) && str_starts_with($traceEntry['class'], 'Vierwd\\') && $traceEntry['class'] !== self::class);
 		if (!$classes) {
 			return false;
 		}

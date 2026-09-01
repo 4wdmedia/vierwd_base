@@ -36,15 +36,9 @@ class LinkUtility {
 	 * }
 	 */
 	public static function getLinkData(string $typolink): array {
-		if (self::$cObj === null) {
-			self::$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-		}
-		if (self::$typolinkCodecService === null) {
-			self::$typolinkCodecService = GeneralUtility::makeInstance(TypoLinkCodecService::class);
-		}
-		if (self::$linkService === null) {
-			self::$linkService = GeneralUtility::makeInstance(LinkService::class);
-		}
+		self::$cObj ??= GeneralUtility::makeInstance(ContentObjectRenderer::class);
+		self::$typolinkCodecService ??= GeneralUtility::makeInstance(TypoLinkCodecService::class);
+		self::$linkService ??= GeneralUtility::makeInstance(LinkService::class);
 
 		$link = null;
 

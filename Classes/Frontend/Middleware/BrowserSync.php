@@ -29,7 +29,7 @@ class BrowserSync implements MiddlewareInterface {
 			if (!$browserSync) {
 				return $response;
 			}
-		} catch (MissingArrayPathException $th) {
+		} catch (MissingArrayPathException) {
 			// ignore
 		}
 

@@ -20,14 +20,10 @@ use TYPO3\CMS\Core\Page\PageRenderer;
  */
 class GetButtonsHook {
 
-	private IconFactory $iconFactory;
-	private LanguageService $languageService;
-	private PageRenderer $pageRenderer;
+	private readonly LanguageService $languageService;
 
-	public function __construct(IconFactory $iconFactory, LanguageServiceFactory $languageServiceFactory, PageRenderer $pageRenderer) {
-		$this->iconFactory = $iconFactory;
+	public function __construct(private readonly IconFactory $iconFactory, LanguageServiceFactory $languageServiceFactory, private readonly PageRenderer $pageRenderer) {
 		$this->languageService = $languageServiceFactory->createFromUserPreferences($GLOBALS['BE_USER'] ?? null);
-		$this->pageRenderer = $pageRenderer;
 	}
 
 	#[AsEventListener('vierwdSaveAndClose')]
@@ -50,7 +46,7 @@ class GetButtonsHook {
 					$saveAndClose->setIcon($this->iconFactory->getIcon('actions-document-save-close', IconSize::SMALL));
 					$saveAndClose->setName('_saveandclosedok');
 					$saveAndClose->setTitle($this->languageService->sL(
-						'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:rm.saveCloseDoc'
+						'core.core:rm.saveCloseDoc'
 					));
 					$saveAndClose->setValue('1');
 					$saveAndClose->setShowLabelText(false);

@@ -41,7 +41,7 @@ class Utility {
 			return '';
 		}
 
-		return (string)file_get_contents($file);
+		return file_get_contents($file);
 	}
 
 	/**
@@ -58,7 +58,7 @@ class Utility {
 		$linkTags = is_array($params['link.'] ?? null) ? $params['link.'] : [];
 
 		$pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
-		$defaultAttribute = isset($params['defaultAttribute']) ? $params['defaultAttribute'] : 'name';
+		$defaultAttribute = $params['defaultAttribute'] ?? 'name';
 
 		foreach ($linkTags as $linkTag) {
 			$pageRenderer->addHeaderData($linkTag);
@@ -72,20 +72,18 @@ class Utility {
 			$value = '';
 
 			if (is_array($data)) {
-				$attribute = isset($data['attribute']) ? $data['attribute'] : $defaultAttribute;
+				$attribute = $data['attribute'] ?? $defaultAttribute;
 				$required = !empty($data['required']);
 
 				// check if all keys are numeric
-				$onlyNumericKeys = !array_filter(array_keys($data), function($key) {
-					return !is_integer($key);
-				});
+				$onlyNumericKeys = !array_filter(array_keys($data), fn ($key) => !is_integer($key));
 
 				if ($onlyNumericKeys) {
 					// process the keys and output the tag multiple times
 					ksort($data);
 					foreach ($data as $subkey => $value) {
 						if (is_array($value)) {
-							$nodeValue = isset($value['_typoScriptNodeValue']) ? $value['_typoScriptNodeValue'] : '';
+							$nodeValue = $value['_typoScriptNodeValue'] ?? '';
 							$value = $this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.'][$subkey . '.']);
 						}
 
@@ -98,7 +96,7 @@ class Utility {
 					continue;
 				}
 
-				$nodeValue = isset($data['_typoScriptNodeValue']) ? $data['_typoScriptNodeValue'] : '';
+				$nodeValue = $data['_typoScriptNodeValue'] ?? '';
 				$value = trim((string)$this->cObj->stdWrap($nodeValue, $params['meta.'][$key . '.']));
 			} else if (is_scalar($data)) {
 				$value = (string)$data;

@@ -33,7 +33,7 @@ class BackendLayoutDataProvider implements DataProviderInterface {
 				if (!$file instanceof \SplFileInfo || is_dir($file->getPathname())) {
 					continue;
 				}
-				$content = (string)file_get_contents($file->getPathname());
+				$content = file_get_contents($file->getPathname());
 				$lineStream = $tokenizer->tokenize($content);
 				$rootNode = GeneralUtility::makeInstance(RootNode::class);
 				$typoScriptConfig = $astBuilder->build($lineStream, $rootNode)->toArray();

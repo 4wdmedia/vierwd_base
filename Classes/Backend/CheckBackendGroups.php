@@ -70,9 +70,7 @@ final class CheckBackendGroups {
 		// this might be an error, if the content element is new and the editor group was not updated
 		// and allowed access to the new element
 		if ($contentElements) {
-			$contentElements = implode(', ', array_map(function($name, $CType) {
-				return htmlspecialchars($name . ' (' . $CType . ')');
-			}, $contentElements, array_keys($contentElements)));
+			$contentElements = implode(', ', array_map(fn ($name, $CType) => htmlspecialchars($name . ' (' . $CType . ')'), $contentElements, array_keys($contentElements)));
 
 			$event->addMessage(new FlashMessage('No backend group has access to edit the following content elements: <strong>' . $contentElements . '</strong>. If this is intentional, configure adminElements in vierwd_base extension configuration.'));
 		}
@@ -97,9 +95,7 @@ final class CheckBackendGroups {
 		}
 
 		// Only check FORWARD MEDIA Tables
-		$tables = array_filter($tables, function($table) {
-			return str_starts_with($table, 'tx_vierwd');
-		});
+		$tables = array_filter($tables, fn ($table) => str_starts_with($table, 'tx_vierwd'));
 
 		// $tables contains all tables for which no backend group has access
 		// this might be an error, if the table is new and the editor group was not updated
@@ -126,18 +122,12 @@ final class CheckBackendGroups {
 	private function getContentElements(): array {
 		$languageService = $this->getLanguageService();
 		$contentElements = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'];
-		$contentElements = array_filter($contentElements, function($contentElement) {
-			return empty($contentElement['adminOnly']);
-		});
+		$contentElements = array_filter($contentElements, fn ($contentElement) => empty($contentElement['adminOnly']));
 
-		$elementKeys = array_map(function($contentElement) {
-			return $contentElement['value'];
-		}, $contentElements);
-		$elementNames = array_map(function($contentElement) use ($languageService) {
-			return $languageService->sL($contentElement['label']);
-		}, $contentElements);
+		$elementKeys = array_map(fn ($contentElement) => $contentElement['value'], $contentElements);
+		$elementNames = array_map(fn ($contentElement) => $languageService->sL($contentElement['label']), $contentElements);
 
-		$contentElements = (array)array_combine($elementKeys, $elementNames);
+		$contentElements = array_combine($elementKeys, $elementNames);
 		return $contentElements;
 	}
 

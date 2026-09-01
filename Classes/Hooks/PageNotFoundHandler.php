@@ -45,10 +45,10 @@ class PageNotFoundHandler implements PageErrorHandlerInterface {
 			$normalizedParams = $request->getAttribute('normalizedParams');
 			assert($normalizedParams !== null);
 			$requestUri = $normalizedParams->getRequestUri();
-			$uri = (string)$language->getBase() . 'login?redirect_url=' . urlencode($requestUri);
+			$uri = $language->getBase() . 'login?redirect_url=' . urlencode($requestUri);
 			$statusCode = 403;
 		} else {
-			$uri = (string)$language->getBase() . '404';
+			$uri = $language->getBase() . '404';
 			$statusCode = 404;
 		}
 

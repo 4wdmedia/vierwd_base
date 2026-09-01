@@ -58,9 +58,7 @@ class TranslationStatusController extends SmartyController {
 	 */
 	protected function getLanguageFiles(): array {
 		$extensions = ExtensionManagementUtility::getLoadedExtensionListArray();
-		$extensions = array_filter($extensions, function(string $extensionName) {
-			return str_starts_with($extensionName, 'vierwd_');
-		});
+		$extensions = array_filter($extensions, fn (string $extensionName) => str_starts_with($extensionName, 'vierwd_'));
 		sort($extensions);
 
 		$files = [];
@@ -70,7 +68,7 @@ class TranslationStatusController extends SmartyController {
 				continue;
 			}
 
-			$languageFiles = glob($path . '/*.xlf') ?: [];
+			$languageFiles = glob($path . '/*.xlf');
 
 			// remove language files which are translations
 			$languageFiles = array_filter($languageFiles, function(string $pathName) {
@@ -83,7 +81,7 @@ class TranslationStatusController extends SmartyController {
 			}
 
 			// only use filename
-			$languageFiles = array_map('basename', $languageFiles);
+			$languageFiles = array_map(basename(...), $languageFiles);
 
 			$files[$extensionName] = [];
 			foreach ($languageFiles as $fileName) {
@@ -97,7 +95,7 @@ class TranslationStatusController extends SmartyController {
 	protected function getAvailableLanguages(string $pathName): array {
 		$directory = dirname($pathName);
 		$fileName = basename($pathName);
-		$translations = glob($directory . '/*.' . $fileName) ?: [];
+		$translations = glob($directory . '/*.' . $fileName);
 
 		// get language prefix
 		$translations = array_map(function(string $pathName) {
@@ -133,9 +131,7 @@ class TranslationStatusController extends SmartyController {
 			return [];
 		}
 
-		$allKeys = array_unique(array_merge(...array_values(array_map(function(array $data) {
-			return array_keys($data);
-		}, $translations))));
+		$allKeys = array_unique(array_merge(...array_values(array_map(array_keys(...), $translations))));
 
 		if ($showAllLabels) {
 			$diffKeys = $allKeys;
@@ -211,7 +207,7 @@ class TranslationStatusController extends SmartyController {
 
 			if ($search) {
 				$searchValue = mb_strtolower(implode('', $row));
-				if (mb_strpos($searchValue, $search) === false) {
+				if (!str_contains($searchValue, $search)) {
 					continue;
 				}
 			}
@@ -235,7 +231,7 @@ class TranslationStatusController extends SmartyController {
 			}
 			fclose($out);
 		} catch (\Throwable) {
-			$this->redirect('index');
+			return $this->redirect('index');
 		}
 		exit;
 	}

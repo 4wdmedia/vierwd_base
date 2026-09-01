@@ -42,7 +42,7 @@ class PostComposerCommand extends Command {
 			$staticResources = Environment::getPublicPath() . '/static-resources';
 			if (!is_link($staticResources)) {
 				$composerFile = Environment::getProjectPath() . '/composer.json';
-				$composerInfo = json_decode((string)file_get_contents($composerFile), true);
+				$composerInfo = json_decode(file_get_contents($composerFile), true);
 				if (is_array($composerInfo) && isset($composerInfo['extra']['vierwd/typo3-base']['composerName'])) {
 					$target = '_assets/' . md5('/vendor/' . $composerInfo['extra']['vierwd/typo3-base']['composerName'] . '/') . '/static';
 					$target = escapeshellarg($target);
@@ -84,7 +84,7 @@ class PostComposerCommand extends Command {
 		$connection = $connectionPool->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
 		try {
 			return count($connection->createSchemaManager()->introspectTableNames()) > 0;
-		} catch (ConnectionException $e) {
+		} catch (ConnectionException) {
 			return false;
 		}
 	}

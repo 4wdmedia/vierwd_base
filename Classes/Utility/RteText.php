@@ -25,9 +25,7 @@ class RteText {
 			return '';
 		}
 
-		if (self::$cObj === null) {
-			self::$cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-		}
+		self::$cObj ??= GeneralUtility::makeInstance(ContentObjectRenderer::class);
 
 		$content = self::$cObj->parseFunc($content, null, '< lib.parseFunc_RTE');
 
@@ -47,9 +45,7 @@ class RteText {
 			]);
 		}, $content);
 
-		$content = preg_replace_callback('/(?:<p>)?%VIDEO%(?<videoID>[^%]*)%(<?:\/p>)?/', function($matches): string {
-			return YouTubeUtility::generatePreview($matches['videoID']);
-		}, $content);
+		$content = preg_replace_callback('/(?:<p>)?%VIDEO%(?<videoID>[^%]*)%(<?:\/p>)?/', fn ($matches): string => YouTubeUtility::generatePreview($matches['videoID']), $content);
 
 		return $content;
 	}

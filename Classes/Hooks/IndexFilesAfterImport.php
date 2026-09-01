@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class IndexFilesAfterImport {
 
-	private Indexer $indexer;
+	private readonly Indexer $indexer;
 
 	public function __construct(StorageRepository $storageRepository) {
 		$storage = $storageRepository->getDefaultStorage();

@@ -79,11 +79,11 @@ class ContentElements implements SingletonInterface {
 
 		// Load configs for FCEs
 		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($fceDir, \FilesystemIterator::SKIP_DOTS)) as $fceConfigFile) {
-			if (!$fceConfigFile instanceof \SplFileInfo || $fceConfigFile->isDir() || substr($fceConfigFile->getFilename(), 0, 1) == '_') {
+			if (!$fceConfigFile instanceof \SplFileInfo || $fceConfigFile->isDir() || str_starts_with($fceConfigFile->getFilename(), '_')) {
 				continue;
 			}
 
-			if (substr($fceConfigFile->getFilename(), -4) != '.php') {
+			if (!str_ends_with($fceConfigFile->getFilename(), '.php')) {
 				continue;
 			}
 
@@ -130,7 +130,7 @@ class ContentElements implements SingletonInterface {
 			}
 
 			if (empty($config['CType'])) {
-				throw new \Exception('Missing CType for ' . $config['filename']);
+				throw new \Exception('Missing CType for ' . $config['filename'], 1788245273);
 			}
 
 			// update typoscript
@@ -147,7 +147,7 @@ class ContentElements implements SingletonInterface {
 				$template = $config['template'];
 
 				$templateDir = $extensionPath . 'Resources/Private/Templates/';
-				if (substr($template, 0, 4) !== 'EXT:' && file_exists($templateDir . $template)) {
+				if (!str_starts_with($template, 'EXT:') && file_exists($templateDir . $template)) {
 					$template = 'EXT:' . $extensionKey . '/Resources/Private/Templates/' . $template;
 				}
 
@@ -259,7 +259,6 @@ class ContentElements implements SingletonInterface {
 					$config['pluginName'],
 					$config['controllerActions'],
 					$config['nonCacheableActions'],
-					ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 				);
 			}
 
@@ -328,7 +327,7 @@ class ContentElements implements SingletonInterface {
 
 				$tca = $config['fullTCA'] ?: self::generateTCA($config);
 
-				if (ExtensionManagementUtility::isLoaded('gridelements') && strpos($tca, 'tx_gridelements_container, tx_gridelements_columns') === false) {
+				if (ExtensionManagementUtility::isLoaded('gridelements') && !str_contains($tca, 'tx_gridelements_container, tx_gridelements_columns')) {
 					$tca .= ', tx_gridelements_container, tx_gridelements_columns';
 				}
 
@@ -357,7 +356,7 @@ class ContentElements implements SingletonInterface {
 					$group = current($group);
 				}
 				if ($config['flexform']) {
-					if (substr($config['flexform'], 0, 5) !== 'FILE:') {
+					if (!str_starts_with($config['flexform'], 'FILE:')) {
 						$config['flexform'] = 'FILE:EXT:' . $extensionKey . '/Configuration/FlexForms/' . $config['flexform'];
 					}
 				}
@@ -385,9 +384,9 @@ class ContentElements implements SingletonInterface {
 		foreach ($fields as $fieldString) {
 			$fieldArray = GeneralUtility::trimExplode(';', $fieldString);
 			$fieldArray = [
-				'fieldName' => isset($fieldArray[0]) ? $fieldArray[0] : '',
-				'fieldLabel' => isset($fieldArray[1]) ? $fieldArray[1] : null,
-				'paletteName' => isset($fieldArray[2]) ? $fieldArray[2] : null,
+				'fieldName' => $fieldArray[0] ?? '',
+				'fieldLabel' => $fieldArray[1] ?? null,
+				'paletteName' => $fieldArray[2] ?? null,
 			];
 			if ($fieldArray['fieldName'] === '--palette--' && $fieldArray['paletteName'] !== null) {
 				if (!isset($GLOBALS['TCA']['tt_content']['palettes'][$fieldArray['paletteName']])) {
@@ -475,7 +474,7 @@ class ContentElements implements SingletonInterface {
 		if ($useAdditionalId) {
 			$additionalId = 'c' . $this->cObj->data['_LOCALIZED_UID'];
 			$additionalIdAttr = ' id="' . $additionalId . '"';
-			if (strpos($content, $additionalIdAttr) === false && ($typoScriptSetup['config']['tx_vierwd.']['enableL10nAnchor'] ?? false)) {
+			if (!str_contains($content, $additionalIdAttr) && ($typoScriptSetup['config']['tx_vierwd.']['enableL10nAnchor'] ?? false)) {
 				self::$usedUids[$additionalId] = true;
 				$additionalIdTag = '<a' . $additionalIdAttr . '></a>';
 			} else {
@@ -494,19 +493,19 @@ class ContentElements implements SingletonInterface {
 		$idAttr = ' id="' . $id . '"';
 		self::$usedUids[$id] = true;
 
-		if (strpos($content, $idAttr) !== false) {
+		if (str_contains($content, $idAttr)) {
 			return $additionalIdTag . $content;
 		}
 
 		// no-cache elements (COA_INT and USER_INT are marked with <!--INT_SCRIPT.MD5-HASH--> and replaced later)
 		// if the current content starts with a no-cache element, we cannot add the id to this element
 		// Solution: Wrap the cache-marker
-		$isINTIncScript = substr($content, 0, strlen('<!--INT_SCRIPT.')) === '<!--INT_SCRIPT.';
+		$isINTIncScript = str_starts_with($content, '<!--INT_SCRIPT.');
 		if ($isINTIncScript) {
 			return $additionalIdTag . '<div' . $idAttr . '>' . $content . '</div>';
 		}
 
-		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || substr($content, 0, strlen('<!--')) === '<!--') {
+		if (preg_match('/^<[^>]*\s+id=[^>]*>/', $content) || str_starts_with($content, '<!--')) {
 			// id already present or comment -> add anchor before the element
 			return $additionalIdTag . '<a' . $idAttr . '></a>' . $content;
 		}

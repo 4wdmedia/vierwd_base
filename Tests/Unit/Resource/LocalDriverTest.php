@@ -18,9 +18,7 @@ class LocalDriverTest extends UnitTestCase {
 	public function testSanitizeFileName(string $expected, string $fileName): void {
 		$this->markTestSkipped('Skipped test');
 		$charsetConverter = $this->getMockBuilder(CharsetConverter::class)->getMock();
-		$charsetConverter->method('specCharsToASCII')->willReturnCallback(function(string $charset, string $string): string {
-			return $string;
-		});
+		$charsetConverter->method('specCharsToASCII')->willReturnCallback(fn (string $charset, string $string): string => $string);
 		GeneralUtility::setSingletonInstance(CharsetConverter::class, $charsetConverter);
 
 		$subject = new LocalDriver();

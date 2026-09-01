@@ -32,7 +32,6 @@ class DeprecationWriterTest extends UnitTestCase {
 
 	public function getMessages(DeprecationWriter $writer): array {
 		$property = new ReflectionProperty($writer, 'messages');
-		$property->setAccessible(true);
 		$messages = $property->getValue($writer);
 		assert(is_array($messages));
 		return $messages;
