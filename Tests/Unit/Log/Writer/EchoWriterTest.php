@@ -43,7 +43,6 @@ class EchoWriterTest extends UnitTestCase {
 		$simpleRecord = GeneralUtility::makeInstance(LogRecord::class, StringUtility::getUniqueId('test.vierwd_base.log.echoWriter.simpleRecord.'), LogLevel::INFO, 'test record');
 		$subject->writeLog($simpleRecord);
 		$property = new \ReflectionProperty(EchoWriter::class, 'output');
-		$property->setAccessible(true);
 		$output = $property->getValue($subject);
 		self::assertEquals(null, $output, 'No output is created when environment is not CLI');
 	}

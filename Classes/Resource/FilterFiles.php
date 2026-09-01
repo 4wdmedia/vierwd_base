@@ -20,21 +20,21 @@ class FilterFiles {
 		}
 
 		foreach ($ignoreFolders as $folderName) {
-			if (strpos($itemIdentifier, '/' . $folderName . '/') !== false) {
+			if (str_contains($itemIdentifier, '/' . $folderName . '/')) {
 				return -1;
 			}
 		}
 
 		$ignorePrefixes = ['_vti'];
 		foreach ($ignorePrefixes as $prefix) {
-			if (substr($itemName, 0, strlen($prefix)) == $prefix) {
+			if (str_starts_with($itemName, $prefix)) {
 				return -1;
 			}
 		}
 
 		$ignoreSuffixes = ['.svn-base'];
 		foreach ($ignoreSuffixes as $suffix) {
-			if (substr($itemName, -strlen($suffix)) == $suffix) {
+			if (str_ends_with($itemName, $suffix)) {
 				return -1;
 			}
 		}

@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use function Safe\preg_split;
+
 #[AsCommand(
 	name: 'vierwd:list-words',
 	description: 'List all words used on the website',
@@ -73,7 +75,7 @@ class ListWordsCommand extends Command {
 		$words = [];
 		array_walk($headers, function(string $header) use (&$words): void {
 			$header = str_replace(html_entity_decode('&shy;', 0, 'UTF-8'), '', $header);
-			$headerWords = array_map('trim', (array)preg_split('/\b/u', $header));
+			$headerWords = array_map(trim(...), preg_split('/\b/u', $header));
 			foreach ($headerWords as $word) {
 				$words[$word] = mb_strlen((string)$word);
 			}
@@ -89,26 +91,22 @@ class ListWordsCommand extends Command {
 			$text = html_entity_decode($text);
 			$text = preg_replace('/\s+/u', ' ', $text);
 			assert(is_string($text));
-			$textWords = array_map('trim', (array)preg_split('/\b/u', $text));
+			$textWords = array_map(trim(...), preg_split('/\b/u', $text));
 			foreach ($textWords as $word) {
 				$words[$word] = mb_strlen((string)$word);
 			}
 		});
 
-		$words = array_filter($words, function($length, $word) {
-			return $length > 7 && !is_numeric($word);
-		}, ARRAY_FILTER_USE_BOTH);
+		$words = array_filter($words, fn ($length, $word) => $length > 7 && !is_numeric($word), ARRAY_FILTER_USE_BOTH);
 
 		$words = array_keys($words);
-		$words = (array)array_combine($words, $words);
+		$words = array_combine($words, $words);
 
 		// get current hypenation
 		$currentHypenationWords = $this->getHyphenationWords();
 		$words = $currentHypenationWords + $words;
 
-		uksort($words, function($word1, $word2) {
-			return mb_strlen((string)$word2) - mb_strlen((string)$word1);
-		});
+		uksort($words, fn ($word1, $word2) => mb_strlen((string)$word2) - mb_strlen((string)$word1));
 
 		echo implode("\n", $words);
 		echo "\n";
@@ -125,7 +123,7 @@ class ListWordsCommand extends Command {
 			assert(is_string($hyphenationRow['hyphenation']));
 			return $hyphenationRow['hyphenation'];
 		}, $hyphenationRows));
-		$words = array_map('trim', explode("\n", $configuration));
+		$words = array_map(trim(...), explode("\n", $configuration));
 		$words = array_filter($words);
 
 		$replacements = [];

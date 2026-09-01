@@ -30,19 +30,17 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 			return '';
 		}
 
-		if (self::$svgInliner === null) {
-			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
-		}
+		self::$svgInliner ??= new SvgInliner(['excludeFromConcatenation' => true]);
 
 		if (!empty($conf['output'])) {
 			return self::$svgInliner->renderFullSVG();
 		}
 
-		$conf['width'] = $conf['width'] ?? null;
-		$conf['height'] = $conf['height'] ?? null;
-		$conf['src'] = $conf['src'] ?? null;
-		$conf['value'] = $conf['value'] ?? null;
-		$conf['class'] = $conf['class'] ?? null;
+		$conf['width'] ??= null;
+		$conf['height'] ??= null;
+		$conf['src'] ??= null;
+		$conf['value'] ??= null;
+		$conf['class'] ??= null;
 
 		$width = isset($conf['width.']) ? $cObj->stdWrap($conf['width'], $conf['width.']) : $conf['width'];
 		$height = isset($conf['height.']) ? $cObj->stdWrap($conf['height'], $conf['height.']) : $conf['height'];
@@ -88,9 +86,7 @@ class ScalableVectorGraphicsContentObject extends AbstractContentObject {
 		}
 
 		$attributes = array_diff_key($conf, array_merge(['src' => 'remove', 'value' => 'remove'], $options));
-		$attributes = array_filter($attributes, function($key) {
-			return substr($key, -1) !== '.';
-		}, ARRAY_FILTER_USE_KEY);
+		$attributes = array_filter($attributes, fn ($key) => !str_ends_with($key, '.'), ARRAY_FILTER_USE_KEY);
 		$options['attributes'] = $attributes;
 
 		if (isset($conf['additionalOptions']) && is_array($conf['additionalOptions'])) {

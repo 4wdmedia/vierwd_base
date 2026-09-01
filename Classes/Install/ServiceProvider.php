@@ -21,12 +21,12 @@ class ServiceProvider extends AbstractServiceProvider {
 
 	public function getFactories(): array {
 		return [
-			PostComposerCommand::class => [ static::class, 'getPostComposerCommand' ],
+			PostComposerCommand::class => static::getPostComposerCommand(...),
 		];
 	}
 
 	public function getExtensions(): array {
-		return parent::getExtensions() + [CommandRegistry::class => [static::class, 'configureCommands']];
+		return parent::getExtensions() + [CommandRegistry::class => static::configureCommands(...)];
 	}
 
 	public static function getPostComposerCommand(ContainerInterface $container): PostComposerCommand {

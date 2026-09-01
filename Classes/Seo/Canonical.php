@@ -30,9 +30,7 @@ class Canonical implements SingletonInterface {
 
 	static public function getUrl(): string {
 		static $url = null;
-		if ($url === null) {
-			$url = self::calculateUrl();
-		}
+		$url ??= self::calculateUrl();
 		return $url;
 	}
 

@@ -16,14 +16,11 @@ class DevMailTransport extends AbstractTransport {
 
 	private const SENDER_ADDRESS = 'clients@4wdmedia.de';
 
-	private string $command = '/usr/local/bin/msmtp';
-	private ProcessStream $stream;
-	private array $mailSettings;
+	private readonly string $command;
+	private readonly ProcessStream $stream;
 
-	public function __construct(array $mailSettings) {
+	public function __construct(private array $mailSettings) {
 		$this->command = ($_SERVER['BREW_PREFIX'] ?? '/usr/local') . '/bin/msmtp';
-
-		$this->mailSettings = $mailSettings;
 		$this->stream = new ProcessStream();
 		parent::__construct();
 	}

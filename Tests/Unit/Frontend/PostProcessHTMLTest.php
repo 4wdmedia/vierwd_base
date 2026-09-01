@@ -19,9 +19,7 @@ class PostProcessHTMLTest extends UnitTestCase {
 		$utility = $this->getMockBuilder(PostProcessHTML::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
-		$utility->method('getHyphenationWords')->willReturnCallback(function(): array {
-			return ['con•sec•tetur', 'adi#pi#sicing'];
-		});
+		$utility->method('getHyphenationWords')->willReturnCallback(fn (): array => ['con•sec•tetur', 'adi#pi#sicing']);
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/MetaTagsBase.html');
 		$typoScriptArray = $this->getTypoScriptArray();
@@ -45,9 +43,7 @@ class PostProcessHTMLTest extends UnitTestCase {
 		$utility = $this->getMockBuilder(PostProcessHTML::class)
 			->onlyMethods(['getHyphenationWords'])
 			->getMock();
-		$utility->method('getHyphenationWords')->willReturnCallback(function(): array {
-			return [];
-		});
+		$utility->method('getHyphenationWords')->willReturnCallback(fn (): array => []);
 
 		$baseContent = (string)file_get_contents(getcwd() . '/Tests/Unit/Fixtures/Utility/ProcessLongHtml.html');
 		$typoScriptArray = $this->getTypoScriptArray();

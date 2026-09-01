@@ -41,7 +41,7 @@ trait GraphicalFunctionsTrait {
 				$additionalParameters = substr($additionalParameters, 0, -strlen($append));
 			}
 			// check if interlace plane is set
-			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($additionalParameters, '-interlace') === false) {
+			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && !str_contains($additionalParameters, '-interlace')) {
 				$additionalParameters .= ' -interlace Plane';
 			}
 
@@ -49,7 +49,7 @@ trait GraphicalFunctionsTrait {
 		}
 		if ($ext === 'webp') {
 			// check if interlace plane is set
-			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && strpos($additionalParameters, '-interlace') === false) {
+			if (!isset($GLOBALS['TYPO3_CONF_VARS']['GFX']['processor_interlace']) && !str_contains($additionalParameters, '-interlace')) {
 				$additionalParameters .= ' -interlace Plane';
 			}
 		}
@@ -69,12 +69,12 @@ trait GraphicalFunctionsTrait {
 		$frame = $this->addFrameSelection ? (int)$frame : null;
 		$inputFile = (string)ImageMagickFile::fromFilePath($input, $frame);
 		$outputFile = CommandUtility::escapeShellArgument($output);
-		if (strpos($params, '%INPUT%') !== false) {
+		if (str_contains($params, '%INPUT%')) {
 			$params = str_replace('%INPUT%', $inputFile, $params);
 		} else {
 			$params .= ' ' . $inputFile;
 		}
-		if (strpos($params, '%OUTPUT%') !== false) {
+		if (str_contains($params, '%OUTPUT%')) {
 			$params = str_replace('%OUTPUT%', $outputFile, $params);
 		} else {
 			$params .= ' ' . $outputFile;

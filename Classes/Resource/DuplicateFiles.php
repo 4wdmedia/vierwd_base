@@ -35,9 +35,7 @@ class DuplicateFiles {
 		$fileIndexRepository = GeneralUtility::makeInstance(FileIndexRepository::class);
 		$files = $fileIndexRepository->findByContentHash($fileHash);
 		assert(is_array($files));
-		$files = array_filter($files, function(array $indexedFile) use ($file): bool {
-			return $indexedFile['storage'] == $file->getStorage()->getUid() && $indexedFile['uid'] != $file->getUid();
-		});
+		$files = array_filter($files, fn (array $indexedFile): bool => $indexedFile['storage'] == $file->getStorage()->getUid() && $indexedFile['uid'] != $file->getUid());
 
 		if ($files) {
 			// There is another file in the same storage which is exactly the same. Inform the user about it

@@ -69,7 +69,7 @@ class PostProcessHTML implements MiddlewareInterface {
 			if ($disableAllHeaderCode) {
 				return $content;
 			}
-		} catch (MissingArrayPathException $th) {
+		} catch (MissingArrayPathException) {
 			// ignore
 		}
 
@@ -78,7 +78,7 @@ class PostProcessHTML implements MiddlewareInterface {
 			if (!$postProcessHTML) {
 				return $content;
 			}
-		} catch (MissingArrayPathException $th) {
+		} catch (MissingArrayPathException) {
 			// ignore
 		}
 
@@ -99,10 +99,8 @@ class PostProcessHTML implements MiddlewareInterface {
 		$queryBuilder->select('*')->from('tx_vierwdbase_hyphenation');
 		$hyphenationRows = $queryBuilder->executeQuery()->fetchAllAssociative();
 
-		$configuration = implode("\n", array_map(function($hyphenationRow) {
-			return $hyphenationRow['hyphenation'];
-		}, $hyphenationRows));
-		$words = array_map('trim', explode("\n", $configuration));
+		$configuration = implode("\n", array_map(fn ($hyphenationRow) => $hyphenationRow['hyphenation'], $hyphenationRows));
+		$words = array_map(trim(...), explode("\n", $configuration));
 
 		return $words;
 	}
@@ -125,9 +123,7 @@ class PostProcessHTML implements MiddlewareInterface {
 				$replacements[$searchWord] = trim(str_replace(['#', '|', '•'], $shy, $word));
 			}
 
-			uksort($replacements, function($word1, $word2) {
-				return strlen($word2) - strlen($word1);
-			});
+			uksort($replacements, fn ($word1, $word2) => strlen($word2) - strlen($word1));
 
 			$searchWords  = array_keys($replacements);
 			$replaceWords = array_values($replacements);

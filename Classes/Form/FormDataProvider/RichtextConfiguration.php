@@ -26,7 +26,7 @@ class RichtextConfiguration implements FormDataProviderInterface {
 				continue;
 			}
 
-			if (!isset($fieldConfig['config']['enableRichtext']) || (bool)$fieldConfig['config']['enableRichtext'] !== true) {
+			if (!isset($fieldConfig['config']['enableRichtext']) || !(bool)$fieldConfig['config']['enableRichtext']) {
 				continue;
 			}
 

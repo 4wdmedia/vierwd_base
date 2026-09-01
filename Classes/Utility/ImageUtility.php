@@ -45,7 +45,7 @@ class ImageUtility {
 		}
 		/** @phpstan-var array{'x': float, 'y': float, 'width': float, 'height': float} $crop */
 		$crop = $cropArea->makeAbsoluteBasedOnFile($image)->asArray();
-		$crop = array_map('intval', array_map('round', $crop));
+		$crop = array_map(intval(...), array_map(round(...), $crop));
 		if ($crop['x'] < 0) {
 			$crop['x'] = 0;
 		}

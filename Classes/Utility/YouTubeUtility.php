@@ -134,9 +134,7 @@ class YouTubeUtility {
 	}
 
 	private static function getSVG(string $path, array $options = []): string {
-		if (self::$svgInliner === null) {
-			self::$svgInliner = new SvgInliner(['excludeFromConcatenation' => true]);
-		}
+		self::$svgInliner ??= new SvgInliner(['excludeFromConcatenation' => true]);
 
 		$svgFile = GeneralUtility::getFileAbsFileName($path);
 		$value = trim(file_get_contents($svgFile));

@@ -19,14 +19,10 @@ use TYPO3\CMS\Core\Page\PageRenderer;
  */
 class GetButtonsHook {
 
-	private IconFactory $iconFactory;
-	private LanguageService $languageService;
-	private PageRenderer $pageRenderer;
+	private readonly LanguageService $languageService;
 
-	public function __construct(IconFactory $iconFactory, LanguageServiceFactory $languageServiceFactory, PageRenderer $pageRenderer) {
-		$this->iconFactory = $iconFactory;
+	public function __construct(private readonly IconFactory $iconFactory, LanguageServiceFactory $languageServiceFactory, private readonly PageRenderer $pageRenderer) {
 		$this->languageService = $languageServiceFactory->createFromUserPreferences($GLOBALS['BE_USER'] ?? null);
-		$this->pageRenderer = $pageRenderer;
 	}
 
 	public function __invoke(ModifyButtonBarEvent $event): void {

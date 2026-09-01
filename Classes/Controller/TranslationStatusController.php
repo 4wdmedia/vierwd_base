@@ -51,9 +51,7 @@ class TranslationStatusController extends SmartyController {
 	 */
 	protected function getLanguageFiles(): array {
 		$extensions = ExtensionManagementUtility::getLoadedExtensionListArray();
-		$extensions = array_filter($extensions, function(string $extensionName) {
-			return str_starts_with($extensionName, 'vierwd_');
-		});
+		$extensions = array_filter($extensions, fn (string $extensionName) => str_starts_with($extensionName, 'vierwd_'));
 		sort($extensions);
 
 		$files = [];
@@ -76,7 +74,7 @@ class TranslationStatusController extends SmartyController {
 			}
 
 			// only use filename
-			$languageFiles = array_map('basename', $languageFiles);
+			$languageFiles = array_map(basename(...), $languageFiles);
 
 			$files[$extensionName] = [];
 			foreach ($languageFiles as $fileName) {
@@ -111,9 +109,7 @@ class TranslationStatusController extends SmartyController {
 
 		$data = $localizationFactory->getParsedData($fileReference, 'default');
 		// get the source label
-		$data = array_map(function(array $row) {
-			return $row[0]['source'];
-		}, $data['default']);
+		$data = array_map(fn (array $row) => $row[0]['source'], $data['default']);
 		$translations['default'] = $data;
 
 		$availableLanguages = $this->getAvailableLanguages($fileReference);
@@ -122,9 +118,7 @@ class TranslationStatusController extends SmartyController {
 			$data = $localizationFactory->getParsedData($fileReference, $languageKey);
 			$data = $data[$languageKey];
 
-			$data = array_map(function($row) {
-				return $row[0]['target'];
-			}, $data);
+			$data = array_map(fn ($row) => $row[0]['target'], $data);
 
 			if ($data) {
 				$translations[$languageKey] = $data;
@@ -135,9 +129,7 @@ class TranslationStatusController extends SmartyController {
 			return [];
 		}
 
-		$allKeys = array_unique(array_merge(...array_values(array_map(function(array $data) {
-			return array_keys($data);
-		}, $translations))));
+		$allKeys = array_unique(array_merge(...array_values(array_map(array_keys(...), $translations))));
 
 		if ($showAllLabels) {
 			$diffKeys = $allKeys;
@@ -213,7 +205,7 @@ class TranslationStatusController extends SmartyController {
 
 			if ($search) {
 				$searchValue = mb_strtolower(implode('', $row));
-				if (mb_strpos($searchValue, $search) === false) {
+				if (!str_contains($searchValue, $search)) {
 					continue;
 				}
 			}
@@ -231,7 +223,7 @@ class TranslationStatusController extends SmartyController {
 
 		$out = fopen('php://output', 'w');
 		if ($out === false) {
-			$this->redirect('index');
+			return $this->redirect('index');
 		}
 		foreach ($table as $row) {
 			fputcsv($out, $row);
