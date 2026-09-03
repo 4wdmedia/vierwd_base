@@ -58,7 +58,7 @@ return RectorConfig::configure()
 	// ->withDeadCodeLevel(30)
 	// ->withCodeQualityLevel(0)
 	// ->withCodingStyleLevel(0)
-	->withPhpSets(php83: true)
+	->withPhpSets(php82: true)
 	->withSets([
 		SetList::PHP_POLYFILLS,
 		SetList::DEAD_CODE,
