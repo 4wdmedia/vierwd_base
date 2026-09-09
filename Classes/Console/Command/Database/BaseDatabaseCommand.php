@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Vierwd\VierwdBase\Console\Command\Database;
 
 use Doctrine\DBAL\Schema\Name\OptionallyQualifiedName;
-use Helhum\Typo3Console\Database\Configuration\ConnectionConfiguration;
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,10 +19,6 @@ use function Safe\file_put_contents;
 
 abstract class BaseDatabaseCommand extends Command {
 
-	private readonly ConnectionConfiguration $connectionConfiguration;
-
-	private array $dbConfig = [];
-
 	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
 	protected InputInterface $input;
 
@@ -33,18 +28,11 @@ abstract class BaseDatabaseCommand extends Command {
 	/** @phpstan-ignore-next-line Uninitialized property. Give it default value or assign it in the constructor. */
 	protected CommandDispatcher $commandDispatcher;
 
-	public function __construct(?string $name = null, ?ConnectionConfiguration $connectionConfiguration = null) {
-		parent::__construct($name);
-		$this->connectionConfiguration = $connectionConfiguration ?: new ConnectionConfiguration();
-	}
-
 	protected function initialize(InputInterface $input, OutputInterface $output): void {
 		parent::initialize($input, $output);
 
 		$this->input = $input;
 		$this->output = $output;
-
-		$this->dbConfig = $this->connectionConfiguration->build();
 
 		$typo3Command = Environment::getProjectPath() . '/vendor/bin/typo3';
 		$this->commandDispatcher = CommandDispatcher::create($typo3Command);
@@ -207,7 +195,7 @@ abstract class BaseDatabaseCommand extends Command {
 
 	protected function getDatabaseName(?string $serverName): string {
 		if (!$serverName) {
-			return $this->dbConfig['dbname'];
+			return $GLOBALS['TYPO3_CONF_VARS']['DB']['Connections']['Default']['dbname'];
 		}
 
 		if ($serverName === 'live') {
