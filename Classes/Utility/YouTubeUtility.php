@@ -17,7 +17,6 @@ use Vierwd\SvgInliner\SvgInliner;
 
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
-use function Safe\sprintf;
 
 class YouTubeUtility {
 
