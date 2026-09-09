@@ -11,7 +11,7 @@ use TYPO3\CMS\IndexedSearch\Indexer as ParentIndexer;
 class Indexer extends ParentIndexer {
 
 	public function indexTypo3PageContent(): void {
-		if ($GLOBALS['TSFE']->config && $GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst']) {
+		if ($GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst'] ?? false) {
 			$this->conf['content'] = str_replace($GLOBALS['TSFE']->config['config']['spamProtectEmailAddresses_atSubst'], '@', $this->conf['content']);
 		}
 
