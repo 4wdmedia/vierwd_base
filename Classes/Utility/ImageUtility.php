@@ -10,11 +10,32 @@ use function Safe\json_decode;
 use function Safe\json_encode;
 
 /**
- * @phpstan-type SingleHotspot array{type: 'position', top: string, left: string}
+ * @phpstan-type SingleHotspot array{
+ *   type: 'position',
+ *   top: string,
+ *   left: string,
+ *   xOffset: string,
+ *   yOffset: string,
+ *   backgroundPosition: string,
+ *   noCrop: array{
+ *     top: string,
+ *     left: string,
+ *   }
+ * }
  * @phpstan-type TopLeftHotspot array{type: 'top-left'}
  * @phpstan-type TopRightHotspot array{type: 'top-right'}
  * @phpstan-type BottomRightHotspot array{type: 'bottom-right'}
- * @phpstan-type MultipleHotspots array{type: 'multiple', hotspots: array<array{top: string, left: string}>}
+ * @phpstan-type MultipleHotspots array{
+ *   type: 'multiple',
+ *   hotspots: array<array{
+ *     top: string,
+ *     left: string,
+ *   }>,
+ *  noCrop: array<array{
+ *     top: string,
+ *     left: string,
+ *  }>
+ * }
  */
 class ImageUtility {
 
@@ -102,6 +123,20 @@ class ImageUtility {
 	}
 
 	/**
+	 * @param ?array{'x': int, 'y': int, 'width': int, 'height': int} $cropValues
+	 */
+	public static function isFullCrop(FileInterface $image, ?array $cropValues): bool {
+		if ($cropValues === null) {
+			return true;
+		}
+		if ($cropValues['x'] === 0 && $cropValues['y'] === 0 && $cropValues['width'] === (int)$image->getProperty('width') && $cropValues['height'] === (int)$image->getProperty('height')) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * get the hotspot configuration from an image
 	 *
 	 * @return SingleHotspot|TopLeftHotspot|TopRightHotspot|BottomRightHotspot|MultipleHotspots
@@ -126,7 +161,6 @@ class ImageUtility {
 			// only work with default crop
 			$hotspot = $hotspot['default'];
 		}
-
 
 		$cropValues = self::getCrop($image);
 
