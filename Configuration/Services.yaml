@@ -18,7 +18,7 @@ services:
     resource: '../Classes/Controller/*'
 
   Vierwd\VierwdBase\Resource\:
-    resource: '../Classes/Resource/{CacheBuster,DuplicateFiles,IndexFilesAfterImport}.php'
+    resource: '../Classes/Resource/*'
 
   Vierwd\VierwdBase\Hooks\ContentElements:
     tags:

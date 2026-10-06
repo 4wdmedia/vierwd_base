@@ -157,4 +157,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['StaticMapper'] = \Vier
 // Setup Plugins directoy
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_smarty']['pluginDirs'][] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('vierwd_base', 'Resources/Private/Smarty');
 
+// Allow "scaling" of SVGs
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['fal']['processingTaskTypes'][\Vierwd\VierwdBase\Resource\Processing\SvgScaleTask::CONTEXT_SVGSCALE] = \Vierwd\VierwdBase\Resource\Processing\SvgScaleTask::class;
+
 unset($extConf);
