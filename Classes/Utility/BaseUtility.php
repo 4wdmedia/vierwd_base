@@ -12,6 +12,13 @@ use function Safe\json_decode;
 
 class BaseUtility {
 
+	/**
+	 * @return array<string, mixed>&array{
+	 *   breakpoints: array<string, int>,
+	 *   containerMaxWidths: array<string, int>,
+	 *   gridGutterWidth: int,
+	 * }
+	 */
 	public static function getCssVars(string $path = 'default'): array {
 		static $cssVars = null;
 

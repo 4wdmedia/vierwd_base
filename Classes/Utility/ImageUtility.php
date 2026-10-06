@@ -9,6 +9,13 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use function Safe\json_decode;
 use function Safe\json_encode;
 
+/**
+ * @phpstan-type SingleHotspot array{type: 'position', top: string, left: string}
+ * @phpstan-type TopLeftHotspot array{type: 'top-left'}
+ * @phpstan-type TopRightHotspot array{type: 'top-right'}
+ * @phpstan-type BottomRightHotspot array{type: 'bottom-right'}
+ * @phpstan-type MultipleHotspots array{type: 'multiple', hotspots: array<array{top: string, left: string}>}
+ */
 class ImageUtility {
 
 	/**
@@ -80,8 +87,8 @@ class ImageUtility {
 	}
 
 	/**
-	 * @param int[] $size width and height
-	 * @return int[] corrected width and height
+	 * @param array{0: int, 1: int} $size width and height
+	 * @return array{0: int, 1: int} corrected width and height
 	 */
 	public static function adjustSizeForCrop(array $size, array $crop): array {
 		$width = $size[0];
@@ -103,11 +110,7 @@ class ImageUtility {
 	/**
 	 * get the hotspot configuration from an image
 	 *
-	 * @return array $hotspot This will be an array with the following keys:
-	 *  - type: position, multiple, top-left, top-right, bottom-right
-	 *  - top (only for `type` "position"): position in percent (with percentage sign)
-	 *  - left (only for `type` "position"): position in percent (with percentage sign)
-	 *  - hotspots (only for `type` "multiple"): array with multple hotspots, each with top and left in percent
+	 * @return SingleHotspot|TopLeftHotspot|TopRightHotspot|BottomRightHotspot|MultipleHotspots
 	 */
 	public static function getHotspot(FileInterface $image): array {
 		$hotspot = $image->getProperty('hotspot');
