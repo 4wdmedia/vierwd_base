@@ -28,8 +28,6 @@ class ImageUtility {
 	public static function getCrop(FileInterface $image, string $cropAreaName = 'default'): array {
 		$width = $image->getProperty('width');
 		$height = $image->getProperty('height');
-		assert(is_int($width));
-		assert(is_int($height));
 
 		$emptyCrop = [
 			'x' => 0,
@@ -42,8 +40,6 @@ class ImageUtility {
 		if (!$crop) {
 			return $emptyCrop;
 		}
-
-		assert(is_string($crop));
 
 		$cropVariantCollection = CropVariantCollection::create($crop);
 		$cropArea = $cropVariantCollection->getCropArea($cropAreaName);
@@ -73,8 +69,6 @@ class ImageUtility {
 
 		$width = $image->getProperty('width');
 		$height = $image->getProperty('height');
-		assert(is_int($width));
-		assert(is_int($height));
 
 		if ($cropValues['x'] === 0 && $cropValues['y'] === 0 && $cropValues['width'] === $width && $cropValues['height'] === $height) {
 			// If the crop is the full image, it's faster to use "no crop".
@@ -136,9 +130,7 @@ class ImageUtility {
 
 		$cropValues = self::getCrop($image);
 
-		/** @var int $width */
 		$width = $image->getProperty('width');
-		/** @var int $height */
 		$height = $image->getProperty('height');
 
 		if ($hotspot['type'] === 'position') {

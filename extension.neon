@@ -1,0 +1,5 @@
+services:
+    -
+        class: Vierwd\VierwdBase\PHPStan\Type\FileInterfaceDynamicReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
