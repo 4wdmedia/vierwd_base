@@ -36,9 +36,10 @@ class FileInterfaceDynamicReturnTypeExtension implements DynamicMethodReturnType
 		$returnTypeMapping = [
 			'width' => 'int',
 			'height' => 'int',
-			'alternative' => 'string',
-			'description' => 'string',
-			'crop' => 'string',
+			'title' => 'null|string',
+			'alternative' => 'null|string',
+			'description' => 'null|string',
+			'crop' => 'null|string',
 		];
 
 		if ($argument === null || !($argument->value instanceof String_) || !isset($returnTypeMapping[$argument->value->value])) {
