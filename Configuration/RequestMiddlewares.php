@@ -43,16 +43,4 @@ if (!$extConf['cachedPostprocessing']) {
 	];
 }
 
-if (!empty($_SERVER['VIERWD_CONFIG'])) {
-	$vierwdMiddlewares['frontend']['vierwd/base/browser-sync'] = [
-		'target' => \Vierwd\VierwdBase\Frontend\Middleware\BrowserSync::class,
-		'after' => [
-			'typo3/cms-frontend/content-length-headers',
-		],
-		'before' => [
-			'typo3/cms-frontend/output-compression',
-		],
-	];
-}
-
 return $vierwdMiddlewares;
