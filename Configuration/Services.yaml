@@ -17,6 +17,9 @@ services:
   Vierwd\VierwdBase\Controller\:
     resource: '../Classes/Controller/*'
 
+  Vierwd\VierwdBase\Frontend\Caching\:
+    resource: '../Classes/Frontend/Caching/*'
+
   Vierwd\VierwdBase\Resource\:
     resource: '../Classes/Resource/*'
 
