@@ -32,7 +32,7 @@ unset($wizards);
 if (empty($GLOBALS['TCA']['tt_content']['columns']['section_frame'])) {
 	$GLOBALS['TCA']['tt_content']['columns']['section_frame'] = [
 		'exclude' => true,
-		'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:section_frame',
+		'label' => 'Rahmen',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
