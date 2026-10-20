@@ -22,8 +22,16 @@ trait ServerTrait {
 
 		$servers = ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['vierwd_base']['servers'] ?? []);
 
+		$serverPath = $config['ssh']['serverPath'];
+		if (str_starts_with($serverPath, '~/')) {
+			// Strip home directory prefix.
+			// rsync < 3.2 does not expand the home directory and it works fine without the prefix,
+			// because SSH starts within the home directory.
+			$serverPath = substr($serverPath, 2);
+		}
+
 		$liveServer = [
-			'live' => $config['ssh']['liveUser'] . '@' . $config['ssh']['liveHost'] . ':' . $config['ssh']['serverPath'],
+			'live' => $config['ssh']['liveUser'] . '@' . $config['ssh']['liveHost'] . ':' . $serverPath,
 		];
 
 		return $liveServer + $servers;
@@ -37,7 +45,9 @@ trait ServerTrait {
 			throw new \Exception('Invalid server: ' . $server, 1622039016);
 		}
 
-		return $servers[$server];
+		$serverPath = $servers[$server];
+
+		return $serverPath;
 	}
 
 }
