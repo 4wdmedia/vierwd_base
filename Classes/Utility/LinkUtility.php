@@ -75,9 +75,9 @@ class LinkUtility {
 				}
 				$pageRepository = GeneralUtility::makeInstance(PageRepository::class);
 				$targetPage = $pageRepository->getPage($linkData['pageuid']);
-				if ($targetPage && $targetPage['doktype'] === PageRepository::DOKTYPE_LINK && $targetPage['url']) {
+				if ($targetPage && $targetPage['doktype'] === PageRepository::DOKTYPE_LINK && $targetPage['link']) {
 					$isPagelink = false;
-					$link = $targetPage['url'];
+					$link = $targetPage['link'];
 				}
 			}
 
