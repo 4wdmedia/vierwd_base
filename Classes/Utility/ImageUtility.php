@@ -125,6 +125,8 @@ class ImageUtility {
 		$height = $image->getProperty('height');
 
 		if ($hotspot['type'] === 'position') {
+			$hotspot['top'] ??= '50%';
+			$hotspot['left'] ??= '50%';
 			$backgroundPosition = $hotspot['left'] . ' ' . $hotspot['top'];
 			// y = (y2 - y1)/(x2 - x1) * (x - x1) + y1
 			$x1 = 0;
