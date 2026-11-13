@@ -23,7 +23,8 @@ class TypolinkIcons {
 		assert($typoScript !== null);
 		$typoScript = $typoScript->getSetupArray();
 		$svgMapping = $typoScript['plugin.']['tx_vierwdbase.']['linkIcons.'] ?? null;
-		if (!$svgMapping) {
+		$svgMappingAfter = $typoScript['plugin.']['tx_vierwdbase.']['linkIconsAfter.'] ?? null;
+		if (!$svgMapping && !$svgMappingAfter) {
 			return;
 		}
 
@@ -39,6 +40,7 @@ class TypolinkIcons {
 		$firstWord = $remaining = '';
 		$linkText = $linkResult->getLinkText();
 		if ($linkText) {
+			$matches = [];
 			if (preg_match('/^(\s*\w.*?)(\b.*)$/u', $linkText, $matches)) {
 				$firstWord = $matches[1];
 				$remaining = $matches[2];
@@ -46,12 +48,31 @@ class TypolinkIcons {
 		}
 
 		$cObj = $event->getContentObjectRenderer();
-		foreach ($svgMapping as $class => $svg) {
+		foreach ($svgMapping ?? [] as $class => $svg) {
 			if (in_array($class, $classes)) {
 				$svg = str_replace(["\n", "\r"], '', $cObj->cObjGetSingle('SVG', [
 					'src' => $svg,
 				]));
 				$linkText = $firstWord ? '<span class="text-nowrap">' . $svg . $firstWord . '</span>' . $remaining : $svg . $linkText;
+				$linkResult = $linkResult->withLinkText($linkText);
+				break;
+			}
+		}
+
+		$lastWord = $preceding = '';
+		if ($linkText) {
+			$matches = [];
+			if (preg_match('/^(.*)\b(\w+[\.\?\!\,\(\)]*)$/u', $linkText, $matches)) {
+				$preceding = $matches[1];
+				$lastWord = $matches[2];
+			}
+		}
+		foreach ($svgMappingAfter ?? [] as $class => $svg) {
+			if (in_array($class, $classes)) {
+				$svg = str_replace(["\n", "\r"], '', $cObj->cObjGetSingle('SVG', [
+					'src' => $svg,
+				]));
+				$linkText = $lastWord ? ($preceding . '<span class="nowrap">' . $lastWord . $svg . '</span>') : $linkText;
 				$linkResult = $linkResult->withLinkText($linkText);
 				break;
 			}
